@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
+import Link from 'next/link'
 
 
 const page = () => {
@@ -51,7 +52,7 @@ const page = () => {
           </button>
           <p className="text-center text-sm text-gray-600 mt-4">
             Already have an account?
-            <a href="#" className="text-blue-600 hover:underline" onClick={() => handleLogin()}>Login</a>
+            <Link href={'/login'} className="text-blue-600 hover:underline">Login</Link>
           </p>
         </form>
       </div>
