@@ -1,4 +1,4 @@
-interface auth{
+export interface Auth{
     signup:{
         name:string,
         email:string

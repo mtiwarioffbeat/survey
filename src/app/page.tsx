@@ -1,8 +1,13 @@
 'use client'
-import React from 'react'
-import { useAppSelector, useAppDispatch } from '@/hooks/reduxhooks'
+import React, { useEffect } from 'react'
+import { useAppSelector } from '@/hooks/reduxhooks'
+import { redirect } from 'next/navigation'
 const page = () => {
-   const {text} = useAppSelector((state) => state.auth)
+
+  const {text} = useAppSelector((state) => state.auth)
+ useEffect(()=>{
+  redirect('/signup')
+ },[])
   return (
     <>
       <div className='text-3xl text-red'>{text}</div>
