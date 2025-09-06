@@ -4,7 +4,6 @@ import Link from 'next/link'
 const page = () => {
   return (
     <div>
-      
         <div className="w-full max-w-md bg-white rounded-2xl shadow p-8 my-13 mx-10">
           <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">Login Page</h2>
           <form className="space-y-2">
