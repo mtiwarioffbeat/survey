@@ -1,5 +1,5 @@
+"use client"
 import React from 'react'
-import Link from 'next/link'
 
 const page = () => {
   return (
@@ -21,7 +21,6 @@ const page = () => {
             >
               Login
             </button>
-
           </form>
         </div>
       </div>
