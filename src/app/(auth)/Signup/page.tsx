@@ -22,7 +22,8 @@ const page = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Create Account</h2>
         <form className="space-y-4">
           <div>
-            <h1>gfgfgdfgyg</h1>
+
+            
             <label className="block text-sm font-medium text-gray-700">Full Name</label>
             <input
               type="text"
@@ -38,6 +39,7 @@ const page = () => {
             <input
               type="email"
               name='email'
+              value={signup?.email}
               onChange={(e) => handleChange(e)}
               placeholder="Enter your Email"
               className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
