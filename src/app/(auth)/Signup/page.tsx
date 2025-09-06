@@ -22,6 +22,7 @@ const page = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Create Account</h2>
         <form className="space-y-4">
           <div>
+            <h1>gfgfgdfgyg</h1>
             <label className="block text-sm font-medium text-gray-700">Full Name</label>
             <input
               type="text"
