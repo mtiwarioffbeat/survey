@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Auth } from "@/types/auth";
 
 
@@ -23,7 +23,7 @@ const authSlice = createSlice({
     setText:(state,action)=>{
         state.text = action.payload
     },
-    setSignup:(state,action)=>{
+    setSignup:(state,action: PayloadAction<Auth["signup"]>)=>{
         state.signup = action.payload
     }
 
