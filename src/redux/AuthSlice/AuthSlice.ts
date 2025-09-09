@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Auth } from "@/types/auth";
 
 
@@ -6,7 +6,12 @@ interface AuthState {
   text: string
   signup: Auth["signup"] | null
   login: Auth["login"] | null
-  otp: Auth["otp"] | null
+  otp: Auth["otp"] | null,
+  signupErrors:Auth["signup"] | null,
+  loginErrors:Auth['login'] | null,
+  loading:boolean,
+  error: string | null;
+  success: boolean;
 }
 
 const initialState: AuthState = {
@@ -14,6 +19,11 @@ const initialState: AuthState = {
   signup: null,
   login: null,
   otp: null,
+  signupErrors:null,
+  loginErrors:null,
+  loading:false,
+  error: null,
+  success: false,
 }
 
 const authSlice = createSlice({
@@ -23,12 +33,28 @@ const authSlice = createSlice({
     setText:(state,action)=>{
         state.text = action.payload
     },
-    setSignup:(state,action)=>{
+    setSignup:(state,action: PayloadAction<Auth["signup"]>)=>{
         state.signup = action.payload
+    },
+    setSignupErrors:(state,action:PayloadAction<Auth['signup']>)=>{
+      state.signupErrors = action.payload
+    },
+    setLoginErrors:(state,action:PayloadAction<Auth['login']>)=>{
+      state.loginErrors = action.payload
+    },
+    setLoading:(state,action:PayloadAction<boolean>)=>{
+      state.loading = action.payload
+    },
+    setError:(state,action:PayloadAction<string | null>)=>{
+      state.error = action.payload
+    },
+    setSuccess:(state,action:PayloadAction<boolean>)=>{
+      state.success = action.payload
     }
+
 
   },
 });
 
-export const { setText,setSignup } = authSlice.actions;
+export const { setText,setSignup,setSignupErrors,setLoginErrors,setLoading,setError,setSuccess } = authSlice.actions;
 export default authSlice.reducer;

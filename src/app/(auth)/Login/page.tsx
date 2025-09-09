@@ -1,12 +1,14 @@
 "use client"
+import Link from 'next/link'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>
-        <div className="w-full max-w-md bg-white rounded-2xl shadow p-8 my-13 mx-10">
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">Login Page</h2>
-          <form className="space-y-2">
+    <div className='w-full flex flex-col items-center justify-center'>
+        <div className="w-full max-w-md bg-white rounded-2xl shadow p-8 my-13 mx-10 pb-20 pt-10">
+           <p className="mb-0">Welcome Back!</p>
+              <h2 className="text-2xl font-bold  text-gray-800 mb-4">Login to your account</h2>
+          <form className="space-y-2" >
             <div>
               <label className="block text-sm font-medium text-gray-700">Email</label>
               <input
@@ -21,6 +23,10 @@ const page = () => {
             >
               Login
             </button>
+            <p className="text-center text-sm text-gray-600 mt-4">
+           Don't have an Account?
+            <Link href={'/signup'} className="text-blue-600 hover:underline" >{' '}Signup</Link>
+          </p>
           </form>
         </div>
       </div>
