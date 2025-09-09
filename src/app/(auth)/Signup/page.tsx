@@ -1,6 +1,6 @@
 "use client"
 
-import { useAppSelector } from '@/hooks/reduxhooks';
+import {  useAppSelector } from '@/hooks/reduxhooks';
 import Link from 'next/link';
 import { useAppDispatch } from '@/hooks/reduxhooks';
 import { setSignup, setSignupErrors, setLoading, setError, setSuccess } from '@/redux/AuthSlice/AuthSlice';
@@ -10,6 +10,7 @@ import { UserService } from '@/services/api/UserService';
 import z from 'zod'
 import Spinner from '@/components/auth/Spinner';
 import { toast } from 'react-toastify';
+import { useNavigation } from '@/hooks/useNavigation'; 
 const page = () => {
   const dispatch = useAppDispatch();
   const [signupData, setSignupData] = useState<Auth['signup']>({
@@ -17,6 +18,8 @@ const page = () => {
     email: ''
   })
   const {signupErrors, loading } = useAppSelector((store) => store.auth)
+
+  const {navigateTo} = useNavigation()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSignupErrors({ name: '', email: '' }))
@@ -53,26 +56,24 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     return;
   }
 
-  //  check if user exists (GET request)
+  //   user exists 
   const res = await UserService.CheckUserByEmail(signupData.email);
   console.log("response",res)
   if (!res.success) {
     if (res.data.exists) {
-      toast.error(res.data.message); // e.g. "User already exists"
+      toast.error(res.data.message);
+     dispatch(setLoading(false))
+      return 
     } else {
       toast.success("Email available, please verify OTP");
-      dispatch(setSignup(signupData)); // store temp signup data
-      // 👉 navigate to OTP screen now
+      dispatch(setSignup(signupData)); // temp signup data
+     
+     navigateTo('/verify')
     }
   } else {
     toast.error(res.message); // general error
   }
 
-  // 🚧 Step 2 (later after OTP verification): 
-  // Call UserService.SignupUser(signupData) here
-  // once OTP is confirmed in Redux flow
-  // const postRes = await UserService.SignupUser(signupData);
-  // if(postRes.success) toast.success(postRes.data.message);
 
   dispatch(setLoading(false));
 };
