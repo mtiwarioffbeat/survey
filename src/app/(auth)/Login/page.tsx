@@ -8,7 +8,7 @@ const page = () => {
         <div className="w-full max-w-md bg-white rounded-2xl shadow p-8 my-13 mx-10 pb-20 pt-10">
            <p className="mb-0">Welcome Back!</p>
               <h2 className="text-2xl font-bold  text-gray-800 mb-4">Login to your account</h2>
-          <form className="space-y-2">
+          <form className="space-y-2" >
             <div>
               <label className="block text-sm font-medium text-gray-700">Email</label>
               <input
