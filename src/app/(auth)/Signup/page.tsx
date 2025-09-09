@@ -11,6 +11,7 @@ import z from 'zod'
 import Spinner from '@/components/auth/Spinner';
 import { toast } from 'react-toastify';
 import { useNavigation } from '@/hooks/useNavigation'; 
+
 const page = () => {
   const dispatch = useAppDispatch();
   const [signupData, setSignupData] = useState<Auth['signup']>({
@@ -19,7 +20,9 @@ const page = () => {
   })
   const {signupErrors, loading } = useAppSelector((store) => store.auth)
 
-  const {navigateTo} = useNavigation()
+  //  used to navigate btw pages 
+  const {router} = useNavigation()
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSignupErrors({ name: '', email: '' }))
@@ -59,7 +62,7 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   user exists 
   const res = await UserService.CheckUserByEmail(signupData.email);
   console.log("response",res)
-  if (!res.success) {
+  if (res.success) {
     if (res.data.exists) {
       toast.error(res.data.message);
      dispatch(setLoading(false))
@@ -68,7 +71,7 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       toast.success("Email available, please verify OTP");
       dispatch(setSignup(signupData)); // temp signup data
      
-     navigateTo('/verify')
+    router.push('/verify')
     }
   } else {
     toast.error(res.message); // general error
