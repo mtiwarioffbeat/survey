@@ -110,8 +110,6 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             />
             {signupErrors?.email && <p className="text-red-500">{signupErrors.email}</p>}
           </div>
-
-
           <button
             disabled={loading}
             className="w-full cursor-pointer bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
