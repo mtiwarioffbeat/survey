@@ -26,52 +26,6 @@ const page = () => {
   }
 
 
-  // const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   dispatch(setLoading(true));
-  //   dispatch(setError(null));
-  //   dispatch(setSignupErrors({ name: "", email: "" }));
-
-  //   // frontend validation with Zod
-  //   const zodErrors: Auth["zodErrors"] = { name: "", email: "" };
-  //   const UserSchema = z.object({
-  //     name: z.string().min(3, "Name must be atleast 3 characters"),
-  //     email: z.string().email("Invalid email format"),
-  //   });
-
-  //   const result = UserSchema.safeParse(signupData);
-  //   if (!result.success) {
-  //     const errorObj = result.error.format();
-  //     for (let key in errorObj) {
-  //       const typedKey = key as keyof Auth["zodErrors"];
-  //       if (errorObj[typedKey]?._errors?.length) {
-  //         zodErrors[typedKey] = errorObj[typedKey]._errors[0];
-  //       }
-  //     }
-  //     dispatch(setSignupErrors(zodErrors));
-  //     dispatch(setLoading(false));
-  //     return;
-  //   }
-
-  //   try {
-  //     const res = await UserService.SignupUser(signupData);
-
-  //     //success from backend
-  //     toast.success(res.data.message || "Signup successful");
-  //     dispatch(setSignup(signupData));
-  //     dispatch(setSuccess(true));
-  //   } catch (error: any) {
-  //     //error from backend
-  //     if (error.response?.data?.error) {
-  //       toast.error(error.response.data.error);
-  //     } else {
-  //       toast.error("Something went wrong, please try again");
-  //     }
-  //   } finally {
-  //     dispatch(setLoading(false));
-  //   }
-  // };
-
 const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   dispatch(setLoading(true));
