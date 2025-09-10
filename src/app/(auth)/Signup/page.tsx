@@ -11,6 +11,7 @@ import z from 'zod'
 import Spinner from '@/components/auth/Spinner';
 import { toast } from 'react-toastify';
 import { useNavigation } from '@/hooks/useNavigation'; 
+import  main  from '@/services/db/nodemailer';
 
 const page = () => {
   const dispatch = useAppDispatch();
@@ -23,7 +24,7 @@ const page = () => {
   //  used to navigate btw pages 
   const {router} = useNavigation()
 
-
+  // change value function
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSignupErrors({ name: '', email: '' }))
     const { name, value } = e.target;
@@ -31,7 +32,7 @@ const page = () => {
 
   }
 
-
+// get email exist and form validation 
 const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   dispatch(setLoading(true));
@@ -60,7 +61,7 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   }
 
   //   user exists 
-  const res = await UserService.CheckUserByEmail(signupData.email);
+  const res = await UserService.SignupUser(signupData);
   console.log("response",res)
   if (res.success) {
     if (res.data.exists) {
@@ -68,9 +69,8 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
      dispatch(setLoading(false))
       return 
     } else {
-      toast.success("Email available, please verify OTP");
+      toast.success("please verify OTP");
       dispatch(setSignup(signupData)); // temp signup data
-     
     router.push('/verify')
     }
   } else {
