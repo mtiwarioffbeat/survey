@@ -24,15 +24,14 @@ const page = () => {
   //  used to navigate btw pages 
   const {router} = useNavigation()
 
-  // change value function
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(setSignupErrors({ name: '', email: '' }))
     const { name, value } = e.target;
     setSignupData((prev) => ({ ...prev, [name]: value }))
 
   }
-
-// get email exist and form validation 
+ 
 const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   dispatch(setLoading(true));

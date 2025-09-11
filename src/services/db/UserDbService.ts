@@ -1,6 +1,7 @@
 import pool from "@/lib/db";
 import { TOTP } from "totp-generator";
 import base32 from "hi-base32";
+
 export class UserDbService {
   public static async findUserByEmail(email: string) {
     const client = await pool.connect();
@@ -38,8 +39,8 @@ export class UserDbService {
 
 
 
-const OTP_WINDOW = 180; // 3 minutes
 
+const OTP_WINDOW = 5; // 3 minutes
 export class OtpService {
   
   //Generate a 4-digit OTP for a given email

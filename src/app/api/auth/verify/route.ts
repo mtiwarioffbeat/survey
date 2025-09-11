@@ -1,53 +1,41 @@
 import { NextResponse } from "next/server";
 import { TOTP } from "totp-generator";
+import base32 from "hi-base32"; // Required for base32 encoding
+import { OtpService } from "@/services/db/UserDbService";
+import Mailer from "@/services/db/nodemailer";
 
-const OTP_WINDOW = 180; // 3 minutes
 
-// Generate OTP
+
+
+// POST: Generate or Verify OTP
 export async function POST(req: Request) {
-  const { email } = await req.json();
+  const { email, otp } = await req.json();
 
   if (!email) {
     return NextResponse.json({ error: "Email is required" }, { status: 400 });
   }
 
-  // Use email as secret (⚠️ better to hash/encode in production)
-  const secret = email;
+  // If OTP is provided, verify it
+  if (otp) {
+    const isValid = await OtpService.verifyOtp(email, otp);
 
-  // Generate OTP valid for 3 minutes
-  const { otp } = await TOTP.generate(secret, {
-    digits: 6,
-    period: OTP_WINDOW,
-  });
-
-  console.log(`OTP for ${email} = ${otp}`);
-
-  // TODO: send via Nodemailer/SendGrid/etc.
-  return NextResponse.json({ message: "OTP sent successfully" });
-}
-
-// Verify OTP
-export async function PUT(req: Request) {
-  const { email, otp } = await req.json();
-
-  if (!email || !otp) {
-    return NextResponse.json({ error: "Email and OTP required" }, { status: 400 });
+    if (isValid) {
+      return NextResponse.json({ success: true, message: "OTP verified" });
+    } else {
+      return NextResponse.json(
+        { success: false, error:"Invalid or expired OTP" },
+        { status: 401 }
+      );
+    }
   }
 
-  const secret = email;
+  // generate a new OTP
+  const generatedOtp = await OtpService.generateOtp(email);
+   if(generatedOtp){
+        const emailSent = Mailer(email,generatedOtp)
+      }
+  console.log(`OTP for ${email} = ${generatedOtp}`);
 
-  // Regenerate expected OTP for the same period
-  const { otp: expectedOtp } = await TOTP.generate(secret, {
-    digits: 6,
-    period: OTP_WINDOW,
-  });
-
-  if (otp === expectedOtp) {
-    return NextResponse.json({ success: true, message: "OTP verified" });
-  }
-
-  return NextResponse.json(
-    { success: false, message: "Invalid or expired OTP" },
-    { status: 401 }
-  );
+  
+  return NextResponse.json({success:200 , message: "OTP sent successfully" });
 }

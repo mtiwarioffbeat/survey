@@ -35,6 +35,48 @@ export class UserService {
     }
   }
 
+  // verify POST
+  public static async OtpVerify(payload:Auth['verify']){
+    const formData = {
+      email:payload.email,
+      otp:payload.otp
+    }
+    try{
+         const response = await axios.post('/api/auth/verify',formData)
+         console.log("response present in userService",response)
+         return response.data
+    } catch(err:any){
+      return {
+        success:false,
+        message:err.response?.data?.error ||"verification faild"
+      }
+    }
+  }
+
+  public static async ResendOtp(payload: string | undefined){
+  if (!payload) {
+    return {
+      success: false,
+      message: "Email address is missing."
+    };
+  }
+
+  const formData = {
+    email: payload,
+  };
+  try {
+    const response = await axios.post('/api/auth/verify', formData);
+    console.log("response present in userService", response.data);
+    return response.data;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: err.response?.data?.error || "OTP resend failed, Please try again later"
+    };
+  }
+}
+
+
   // Check if user exists by email (GET)
   public static async CheckUserByEmail(email: string) {
   try {
