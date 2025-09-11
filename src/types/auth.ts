@@ -15,5 +15,15 @@ export interface Auth{
     name: string;
     email: string;
     },  
+    verify:{
+        email:string | undefined,
+        otp:string | undefined
+    }
+
 }
+
+export enum ResendOTP{
+    ResendOtp="ResendOtp",
+    SubmitOtp="SubmitOtp"
+} 
 
