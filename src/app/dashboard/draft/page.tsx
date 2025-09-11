@@ -1,7 +1,8 @@
 import SearchBox from "@/components/dashboard/SearchBox";
-import { IoAddCircle } from "react-icons/io5";
+
 import { MdNotificationAdd } from "react-icons/md";
 import Link from "next/link";
+import SurveyList from "@/components/dashboard/SurveyList";
 export default function DraftPage() {
   const isMenu = true;
   return (
@@ -17,16 +18,10 @@ export default function DraftPage() {
               <div className="flex w-full  flex-row justify-between my-5">
                 <SearchBox />
                 <div>
-                  <div className="flex bg-blue-600 px-1 rounded-4xl text-white">
-                    <button className="text-sm">Create new Survey </button>
-                    <IoAddCircle className="text-2xl mt-1" />
+                    <MdNotificationAdd className="text-2xl " />
                   </div>
-                   <MdNotificationAdd className="text-2xl " />
-                  
-                </div>
-
               </div>
-
+              <SurveyList />
             </div>
           </div>
         </div>

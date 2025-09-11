@@ -24,10 +24,9 @@ export default function Aside({ isMenu, setIsMenu }: { isMenu: boolean; setIsMen
           <IoMenu className="text-2xl" />
         </button>
       )}
-
       {/* Sidebar */}
       {isMenu && (
-        <div className="w-60 bg-white shadow h-screen flex flex-col fixed top-0 left-0 z-40">
+        <div className="w-60 bg-white shadow h-screen  flex flex-col fixed top-0 left-0 z-40">
           <div className="py-6 px-5 border-b flex justify-between items-center">
             {/* Profile Section */}
             <div className="flex items-center gap-3">
@@ -47,27 +46,27 @@ export default function Aside({ isMenu, setIsMenu }: { isMenu: boolean; setIsMen
           </div>
 
           {/* Sidebar Menu */}
-          <div className="py-6 px-5 flex-1 space-y-4">
-            <div className={`flex items-center gap-3 p-2  ${pathname === "/dashboard" ? "bg-gray-300" : "hover:bg-gray-300"} `} >
+          <div className="py-6 px-5  flex-1 space-y-4">
+            <div className={`flex items-center gap-3 p-2 cursor-pointer  ${pathname === "/dashboard" ? "bg-gray-300" : "hover:bg-gray-300"} `} >
               <MdDashboard className="text-xl" />
               <Link href="/dashboard" className="text-sm font-bold">
                 Dashboard
               </Link>
             </div>
-            <div className={`flex items-center gap-3 p-2  ${pathname === "/dashboard/draft" ? "bg-gray-300" : "hover:bg-gray-300 p-2"} `}>
+            <div className={`flex items-center gap-3 p-2 cursor-pointer  ${pathname === "/dashboard/draft" ? "bg-gray-300" : "hover:bg-gray-300 p-2"} `}>
               <MdDrafts className="text-xl" />
               <Link href="/dashboard/draft" className="font-bold text-sm">
                 Drafts
               </Link>
             </div>
-          </div>
 
-          {/* Logout Button */}
-          <div className="border-t">
-            <button className="w-full font-bold cursor-pointer flex items-center gap-2 text-sm text-gray-700 px-4 py-3">
-              <IoIosLogOut className="text-lg" />
-              Logout
-            </button>
+            {/* Logout Button */}
+            <div className="border-t mt-90 ">
+              <button className="w-full font-bold cursor-pointer flex items-center gap-2 text-sm text-gray-700 px-4 py-3">
+                <IoIosLogOut className="text-lg" />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       )}

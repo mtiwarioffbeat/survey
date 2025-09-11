@@ -1,24 +1,11 @@
 "use client";
-
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Countdown } from "@/utils/Auth/Countdown";
-
+import RemainingTime from "@/components/auth/RemainingTime";
 export default function Otppage() {
-  const [timeLeft, setTimeLeft] = useState(60);
-
-  useEffect(() => {
-    const timer = new Countdown(
-      60,
-      (time) => setTimeLeft(time), // onTick
-      () => console.log("Time over!") // onComplete
-    );
-    timer.start();
-    return () => timer.stop(); // cleanup when component unmounts
-  }, []);
-
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  const [timeLeft, setTimeLeft] = useState(60);
 
   // ⏳ use countdown hook
   const handleChange = (index: number, value: string) => {
@@ -28,7 +15,6 @@ export default function Otppage() {
     setOtp(newOtp);
     if (value && index < 3) inputsRef.current[index + 1]?.focus();
   };
-
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputsRef.current[index - 1]?.focus();
@@ -38,7 +24,7 @@ export default function Otppage() {
     <div className="w-full flex flex-col items-center justify-center">
       <div className="w-90 max-w-md bg-white rounded-2xl shadow p-8 my-13 mx-10">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">OTP Verification</h1>
-        <p className="text-sm">
+        <p className="text-sm mb-5">
           Please enter the OTP sent to your registered email to complete your verification
         </p>
         <div className="flex flex-col items-center justify-center p-4 bg-gray-50">
@@ -61,18 +47,23 @@ export default function Otppage() {
           </div>
         </div>
         <div className="flex justify-between mt-4">
-          <div className="flex flex-col items-center justify-center">
-            <p className="text-xs">
-              Remaining Time:{" "}
-              <span className="text-blue-600">
-                {`00:${timeLeft < 10 ? `0 ${timeLeft}` : timeLeft}`}
-              </span>
-            </p>
+          <RemainingTime timeLeft={timeLeft} setTimeLeft={setTimeLeft} />
+          <div className="flex">
+
+
+          <p className="text-xs mr-2" >Didn’t get the code?</p>
+          <Link
+            href="#"
+            className={`${timeLeft === 0
+                ? "text-blue-600 cursor-pointer text-xs"
+                : "text-gray-400 cursor-not-allowed pointer-events-none text-xs"
+              }`}
+          >
+            Resend
+          </Link>
           </div>
-          <p className="text-xs">
-            Didn’t get the code?
-            <Link href="#" className="text-blue-600">Resend</Link>
-          </p>
+
+
         </div>
         <button type="submit"
           className="mt-4 w-full bg-blue-600 cursor-pointer  text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">

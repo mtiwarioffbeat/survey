@@ -51,6 +51,6 @@ export class Countdown {
   formatTime() {
     const mins = Math.floor(this.timeLeft / 60);
     const secs = this.timeLeft % 60;
-    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
-  }
+    return `${mins}:${secs < 10 ? "0" :""}${secs}`;
+    }
 }
