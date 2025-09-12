@@ -31,7 +31,6 @@ export class UserService {
       return response.data
     } catch (err: any) {
       return {
-        success: false,
         message: err.response?.data?.error || "Login failed",
       };
     }

@@ -1,7 +1,8 @@
 "use client"
+import Spinner from '@/components/auth/Spinner'
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxhooks'
 import { useNavigation } from '@/hooks/useNavigation'
-import { setLoading, setLoginErrors } from '@/redux/AuthSlice/AuthSlice'
+import { setLoading, setLogin, setLoginErrors } from '@/redux/AuthSlice/AuthSlice'
 import { UserService } from '@/services/api/UserService'
 import { Auth } from '@/types/auth'
 import Link from 'next/link'
@@ -23,58 +24,59 @@ const page = () => {
   }
   console.log(loginData)
   
-  const handleSubmit = async(e:React.FormEvent<HTMLFormElement>)=>{
-    e.preventDefault()
-      dispatch(setLoading(true));
-      dispatch(setLoginErrors({email:""}))
+ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  dispatch(setLoading(true));
+  dispatch(setLoginErrors({ email: "" }));
+  dispatch(setLogin(loginData));
 
-      //frontend validation
-      const zodErrors: Auth["login"] = {email:''}
-      const LoginSchema = z.object({
-        email:z.string().email("Invalid email format")
-      })
+  // --- Zod validation ---
+  const LoginSchema = z.object({
+    email: z.string().email("Invalid email format"),
+  });
 
-      const result = LoginSchema.safeParse(loginData)
-        if (!result.success) {
-          const errorObj = result.error.format();
-          for (let key in errorObj) {
-            const typedKey = key as keyof Auth["login"];
-            if (errorObj[typedKey]?._errors?.length) {
-              zodErrors[typedKey] = errorObj[typedKey]._errors[0];
-            }
-          }
-          dispatch(setLoginErrors(zodErrors));
-          dispatch(setLoading(false));
-          return;
-        }
-      
-    try{
-      // type check to ensure email is their
-      if(!login?.email){
-        toast.error("User email is not available")
-        dispatch(setLoading(false))
-        return 
+  const result = LoginSchema.safeParse(loginData);
+
+  if (!result.success) {
+    const zodErrors: Auth["login"] = { email: "" };
+    const errorObj = result.error.format();
+
+    for (let key in errorObj) {
+      const typedKey = key as keyof Auth["login"];
+      if (errorObj[typedKey]?._errors?.length) {
+        zodErrors[typedKey] = errorObj[typedKey]._errors[0];
       }
-
-      const payload = {
-        email:login.email
-      }
-
-      console.log('')
-
-      let res = await UserService.LoginUser(payload)
-      if(res && res.success){
-        toast.success(res.message)
-      } else if(res) {
-        toast.error(res.message || "An unknown error occured")
-      }
-
-    } catch(error){
-     toast.error("An unexpected error occurred.")
-    } finally {
-      dispatch(setLoading(false))
     }
+
+    dispatch(setLoginErrors(zodErrors));
+    dispatch(setLoading(false));
+    return;
   }
+
+  try {
+    const payload = {
+      email: loginData.email,
+    };
+
+    const res = await UserService.LoginUser(payload);
+    console.log("login response", res);
+
+    if (!res?.success) {
+      toast.error(res?.message || res?.error || "An unknown error occurred");
+      return;
+    }
+
+    toast.success(res.message);
+    await router.push("/verify");
+
+  } catch (error) {
+    console.error("Login error:", error);
+    toast.error("An unexpected error occurred.");
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
   return (
     <div className='w-full flex flex-col items-center justify-center'>
         <div className="w-full max-w-md bg-white rounded-2xl shadow p-8 my-13 mx-10 pb-20 pt-10">
@@ -91,13 +93,14 @@ const page = () => {
                 value={loginData.email}
                 onChange={(e)=>handleChange(e)}
               />
+                {loginErrors?.email && <p className="text-red-500">{loginErrors.email}</p>}
             </div>
             <button
               type="submit"
               className=" mt-2 w-full bg-blue-600 text-white cursor-pointer py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
-              onClick={()=>router.push("/verify")}
+           
             >
-              Login
+              {loading ?(<Spinner/>):('Login')}
             </button>
             <p className="text-center text-sm text-gray-600 mt-4">
            Don't have an Account?

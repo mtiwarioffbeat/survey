@@ -13,7 +13,7 @@ import Spinner from "@/components/auth/Spinner";
 
 export default function Otppage() {
   const [timeLeft, setTimeLeft] = useState(60);
-  const { signup, loading } = useAppSelector((store) => store.auth)
+  const { signup, loading,login } = useAppSelector((store) => store.auth)
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -52,47 +52,41 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   dispatch(setLoading(true));
 
-  const submitter = e.nativeEvent.submitter ;
+  const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+  const userEmail = signup?.email || login?.email;
 
   try {
     let res;
+
     if (submitter.name === "submitOtp") {
       const otpString = otp.join('');
+
       if (!otpString) {
         toast.error("Please enter the OTP.");
-        dispatch(setLoading(false));
         return;
       }
 
-      // Perform a type check to ensure `signup` and `email` are available.
-      if (!signup?.email) {
+      if (!userEmail) {
         toast.error("User email is not available.");
-        dispatch(setLoading(false));
         return;
       }
-      
-      const payload = {
-        email: signup.email, // `email` is now guaranteed to be a string
-        otp: otpString
-      };
-      res = await UserService.OtpVerify(payload);
 
-    } else if (submitter.name === "resendOtp") {
-      // Perform a type check before calling the service.
-      if (!signup?.email) {
-        toast.error("User email is not available for resend.");
-        dispatch(setLoading(false));
-        return;
-      }
-      
-      res = await UserService.ResendOtp(signup.email); // `email` is now guaranteed to be a string
-    } else {
-      dispatch(setLoading(false));
-      return;
+      const payload = { email: userEmail, otp: otpString };
+      res = await UserService.OtpVerify(payload);
     }
 
-    if (res && res.success) {
+    if (submitter.name === "resendOtp") {
+      if (!userEmail) {
+        toast.error("User email is not available for resend.");
+        return;
+      }
+
+      res = await UserService.ResendOtp(userEmail);
+    }
+
+    if (res?.success) {
       toast.success(res.message);
+      router.push('/dashboard')
     } else if (res) {
       toast.error(res.message || res.error || "An unknown error occurred.");
     }
@@ -101,6 +95,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     toast.error("An unexpected error occurred.");
   } finally {
     dispatch(setLoading(false));
+    router.push('/dashboard')
   }
 };
 
