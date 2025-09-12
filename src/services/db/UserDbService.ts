@@ -40,7 +40,7 @@ export class UserDbService {
 
 
 
-const OTP_WINDOW = 5; // 3 minutes
+const OTP_WINDOW = 180; // 3 minutes
 export class OtpService {
   
   //Generate a 4-digit OTP for a given email
@@ -63,13 +63,14 @@ export class OtpService {
   // Verify the provided OTP against the expected one
  
   public static async verifyOtp(email: string, otp: string): Promise<boolean> {
+  console.log("inside verify otp", email, otp)
     const secret = base32.encode(email).replace(/=+$/, "");
-
+     console.log(secret)
     const { otp: expectedOtp } = await TOTP.generate(secret, {
       digits: 4,
       period: OTP_WINDOW,
     });
-
-    return otp === expectedOtp;
+    console.log("expectedOtp",expectedOtp)
+    return otp == expectedOtp;
   }
 }
