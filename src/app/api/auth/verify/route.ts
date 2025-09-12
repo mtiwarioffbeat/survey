@@ -7,7 +7,7 @@ import Mailer from "@/services/db/nodemailer";
 
 
 
-// POST: Generate or Verify OTP
+// it generater or verify otp
 export async function POST(req: Request) {
   const { email, otp } = await req.json();
 
@@ -15,10 +15,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Email is required" }, { status: 400 });
   }
 
-  // If OTP is provided, verify it
+  // if otp is provided, verifing it
   if (otp) {
+    console.log(otp)
     const isValid = await OtpService.verifyOtp(email, otp);
-
+    console.log("inside verify route",isValid)
     if (isValid) {
       return NextResponse.json({ success: true, message: "OTP verified" });
     } else {
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
     }
   }
 
-  // generate a new OTP
+  // generateging a new otpp
   const generatedOtp = await OtpService.generateOtp(email);
    if(generatedOtp){
         const emailSent = Mailer(email,generatedOtp)

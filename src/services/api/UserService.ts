@@ -20,16 +20,17 @@ export class UserService {
   }
 
   // Login POST
-  public static async LoginUser(payload: any) {
+  public static async LoginUser(payload: Auth['login']) {
+     const formData = {
+      email:payload.email,
+    
+    }
     try {
-      const response = await axios.post("/api/auth/login", {
-        email: payload.email,
-        password: payload.password,
-      });
-      return { success: true, data: response.data };
+      const response = await axios.post("/api/auth/login", formData);
+       console.log("response present in userService",response)
+      return response.data
     } catch (err: any) {
       return {
-        success: false,
         message: err.response?.data?.error || "Login failed",
       };
     }

@@ -36,6 +36,9 @@ const authSlice = createSlice({
     setSignup:(state,action: PayloadAction<Auth["signup"]>)=>{
         state.signup = action.payload
     },
+    setLogin:(state,action) =>{
+      state.login = action.payload
+    },
     setSignupErrors:(state,action:PayloadAction<Auth['signup']>)=>{
       state.signupErrors = action.payload
     },
@@ -56,5 +59,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setText,setSignup,setSignupErrors,setLoginErrors,setLoading,setError,setSuccess } = authSlice.actions;
+export const { setText,setSignup,setSignupErrors,setLoginErrors,setLoading,setError,setSuccess,setLogin } = authSlice.actions;
 export default authSlice.reducer;
