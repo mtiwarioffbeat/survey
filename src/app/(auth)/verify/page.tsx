@@ -73,6 +73,13 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
       const payload = { email: userEmail, otp: otpString };
       res = await UserService.OtpVerify(payload);
+      
+    if (res?.success) {
+      toast.success(res.message);
+      router.push('/dashboard')
+    } else if (res) {
+      toast.error(res.message || res.error || "An unknown error occurred.");
+    }
     }
 
     if (submitter.name === "resendOtp") {
@@ -82,20 +89,21 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       }
 
       res = await UserService.ResendOtp(userEmail);
-    }
-
+      
     if (res?.success) {
       toast.success(res.message);
-      router.push('/dashboard')
+    
     } else if (res) {
       toast.error(res.message || res.error || "An unknown error occurred.");
     }
+    }
+
 
   } catch (error) {
     toast.error("An unexpected error occurred.");
   } finally {
     dispatch(setLoading(false));
-    router.push('/dashboard')
+    // router.push('/dashboard')
   }
 };
 
