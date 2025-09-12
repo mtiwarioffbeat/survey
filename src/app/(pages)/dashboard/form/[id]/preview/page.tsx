@@ -17,7 +17,7 @@ export default function PreviewPage() {
           <FormHeading />
 
           {/* Question Builder */}
-          <Question setQuestions={setQuestions} />
+          {/* <Question setQuestions={setQuestions} /> */}
 
           {/* Preview */}
           <Preview questions={questions} />

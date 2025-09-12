@@ -4,7 +4,7 @@ import { ImParagraphLeft } from "react-icons/im";
 import { IoMdRadioButtonOn, IoMdArrowDropdown } from "react-icons/io";
 import { GrCheckboxSelected } from "react-icons/gr";
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
-import { X } from "lucide-react";
+import { RxCross1 } from "react-icons/rx";
 
 const options = [
   { type: "Paragraph", icon: <ImParagraphLeft /> },
@@ -24,6 +24,7 @@ export default function Question({ setQuestions }: QuestionProps) {
   const [hasOther, setHasOther] = useState(false);
   const [open, setOpen] = useState(false);
 
+  console.log('choices',choices)
   const addOption = () => {
     setChoices((prev) => [...prev, ""]);
   };
@@ -35,7 +36,7 @@ export default function Question({ setQuestions }: QuestionProps) {
   };
 
   const removeOption = (i: number) => {
-    setChoices((prev) => prev.filter((_, idx) => idx !== i));
+    setChoices((prev) => prev.filter((_,idx) => idx !== i));
   };
 
   const addQuestion = () => {
@@ -121,7 +122,7 @@ export default function Question({ setQuestions }: QuestionProps) {
                   />
                   {choices.length > 1 && (
                     <button onClick={() => removeOption(i)} className="text-gray-500">
-                      <X size={16} />
+                      <RxCross1 size={16} />
                     </button>
                   )}
                 </div>
@@ -130,9 +131,9 @@ export default function Question({ setQuestions }: QuestionProps) {
                 Add Option
               </button>
               or
-              <button onClick={() => setHasOther(true)} disabled={hasOther} className="text-blue-600 px-2 py-1 text-xs">
+              {/* <button onClick={() => setHasOther(true)} disabled={hasOther} className="text-blue-600 px-2 py-1 text-xs cursor-pointer hover:underline">
                 Add Other
-              </button>
+              </button> */}
             </div>
           )}
         </div>
