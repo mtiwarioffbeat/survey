@@ -1,15 +1,18 @@
 "use client"
-import { useAppDispatch } from '@/hooks/reduxhooks'
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxhooks'
 import { useNavigation } from '@/hooks/useNavigation'
-import { setLoginErrors } from '@/redux/AuthSlice/AuthSlice'
+import { setLoading, setLoginErrors } from '@/redux/AuthSlice/AuthSlice'
+import { UserService } from '@/services/api/UserService'
 import { Auth } from '@/types/auth'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
+import z from 'zod'
 
 const page = () => {
   const {router} = useNavigation()
   const dispatch = useAppDispatch()
+  const {loading,loginErrors,login} = useAppSelector((store)=>store.auth)
   const [loginData,setLoginData] = useState<Auth['login']>({
     email:""
   })
@@ -22,10 +25,54 @@ const page = () => {
   
   const handleSubmit = async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
+      dispatch(setLoading(true));
+      dispatch(setLoginErrors({email:""}))
+
+      //frontend validation
+      const zodErrors: Auth["login"] = {email:''}
+      const LoginSchema = z.object({
+        email:z.string().email("Invalid email format")
+      })
+
+      const result = LoginSchema.safeParse(loginData)
+        if (!result.success) {
+          const errorObj = result.error.format();
+          for (let key in errorObj) {
+            const typedKey = key as keyof Auth["login"];
+            if (errorObj[typedKey]?._errors?.length) {
+              zodErrors[typedKey] = errorObj[typedKey]._errors[0];
+            }
+          }
+          dispatch(setLoginErrors(zodErrors));
+          dispatch(setLoading(false));
+          return;
+        }
+      
     try{
+      // type check to ensure email is their
+      if(!login?.email){
+        toast.error("User email is not available")
+        dispatch(setLoading(false))
+        return 
+      }
+
+      const payload = {
+        email:login.email
+      }
+
+      console.log('')
+
+      let res = await UserService.LoginUser(payload)
+      if(res && res.success){
+        toast.success(res.message)
+      } else if(res) {
+        toast.error(res.message || "An unknown error occured")
+      }
 
     } catch(error){
-      toast.error("Unexpected error occured")
+     toast.error("An unexpected error occurred.")
+    } finally {
+      dispatch(setLoading(false))
     }
   }
   return (

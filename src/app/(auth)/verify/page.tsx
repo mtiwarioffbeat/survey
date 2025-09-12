@@ -30,7 +30,7 @@ export default function Otppage() {
   const { router } = useNavigation()
   const dispatch = useAppDispatch();
   
-  // use countdown hook
+
   const handleChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return;
     console.log(value)
