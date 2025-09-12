@@ -4,9 +4,6 @@ import base32 from "hi-base32"; // Required for base32 encoding
 import { OtpService } from "@/services/db/UserDbService";
 import Mailer from "@/services/db/nodemailer";
 
-
-
-
 // it generater or verify otp
 export async function POST(req: Request) {
   const { email, otp } = await req.json();
