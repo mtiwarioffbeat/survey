@@ -1,6 +1,7 @@
 import pool from "@/lib/db";
 import { TOTP } from "totp-generator";
 import base32 from "hi-base32";
+import { Auth } from "@/types/auth";
 
 export class UserDbService {
   public static async findUserByEmail(email: string) {
@@ -10,10 +11,11 @@ export class UserDbService {
         "SELECT id, name, email FROM users WHERE email = $1 LIMIT 1",
         [email]
       );
-
-      if ((result.rowCount ?? 0)) {
-  return result.rows[0]; // user exists
-}
+console.log("res",result);
+      if (result.rowCount) {
+        console.log("finduserbyemail", result.rows[0])
+        return result.rows[0]; // user exists
+      }
       return null; // user does not exist
     } finally {
       client.release();
@@ -38,11 +40,9 @@ export class UserDbService {
 }
 
 
-
-
 const OTP_WINDOW = 180;
 export class OtpService {
-  
+
   public static async generateOtp(email: string): Promise<string> {
     // Encode email into base32 to make it a valid secret
     const secret = base32.encode(email).replace(/=+$/, ""); // strip padding
@@ -52,23 +52,43 @@ export class OtpService {
       period: OTP_WINDOW,
     });
 
-    console.log("OTP+++>",otp)
+    console.log("OTP+++>", otp)
 
     return otp;
   }
 
-  
+
   // Verify the provided OTP against the expected one
- 
+
   public static async verifyOtp(email: string, otp: string): Promise<boolean> {
-  console.log("inside verify otp", email, otp)
+    console.log("inside verify otp", email, otp)
     const secret = base32.encode(email).replace(/=+$/, "");
-     console.log(secret)
+    console.log(secret)
     const { otp: expectedOtp } = await TOTP.generate(secret, {
       digits: 4,
       period: OTP_WINDOW,
     });
-    console.log("expectedOtp",expectedOtp)
+    console.log("expectedOtp", expectedOtp)
     return otp == expectedOtp;
+  }
+}
+
+
+export class TokenService{
+  public static async CreateUserToken(session:Auth['userToken']){
+    const client = await pool.connect()
+
+    const result = await client.query(`Insert INTO user_tokens(token,user_id,is_used)
+      VALUES ($1,$2,$3) 
+      RETURNING *
+      `,
+      [session.token,session.user_id,session.is_used])
+
+
+      if(result.rowCount){
+        return result.rows[0]
+      }
+
+      return null
   }
 }

@@ -18,6 +18,12 @@ export interface Auth{
     verify:{
         email:string | undefined,
         otp:string | undefined
+    },
+    userToken:{
+        token:string,
+        is_used:boolean,
+        user_id:number
+        // used_at:number 
     }
 
 }
