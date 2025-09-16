@@ -4,9 +4,12 @@ import { FaFileAlt } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
 import { MdOutlineRemoveRedEye, MdPublishedWithChanges } from "react-icons/md";
 import Tooltip from "./Tooltip";
+import { usePathname } from "next/navigation";
 export default function DashboardNav() {
     const { menuOpen } = useAppSelector((store) => store.dashboard)
     const dispatch = useAppDispatch()
+    const pathName = usePathname()
+    console.log("pathName",pathName)
     return (
 
         <nav className=" border-gray-200  bg-white shadow w-full py-3">
@@ -28,7 +31,9 @@ export default function DashboardNav() {
                 </div>
 
                 {/*button features for survey page  */}
-                <div className="flex items-center justify-center gap-3">
+                {
+                    pathName !="/dashboard" &&
+                      <div className="flex items-center justify-center gap-3">
                     {/* view */}
                     <button className="flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
 
@@ -41,6 +46,8 @@ export default function DashboardNav() {
                     <button type="button" className="text-indigo-600 font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1  hover:bg-indigo-600 hover:text-white flex gap-2 cursor-pointer "> Publish</button>
                   
                 </div>
+                }
+              
             </div>
         </nav>
 

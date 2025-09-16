@@ -25,12 +25,12 @@ export default function Question({ index, data }: Props) {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
-  // 🔹 Update a question field (title, description, type, choices, etc.)
+  //update a question (title, des, type, choices et..)
   const updateQuestion = (updates: Partial<QuestionState>) => {
     dispatch(setUpdateQuestion({ index, data: updates }));
   };
 
-  // 🔹 Choices
+  // options
   const addOption = () => {
     const newChoices = [...(data.choices || []), `Option ${data.choices?.length! + 1}`];
     updateQuestion({ choices: newChoices });
@@ -52,7 +52,7 @@ export default function Question({ index, data }: Props) {
       <div className="rounded-lg items-center border-l-6 border-indigo-600 bg-white p-6 shadow">
         <div className="flex gap-4 justify-between">
           <div className="flex flex-col w-full">
-            {/* Question Title */}
+            {/* ques title */}
             <input
               type="text"
               placeholder="Question"
@@ -61,7 +61,7 @@ export default function Question({ index, data }: Props) {
               className="border-b outline-none pb-2 border-gray-300"
             />
 
-            {/* Conditional Description */}
+            {/* conditional description */}
             {data.description !== null ? (
               <div className="flex items-center gap-2">
                 <input
@@ -87,7 +87,7 @@ export default function Question({ index, data }: Props) {
               </button>
             )}
           </div>
-          {/* Question type dropdown */}
+          {/* question type dropdown */}
           <div className="relative">
             <button
               type="button"
@@ -120,7 +120,7 @@ export default function Question({ index, data }: Props) {
           </div>
         </div>
 
-        {/* Builder UI */}
+              {/* main ui based on question type chooosed */}
         <div className="mt-4 text-sm text-gray-600 space-y-2">
           {data.type === "Paragraph" && <p>Long-answer text</p>}
 
