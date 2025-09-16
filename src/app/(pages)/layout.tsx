@@ -1,5 +1,7 @@
 "use client"
-import Aside from "@/components/dashboard/Aside";
+import Aside from "@/components/Aside";
+import DashboardNav from "@/components/Navbar";
+import FormNav from "@/components/dashboard/form/SurveyNav";
 
 
 export default  function layout({ children }:{
@@ -8,10 +10,9 @@ export default  function layout({ children }:{
  
   return (
     
-    <div>
-    <Aside isMenu={false} setIsMenu={function (val: boolean): void {
-          throw new Error("Function not implemented.");
-        } }/>
+    <div className="h-screen bg-[#faf5ff] transition-all duration-300 ease-in-out">
+    <DashboardNav/>
+   
     {children}
     </div>
    

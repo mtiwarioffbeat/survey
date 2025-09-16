@@ -40,10 +40,8 @@ export class UserDbService {
 
 
 
-const OTP_WINDOW = 180; // 3 minutes
+const OTP_WINDOW = 180;
 export class OtpService {
-  
-  //Generate a 4-digit OTP for a given email
   
   public static async generateOtp(email: string): Promise<string> {
     // Encode email into base32 to make it a valid secret

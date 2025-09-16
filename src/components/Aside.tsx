@@ -9,24 +9,21 @@ import Link from "next/link";
 import { IoIosLogOut } from "react-icons/io";
 import { RiCloseFill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
+import { setMenuOpen } from "@/redux/DashboardSlice/DashboardSlice";
 
-
-export default function Aside({ isMenu, setIsMenu }: { isMenu: boolean; setIsMenu: (val: boolean) => void }) {
+export default function Aside() {
   const pathname = usePathname();
+  const {menuOpen} = useAppSelector((store)=>store.dashboard)
+  const dispatch = useAppDispatch()
   return (
     <>
+    
       {/* Toggle Button (when sidebar is closed) */}
-      {!isMenu && (
-        <button
-          onClick={() => setIsMenu(true)}
-          className="absolute top-4 left-4 z-50 p-2 bg-gray-200 rounded-lg shadow"
-        >
-          <IoMenu className="text-2xl" />
-        </button>
-      )}
+     
       {/* Sidebar */}
-      {isMenu && (
-        <div className="w-60 bg-white shadow h-screen  flex flex-col fixed top-0 left-0 z-40">
+      {menuOpen && (
+        <div className="w-60 bg-white shadow h-screen  flex flex-col fixed top-0 left-0 z-100 transition-all duration-300 ease-in-out">
           <div className="py-6 px-5 border-b flex justify-between items-center">
             {/* Profile Section */}
             <div className="flex items-center gap-3">
@@ -39,7 +36,7 @@ export default function Aside({ isMenu, setIsMenu }: { isMenu: boolean; setIsMen
             {/* Toggle Close */}
             <div>
               <RiCloseFill
-                onClick={() => setIsMenu(false)}
+                onClick={() => dispatch(setMenuOpen(false))}
                 className="text-3xl cursor-pointer"
               />
             </div>
@@ -53,9 +50,9 @@ export default function Aside({ isMenu, setIsMenu }: { isMenu: boolean; setIsMen
                 Dashboard
               </Link>
             </div>
-            <div className={`flex items-center gap-3 p-2 cursor-pointer  ${pathname === "/dashboard/draft" ? "bg-gray-300" : "hover:bg-gray-300 p-2"} `}>
+            <div className={`flex items-center gap-3 p-2 cursor-pointer  ${pathname === "/draft" ? "bg-gray-300" : "hover:bg-gray-300 p-2"} `}>
               <MdDrafts className="text-xl" />
-              <Link href="/dashboard/draft" className="font-bold text-sm">
+              <Link href="/draft" className="font-bold text-sm">
                 Drafts
               </Link>
             </div>

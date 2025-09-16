@@ -2,7 +2,6 @@
 
 import { NextResponse } from "next/server";
 import { OtpService, UserDbService } from "@/services/db/UserDbService";
-import main from "@/services/db/nodemailer";
 import Mailer from "@/services/db/nodemailer";
 
 export async function POST(req: Request) {
@@ -49,36 +48,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
-
-
-// export async function GET(req: Request) {
-//   try {
-//     const { searchParams } = new URL(req.url);
-//     const email = searchParams.get("email");
-
-//     if (!email) {
-//       return NextResponse.json(
-//         { error: "Email is required" },
-//         { status: 400 }
-//       );
-//     }
-
-//     const user = await UserDbService.findUserByEmail(email);
-
-//     if (user) {
-//       return NextResponse.json(
-//         { exists: true, message: "User already exists, try login" },
-//         { status: 400 }
-//       );
-//     }
-//     const res=  main();
-//     console.log("res", res )
-//     return NextResponse.json(
-//       { exists: false, message: "Email is available" },
-//       { status: 200 }
-//     );
-//   } catch (error: any) {
-//     console.error("GET signup check error:", error);
-//     return NextResponse.json({ error: error.message }, { status: 500 });
-//   }
-// }

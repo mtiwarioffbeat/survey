@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authSlice from '../redux/AuthSlice/AuthSlice'
 import dashboardSlice from '../redux/DashboardSlice/DashboardSlice'
+import surveySlice from '../redux/SurveySlice/SurveySlice'
 export const store = configureStore({
   reducer: {
     auth: authSlice,
-    dashboard:dashboardSlice
-   
+    dashboard:dashboardSlice,
+    survey:surveySlice
   },
 })
 

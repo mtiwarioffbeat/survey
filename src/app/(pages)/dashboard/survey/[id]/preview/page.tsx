@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import FormHeading from "@/components/dashboard/form/FormHeading";
-import FormNav from "@/components/dashboard/form/FormNav";
+import FormHeading from "@/components/dashboard/form/SurveyHeading";
+import FormNav from "@/components/dashboard/form/SurveyNav";
 import Question from "@/components/dashboard/form/Question";
 import Preview from "@/components/dashboard/form/Preview";
 
