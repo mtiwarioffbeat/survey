@@ -1,3 +1,4 @@
+
 "use client";
 import { useState } from "react";
 import { ImParagraphLeft } from "react-icons/im";
@@ -6,7 +7,7 @@ import { GrCheckboxSelected } from "react-icons/gr";
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import { useAppDispatch } from "@/hooks/reduxhooks";
-import { setUpdateQuestion, removeQuestion } from "@/redux/SurveySlice/SurveySlice";
+import { setUpdateQuestion } from "@/redux/SurveySlice/SurveySlice";
 import type QuestionState from "@/redux/SurveySlice/SurveySlice";
 
 const options = [
@@ -16,32 +17,42 @@ const options = [
   { type: "Drop-down", icon: <MdOutlineArrowDropDownCircle /> },
 ];
 
-type Props = {
-  index: number;
-  data: QuestionState;
+// extend choice type
+type Choice = {
+  text: string;
+  description: string | null;
 };
 
+type Props = {
+  index: number;
+  data: QuestionState & { choices?: Choice[] };
+};
 export default function Question({ index, data }: Props) {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
-  //update a question (title, des, type, choices et..)
+  // update a question (title, des, type, choices etc.)
   const updateQuestion = (updates: Partial<QuestionState>) => {
     dispatch(setUpdateQuestion({ index, data: updates }));
   };
 
-  // options
+  // add option
   const addOption = () => {
-    const newChoices = [...(data.choices || []), `Option ${data.choices?.length! + 1}`];
+    const newChoices = [
+      ...(data.choices || []),
+      { text: `Option ${data.choices?.length! + 1}`, description: null },
+    ];
     updateQuestion({ choices: newChoices });
   };
 
-  const updateOption = (i: number, value: string) => {
+  // update option text or description
+  const updateOption = (i: number, key: "text" | "description", value: string | null) => {
     const newChoices = [...(data.choices || [])];
-    newChoices[i] = value;
+    newChoices[i] = { ...newChoices[i], [key]: value };
     updateQuestion({ choices: newChoices });
   };
 
+  // remove option
   const removeOption = (i: number) => {
     const newChoices = (data.choices || []).filter((_, idx) => idx !== i);
     updateQuestion({ choices: newChoices });
@@ -107,7 +118,10 @@ export default function Question({ index, data }: Props) {
                   <div
                     key={opt.type}
                     onClick={() => {
-                      updateQuestion({ type: opt.type, choices: ["Option 1"] });
+                      updateQuestion({
+                        type: opt.type,
+                        choices: [{ text: "Option 1", description: null }],
+                      });
                       setOpen(false);
                     }}
                     className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer"
@@ -119,27 +133,54 @@ export default function Question({ index, data }: Props) {
             )}
           </div>
         </div>
-
-              {/* main ui based on question type chooosed */}
+        {/* main ui based on question type */}
         <div className="mt-4 text-sm text-gray-600 space-y-2">
           {data.type === "Paragraph" && <p>Long-answer text</p>}
 
           {["Multiple choice", "Checkboxes", "Drop-down"].includes(data.type) && (
-            <div className="space-y-2">
+            <div className="space-y-4">
               {(data.choices || []).map((opt, i) => (
-                <div key={i} className="flex gap-2 items-center">
-                  {data.type === "Multiple choice" && <input type="radio" disabled />}
-                  {data.type === "Checkboxes" && <input type="checkbox" disabled />}
-                  <input
-                    type="text"
-                    value={opt}
-                    onChange={(e) => updateOption(i, e.target.value)}
-                    placeholder={`Option ${i + 1}`}
-                    className="flex-1 border-b outline-none pb-1"
-                  />
-                  {data.choices && data.choices.length > 1 && (
-                    <button onClick={() => removeOption(i)} className="text-gray-500">
-                      <RxCross1 size={16} className="cursor-pointer"/>
+                <div key={i} className="flex flex-col gap-1">
+                  <div className="flex gap-2 items-center">
+                    {data.type === "Multiple choice" && <input type="radio" disabled />}
+                    {data.type === "Checkboxes" && <input type="checkbox" disabled />}
+                    <input
+                      type="text"
+                      value={opt.text}
+                      onChange={(e) => updateOption(i, "text", e.target.value)}
+                      placeholder={`Option ${i + 1}`}
+                      className="flex-1 border-b outline-none pb-1"
+                    />
+                    {data.choices && data.choices.length > 1 && (
+                      <button onClick={() => removeOption(i)} className="text-gray-500">
+                        <RxCross1 size={16} className="cursor-pointer" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* 🔹 option description with remove */}
+                  {opt.description !== null ? (
+                    <div className="flex items-center gap-3 ml-8 ">
+                      <input
+                        type="text"
+                        value={opt.description}
+                        onChange={(e) => updateOption(i, "description", e.target.value)}
+                        placeholder="Option description"
+                        className="flex-1 border-b outline-none text-sm text-gray-500 px-3"
+                      />
+                      <button
+                        onClick={() => updateOption(i, "description", null)}
+                        className="text-red-400 text-xs cursor-pointer"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => updateOption(i, "description", "")}
+                      className="text-blue-600 text-xs mt-1 self-start ml-8 cursor-pointer "
+                    >
+                      + Add description
                     </button>
                   )}
                 </div>
@@ -150,7 +191,6 @@ export default function Question({ index, data }: Props) {
               >
                 Add Option
               </button>
-              or
             </div>
           )}
         </div>
