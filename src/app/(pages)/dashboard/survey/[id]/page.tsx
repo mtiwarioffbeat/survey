@@ -21,7 +21,7 @@ export default function FormPage() {
     sortOrder: questions.length + 1,
   };
 
-  dispatch(setAddQuestion(newQuestion));
+  // dispatch(setAddQuestion(newQuestion));
 };
 
   return (
@@ -36,7 +36,7 @@ export default function FormPage() {
 
         <button
           onClick={handleAddQuestion}
-          className="text-white px-4 py-2 text-sm bg-blue-600 cursor-pointer rounded"
+          className="text-white px-4 py-2 text-sm bg-indigo-600 cursor-pointer rounded"
         >
           Add Question
         </button>

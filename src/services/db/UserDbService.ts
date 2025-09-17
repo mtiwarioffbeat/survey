@@ -74,21 +74,21 @@ export class OtpService {
 }
 
 
-export class TokenService{
-  public static async CreateUserToken(session:Auth['userToken']){
-    const client = await pool.connect()
+// export class TokenService{
+//   public static async CreateUserToken(session:Auth['userToken']){
+//     const client = await pool.connect()
 
-    const result = await client.query(`Insert INTO user_tokens(token,user_id,is_used)
-      VALUES ($1,$2,$3) 
-      RETURNING *
-      `,
-      [session.token,session.user_id,session.is_used])
+//     const result = await client.query(`Insert INTO user_tokens(token,user_id,is_used)
+//       VALUES ($1,$2,$3) 
+//       RETURNING *
+//       `,
+//       [session.token,session.user_id,session.is_used])
 
 
-      if(result.rowCount){
-        return result.rows[0]
-      }
+//       if(result.rowCount){
+//         return result.rows[0]
+//       }
 
-      return null
-  }
-}
+//       return null
+//   }
+// }

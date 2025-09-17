@@ -10,6 +10,10 @@ import Aside from '@/components/Aside';
 const Page = () => {
   const route = useRouter();
   const isMenu = true;
+
+  const handleSurveyCreation = async () =>{
+    //  const res = 
+  }
   return (
     <div className='w-full flex flex-col  md:w-[90%] mx-auto h-full ' >
        <Aside/>
@@ -25,10 +29,17 @@ const Page = () => {
                 <SearchBox />
 
                 <div className="flex">
-                  <div className="flex bg-blue-600  hover:bg-blue-700 transition-all duration-300 ease-in-out px-2 py-1 rounded-4xl text-white gap-2 group">
+                  <button className="flex bg-blue-600  hover:bg-blue-700 transition-all duration-300 ease-in-out px-2 py-1 rounded text-white gap-2 group cursor-pointer" onClick={handleSurveyCreation}>
+                   Create new Survey 
+                    <IoAddCircle className="text-2xl mt-1 group-hover:animate-bounce" />
+                  </button>
+
+                  {/* <div className="flex bg-blue-600  hover:bg-blue-700 transition-all duration-300 ease-in-out px-2 py-1 rounded-4xl text-white gap-2 group">
                     <button onClick={()=>route.push('dashboard/survey/1')} className="text-sm cursor-pointer">Create new Survey </button>
                     <IoAddCircle className="text-2xl mt-1 group-hover:animate-bounce" />
-                  </div>
+                  </div> */}
+
+
                   {/* <div>
                     <MdNotificationAdd className="text-2xl " />
                   </div> */}

@@ -2,11 +2,13 @@
 import React, { useEffect } from 'react'
 import { useAppSelector } from '@/hooks/reduxhooks'
 import { redirect } from 'next/navigation'
-const page = () => {
 
+import { useNavigation } from '@/hooks/useNavigation'
+const page = () => {
+  const {router} = useNavigation()
   const {text} = useAppSelector((state) => state.auth)
  useEffect(()=>{
-  redirect('/signup')
+  router.push('/signup')
  },[])
   return (
     <>

@@ -40,14 +40,14 @@ export async function POST(req: Request) {
         path: "/",
       });
 
-      const session: Auth['userToken'] = {
-        token: token,
-        is_used: true,
-        user_id: user.id
-      }
+      // const session: Auth['userToken'] = {
+      //   token: token,
+      //   is_used: true,
+      //   user_id: user.id
+      // }
 
-      const userSessioninDB = TokenService.CreateUserToken(session)
-      console.log(userSessioninDB, "token saved in backend")
+      // const userSessioninDB = TokenService.CreateUserToken(session)
+      // console.log(userSessioninDB, "token saved in backend")
 
       return NextResponse.json({ success: true, message: "OTP verified", token: token });
     } else {
