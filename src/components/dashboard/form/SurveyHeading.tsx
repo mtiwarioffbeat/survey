@@ -20,7 +20,7 @@ export default function SurveyHeading() {
 
   // Initialize description from Redux (only when loading survey)
   useEffect(() => {
-    if (descRef.current && survey.description && survey.description !== descRef.current.innerText) {
+    if (descRef.current && survey.description  !== descRef.current.innerText) {
       descRef.current.innerText = survey.description;
       setLocalDesc(survey.description);
     }

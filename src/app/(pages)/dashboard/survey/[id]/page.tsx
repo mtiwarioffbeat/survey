@@ -9,6 +9,7 @@ export default function FormPage() {
   const { questions } = useAppSelector((store) => store.survey);
   const {session} = useAppSelector((store)=>store.dashboard)
   console.log("session",session)
+  
   const handleAddQuestion = () => {
     const newQuestion = {
       title: "",
