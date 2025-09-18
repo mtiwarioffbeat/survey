@@ -43,7 +43,6 @@ const Page = () => {
     console.log("handlesurveysubmit",survey)
     console.log("session bro",session)
     router.push('/dashboard/survey/1')
-     
     const res = await SurveyRoutes.CreateSurvey(survey)
   }
   

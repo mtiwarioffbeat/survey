@@ -5,7 +5,7 @@ import { IoMdRadioButtonOn, IoMdArrowDropdown } from "react-icons/io";
 import { GrCheckboxSelected } from "react-icons/gr";
 import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
-import { useAppDispatch } from "@/hooks/reduxhooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { setUpdateQuestion } from "@/redux/SurveySlice/SurveySlice";
 import type { Survey } from "@/types/survey";
 
@@ -22,12 +22,14 @@ type Props = {
 };
 
 export default function Question({ index, data }: Props) {
+  const survey = useAppSelector((store)=>store.survey)
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
   // update a question (title, desc, type, choices etc.)
   const updateQuestion = (updates: Partial<Survey["Question"]>) => {
     dispatch(setUpdateQuestion({ index, data: updates }));
+    console.log("survey",survey)
   };
 
   // add option

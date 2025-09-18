@@ -1,65 +1,40 @@
-// src/app/api/surveys/route.ts
-import { NextResponse } from "next/server";
-import pool from "@/lib/db"; 
+import { NextRequest, NextResponse } from "next/server";
+import pool from "@/lib/db"; // your pg Pool instance
+import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
-
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    const { name, description, isPublished, isOpenedInEditMode, questions } = body;
 
-    const {
-      name,
-      description,
-      created_by,
-      is_deleted = false,
-      is_active = true,
-      is_published = false,
-      questions = [],
-    } = body;
-
-  
-    const surveyResult = await pool.query(
-      `INSERT INTO survey (name, description, createdby, createdat, isdeleted, isactive, ispublished) 
-       VALUES ($1, $2, $3, NOW(), $4, $5, $6) 
-       RETURNING id`,
-      [name, description, created_by, is_deleted, is_active, is_published]
-    );
-
-    const surveyId = surveyResult.rows[0].id;
-
-   
-    for (const q of questions) {
-      const questionResult = await pool.query(
-        `INSERT INTO question (title, description, questiontypeid, surveyid, enteredby, createdat, isdeleted, isactive, sortorder) 
-         VALUES ($1, $2, $3, $4, $5, NOW(), false, true, $6) 
-         RETURNING id`,
-        [q.title, q.description, q.type, surveyId, created_by, q.sortOrder]
-      );
-
-      const questionId = questionResult.rows[0].id;
-
-   
-      if (q.choices && q.choices.length > 0) {
-        for (let i = 0; i < q.choices.length; i++) {
-          const choice = q.choices[i];
-          await pool.query(
-            `INSERT INTO questionoption (title, description, questionid, createdat, isdeleted, isactive, sortorder)
-             VALUES ($1, $2, $3, NOW(), false, true, $4)`,
-            [choice, "", questionId, i + 1]
-          );
-        }
-      }
+    // 1. Extract token from cookie
+    const cookieStore = await cookies();
+    const token = cookieStore.get("session")?.value;
+    if (!token) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    return NextResponse.json(
-      { message: "Survey saved successfully", surveyId },
-      { status: 201 }
+    // 2. Decode JWT to get user id
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: number };
+    const userId = decoded.id;
+
+    // 3. Call stored procedure
+    await pool.query(
+      `CALL create_survey($1, $2, $3, $4, $5, $6)`,
+      [
+        name,
+        description,
+        isPublished,
+        isOpenedInEditMode,
+        userId,                // <-- created_by (from session)
+        JSON.stringify(questions),
+      ]
     );
-  } catch (err) {
-    console.error("Error saving survey:", err);
-    return NextResponse.json(
-      { error: "Failed to save survey" },
-      { status: 500 }
-    );
+
+    return NextResponse.json({ message: "Survey created successfully" }, { status: 201 });
+  } catch (error: any) {
+    console.error("Error creating survey:", error);
+    return NextResponse.json({ error: "Failed to create survey" }, { status: 500 });
   }
 }

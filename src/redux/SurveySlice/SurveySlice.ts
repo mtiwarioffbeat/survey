@@ -6,7 +6,7 @@ const initialState: Survey["Survey"] = {
   description: "",
   isPublished: false,
   isOpenedInEditMode: true,
-  createdBy: null,
+  // createdBy: null,
   questions: [
     {
       title: "",
@@ -16,7 +16,7 @@ const initialState: Survey["Survey"] = {
         description: null,
       },
       choices: [],
-      enteredBy: null 
+      // enteredBy: null 
     },
   ],
 };
