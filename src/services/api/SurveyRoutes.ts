@@ -1,12 +1,16 @@
+import { getSession } from "@/lib/getSession";
 import { Auth } from "@/types/auth";
+import { Survey } from "@/types/survey";
 import axios from "axios";
+import { useEffect } from "react";
 
 export class SurveyRoutes {
   // Signup POST
-  public static async CreateSurvey(payload) {
+  public static async CreateSurvey(payload:Survey['Survey']) {
+   
     const formdata = {
       name: payload?.name,
-      email: payload?.email,
+      // email: payload?.email,
     };
     try {
       const response = await axios.post("/api/survey", formdata);

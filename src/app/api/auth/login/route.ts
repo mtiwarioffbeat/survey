@@ -21,7 +21,7 @@ export async function POST(req:Request){
     if(generatedOtp){
         const emailSent = Mailer(email,generatedOtp)
     }
-    console.log(`otp for ${email}=${generatedOtp}`)
+    // console.log(`otp for ${email}=${generatedOtp}`)
 
     return NextResponse.json({success:true,status:200, message:"OTP sent successfully"})
 }

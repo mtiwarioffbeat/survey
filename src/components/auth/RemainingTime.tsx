@@ -11,7 +11,7 @@ const RemainingTime = ( {timeLeft , setTimeLeft}  :any ) => {
        return () => clearInterval(intervalId); 
     },[timeLeft])
 
-      console.log("outside", timeLeft)
+    //   console.log("outside", timeLeft)
     return (
         <div>
             <span className="flex flex-col items-center justify-center">

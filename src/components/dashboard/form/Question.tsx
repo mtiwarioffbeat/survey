@@ -1,4 +1,3 @@
-
 "use client";
 import { useState } from "react";
 import { ImParagraphLeft } from "react-icons/im";
@@ -8,31 +7,26 @@ import { MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import { useAppDispatch } from "@/hooks/reduxhooks";
 import { setUpdateQuestion } from "@/redux/SurveySlice/SurveySlice";
-import type QuestionState from "@/redux/SurveySlice/SurveySlice";
+import type { Survey } from "@/types/survey";
 
-const options = [
-  { type: "Paragraph", icon: <ImParagraphLeft /> },
-  { type: "Multiple choice", icon: <IoMdRadioButtonOn /> },
-  { type: "Checkboxes", icon: <GrCheckboxSelected /> },
-  { type: "Drop-down", icon: <MdOutlineArrowDropDownCircle /> },
+const options: Survey["QuestionType"][] = [
+  { name: "Paragraph", description: null },
+  { name: "Multiple choice", description: null },
+  { name: "Checkboxes", description: null },
+  { name: "Drop-down", description: null },
 ];
-
-// extend choice type
-type Choice = {
-  text: string;
-  description: string | null;
-};
 
 type Props = {
   index: number;
-  data: QuestionState & { choices?: Choice[] };
+  data: Survey["Question"];
 };
+
 export default function Question({ index, data }: Props) {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
-  // update a question (title, des, type, choices etc.)
-  const updateQuestion = (updates: Partial<QuestionState>) => {
+  // update a question (title, desc, type, choices etc.)
+  const updateQuestion = (updates: Partial<Survey["Question"]>) => {
     dispatch(setUpdateQuestion({ index, data: updates }));
   };
 
@@ -40,13 +34,17 @@ export default function Question({ index, data }: Props) {
   const addOption = () => {
     const newChoices = [
       ...(data.choices || []),
-      { text: `Option ${data.choices?.length! + 1}`, description: null },
+      { title: `Option ${data.choices?.length! + 1}`, description: null },
     ];
     updateQuestion({ choices: newChoices });
   };
 
-  // update option text or description
-  const updateOption = (i: number, key: "text" | "description", value: string | null) => {
+  // update option (title or description)
+  const updateOption = (
+    i: number,
+    key: "title" | "description",
+    value: string | null
+  ) => {
     const newChoices = [...(data.choices || [])];
     newChoices[i] = { ...newChoices[i], [key]: value };
     updateQuestion({ choices: newChoices });
@@ -63,7 +61,7 @@ export default function Question({ index, data }: Props) {
       <div className="rounded-lg items-center border-l-6 border-indigo-600 bg-white p-6 shadow">
         <div className="flex gap-4 justify-between">
           <div className="flex flex-col w-full">
-            {/* ques title */}
+            {/* Question title */}
             <input
               type="text"
               placeholder="Question"
@@ -72,14 +70,16 @@ export default function Question({ index, data }: Props) {
               className="border-b outline-none pb-2 border-gray-300"
             />
 
-            {/* conditional description */}
+            {/* Conditional description */}
             {data.description !== null ? (
               <div className="flex items-center gap-2">
                 <input
                   type="text"
                   placeholder="Question Description"
                   value={data.description || ""}
-                  onChange={(e) => updateQuestion({ description: e.target.value })}
+                  onChange={(e) =>
+                    updateQuestion({ description: e.target.value })
+                  }
                   className="flex-1 border-b outline-none pb-2 border-gray-300"
                 />
                 <button
@@ -98,7 +98,8 @@ export default function Question({ index, data }: Props) {
               </button>
             )}
           </div>
-          {/* question type dropdown */}
+
+          {/* Question type dropdown */}
           <div className="relative">
             <button
               type="button"
@@ -106,8 +107,15 @@ export default function Question({ index, data }: Props) {
               className="flex cursor-pointer items-center justify-between w-48 border px-3 py-2 text-sm bg-white shadow"
             >
               <span className="flex items-center gap-2">
-                {options.find((o) => o.type === data.type)?.icon}
-                {data.type}
+                {
+                  {
+                    Paragraph: <ImParagraphLeft />,
+                    "Multiple choice": <IoMdRadioButtonOn />,
+                    Checkboxes: <GrCheckboxSelected />,
+                    "Drop-down": <MdOutlineArrowDropDownCircle />,
+                  }[data.type.name]
+                }
+                {data.type.name}
               </span>
               <IoMdArrowDropdown />
             </button>
@@ -116,55 +124,77 @@ export default function Question({ index, data }: Props) {
               <div className="absolute right-0 mt-1 w-48 bg-white border shadow-lg z-10">
                 {options.map((opt) => (
                   <div
-                    key={opt.type}
+                    key={opt.name}
                     onClick={() => {
                       updateQuestion({
-                        type: opt.type,
-                        choices: [{ text: "Option 1", description: null }],
+                        type: opt,
+                        choices: [{ title: "Option 1", description: null }],
                       });
                       setOpen(false);
                     }}
                     className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer"
                   >
-                    {opt.icon} <span>{opt.type}</span>
+                    {
+                      {
+                        Paragraph: <ImParagraphLeft />,
+                        "Multiple choice": <IoMdRadioButtonOn />,
+                        Checkboxes: <GrCheckboxSelected />,
+                        "Drop-down": <MdOutlineArrowDropDownCircle />,
+                      }[opt.name]
+                    }{" "}
+                    <span>{opt.name}</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
         </div>
-        {/* main ui based on question type */}
-        <div className="mt-4 text-sm text-gray-600 space-y-2">
-          {data.type === "Paragraph" && <p>Long-answer text</p>}
 
-          {["Multiple choice", "Checkboxes", "Drop-down"].includes(data.type) && (
+        {/* Main UI based on question type */}
+        <div className="mt-4 text-sm text-gray-600 space-y-2">
+          {data.type.name === "Paragraph" && <p>Long-answer text</p>}
+
+          {["Multiple choice", "Checkboxes", "Drop-down"].includes(
+            data.type.name
+          ) && (
             <div className="space-y-4">
               {(data.choices || []).map((opt, i) => (
                 <div key={i} className="flex flex-col gap-1">
                   <div className="flex gap-2 items-center">
-                    {data.type === "Multiple choice" && <input type="radio" disabled />}
-                    {data.type === "Checkboxes" && <input type="checkbox" disabled />}
+                    {data.type.name === "Multiple choice" && (
+                      <input type="radio" disabled />
+                    )}
+                    {data.type.name === "Checkboxes" && (
+                      <input type="checkbox" disabled />
+                    )}
                     <input
                       type="text"
-                      value={opt.text}
-                      onChange={(e) => updateOption(i, "text", e.target.value)}
+                      value={opt.title}
+                      onChange={(e) =>
+                        updateOption(i, "title", e.target.value)
+                      }
                       placeholder={`Option ${i + 1}`}
                       className="flex-1 border-b outline-none pb-1"
                     />
                     {data.choices && data.choices.length > 1 && (
-                      <button onClick={() => removeOption(i)} className="text-gray-500">
+                      <button
+                        onClick={() => removeOption(i)}
+                        className="text-gray-500"
+                      >
                         <RxCross1 size={16} className="cursor-pointer" />
                       </button>
                     )}
                   </div>
 
-                  {/* 🔹 option description with remove */}
+                  {/* Option description */}
                   {opt.description !== null ? (
-                    <div className="flex items-center gap-3 ml-8 ">
+                    <div className="flex items-center gap-3 ml-8">
                       <input
                         type="text"
                         value={opt.description}
-                        onChange={(e) => updateOption(i, "description", e.target.value)}
+                        onChange={(e) =>
+                          updateOption(i, "description", e.target.value)
+                        }
                         placeholder="Option description"
                         className="flex-1 border-b outline-none text-sm text-gray-500 px-3"
                       />
@@ -178,7 +208,7 @@ export default function Question({ index, data }: Props) {
                   ) : (
                     <button
                       onClick={() => updateOption(i, "description", "")}
-                      className="text-blue-600 text-xs mt-1 self-start ml-8 cursor-pointer "
+                      className="text-blue-600 text-xs mt-1 self-start ml-8 cursor-pointer"
                     >
                       + Add description
                     </button>

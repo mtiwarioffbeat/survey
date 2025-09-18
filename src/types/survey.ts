@@ -48,7 +48,7 @@ export interface Survey{
   Survey:{
     name:string,
     description:string,
-    // CreatedBy: INT FK, (when axios==> add Createdby from session)
+    createdBy: number | null,//INT FK, (when axios==> add Createdby from session)
     // CreatedAt:Time (system gen or date.now())
     // IsDeleted: (No req rn)
     // IsActve: (No req rn)
@@ -66,7 +66,7 @@ export interface Survey{
     choices:Array<Survey['QuestionOption']>
     // QuestionTypeId: INT FK (backend wehn Question type is created it will return id)
     // SurveyID: INT FK (backend: when survey is create it will return id)
-    // EnteredBy:INT FK (frontend:when axios==> add id from session),
+    enteredBy: number | null //INT FK (frontend:when axios==> add id from session),
      // IsDeleted: (No req rn)
     // IsActve: (No req rn),
      // SortOrder:number, (could use or index of array)

@@ -13,7 +13,7 @@ export default function DashboardNav() {
     return (
 
         <nav className=" border-gray-200  bg-white shadow w-full py-3">
-            <div className=" flex flex-wrap  items-centere justify-between mx-auto md:w-[90%]">
+            <div className=" flex flex-wrap  items-centere justify-between mx-auto sm:w-[90%]">
                 {/* hamburgur menu */}
                 <div className="flex">
                     <button

@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
   // if otp is provided, verifing it
   if (otp) {
-    console.log(otp)
+    // console.log(otp)
     const isValid = await OtpService.verifyOtp(email, otp);
     if (isValid) {
 

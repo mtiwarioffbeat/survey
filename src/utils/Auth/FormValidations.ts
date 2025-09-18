@@ -17,7 +17,7 @@ export const LoginValidate = (payload:Auth['login'])=>{
             // }
 
             // console.log("login me errorsssssss aa gye", zodErrors);
-            console.log(errorObj)
+            // console.log(errorObj)
             
         }
 }
@@ -32,7 +32,7 @@ export const SignupValidate = (payload:Auth['signup'] | null) =>{
    const result = UserSchema.safeParse(payload)
     if (!result.success) {
             const errorObj = result.error.format();
-            console.log("error obj",errorObj)
+            // console.log("error obj",errorObj)
             
         }
 

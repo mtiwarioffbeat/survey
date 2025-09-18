@@ -2,27 +2,29 @@
 import FormHeading from "@/components/dashboard/form/SurveyHeading";
 import Question from "@/components/dashboard/form/Question";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
-import { useDispatch } from "react-redux";
 import { setAddQuestion } from "@/redux/SurveySlice/SurveySlice";
-
 
 export default function FormPage() {
   const dispatch = useAppDispatch();
   const { questions } = useAppSelector((store) => store.survey);
-  
- const handleAddQuestion = () => {
-  const isParagraph = true; // default new question type
+  const {session} = useAppSelector((store)=>store.dashboard)
+  console.log("session",session)
+  const handleAddQuestion = () => {
+    const newQuestion = {
+      title: "",
+      description: null,
+      type: {
+        name: "Paragraph", // default type
+        description: null,
+      },
+      choices: [] as {
+        title: string;
+        description: string | null;
+      }[], // empty by default
+    };
 
-  const newQuestion = {
-    title: "",
-    type: "Paragraph",
-    description: null, // optional
-    choices: null,     // null for Paragraph
-    sortOrder: questions.length + 1,
+    dispatch(setAddQuestion(newQuestion));
   };
-
-  // dispatch(setAddQuestion(newQuestion));
-};
 
   return (
     <div className="bg-purple-50 mx-auto mt-10">
