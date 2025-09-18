@@ -37,13 +37,14 @@ const Page = () => {
 
 
    
-   console.log("Dashbord pag  ",session)
+  //  console.log("Dashbord pag  ",session)
 
     const handleSurveyCreation = async () =>{
-    console.log("handlesurveysubmit",survey)
-    console.log("session bro",session)
+    // console.log("handlesurveysubmit",survey)
+    // console.log("session bro",session)
     router.push('/dashboard/survey/1')
     const res = await SurveyRoutes.CreateSurvey(survey)
+    console.log('response from survey creation',res)
   }
   
   return (

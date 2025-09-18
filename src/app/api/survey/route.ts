@@ -6,8 +6,8 @@ import { cookies } from "next/headers";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, description, isPublished, isOpenedInEditMode, questions } = body;
-
+    const { name:title, description, isPublished, isOpenedInEditMode, questions } = body;
+    console.log("title",title)
     // 1. Extract token from cookie
     const cookieStore = await cookies();
     const token = cookieStore.get("session")?.value;
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     await pool.query(
       `CALL create_survey($1, $2, $3, $4, $5, $6)`,
       [
-        name,
+        title,
         description,
         isPublished,
         isOpenedInEditMode,

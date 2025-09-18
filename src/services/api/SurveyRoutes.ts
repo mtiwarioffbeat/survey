@@ -9,7 +9,7 @@ export class SurveyRoutes {
   public static async CreateSurvey(payload:Survey['Survey']) {
    
     console.log('payload',payload)
-    return
+    
     try {
       const response = await axios.post("/api/survey", payload);
       return { success: true, data: response.data };
