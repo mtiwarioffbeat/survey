@@ -61,7 +61,7 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
   //   user exists 
   const res = await UserService.SignupUser(signupData);
-  console.log("response",res)
+  // console.log("response",res)
   if (res.success) {
     if (res.data.exists) {
       toast.error(res.data.message);

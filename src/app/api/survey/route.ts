@@ -18,10 +18,10 @@ export async function POST(req: NextRequest) {
     // 2. Decode JWT to get user id
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: number };
     const userId = decoded.id;
-
+    let _survey_id = null
     // 3. Call stored procedure
-    await pool.query(
-      `CALL create_survey($1, $2, $3, $4, $5, $6)`,
+  const {rows} =   await pool.query(
+      `CALL create_survey($1, $2, $3, $4, $5, $6, $7)`,
       [
         name,
         description,
@@ -29,10 +29,13 @@ export async function POST(req: NextRequest) {
         isOpenedInEditMode,
         userId,                // <-- created_by (from session)
         JSON.stringify(questions),
+        _survey_id
       ]
     );
-
-    return NextResponse.json({ message: "Survey created successfully" }, { status: 201 });
+    const sur_id = rows[0]._survey_id
+    console.log("updated survey ",rows)
+    // console.log("response in backend",res)
+    return NextResponse.json({ message: "Survey created successfully",sur_id},{status:201});
   } catch (error: any) {
     console.error("Error creating survey:", error);
     return NextResponse.json({ error: "Failed to create survey" }, { status: 500 });

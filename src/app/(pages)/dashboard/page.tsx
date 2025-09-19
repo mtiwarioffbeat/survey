@@ -21,7 +21,7 @@ const Page = () => {
    useEffect(()=>{
      async function get(){
          const user = await getSession()
-        console.log("user",user)
+        // console.log("user",user)
          const temp = {
           id:user?.id,
           name:user?.name,

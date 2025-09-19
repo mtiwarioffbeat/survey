@@ -3,11 +3,12 @@ import { useState } from "react";
 import { ImParagraphLeft } from "react-icons/im";
 import { IoMdRadioButtonOn, IoMdArrowDropdown } from "react-icons/io";
 import { GrCheckboxSelected } from "react-icons/gr";
-import { MdOutlineArrowDropDownCircle } from "react-icons/md";
+import { MdDelete, MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
-import { useAppDispatch } from "@/hooks/reduxhooks";
-import { setUpdateQuestion } from "@/redux/SurveySlice/SurveySlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
+import { setRemoveQuestion, setSurvey, setUpdateQuestion } from "@/redux/SurveySlice/SurveySlice";
 import type { Survey } from "@/types/survey";
+import Tooltip from "@/components/Tooltip";
 
 const options: Survey["QuestionType"][] = [
   { name: "Paragraph", description: null },
@@ -24,11 +25,17 @@ type Props = {
 export default function Question({ index, data }: Props) {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
-
+  const {questions} = useAppSelector((store)=>store.survey)
   // update a question (title, desc, type, choices etc.)
   const updateQuestion = (updates: Partial<Survey["Question"]>) => {
     dispatch(setUpdateQuestion({ index, data: updates }));
   };
+
+  // delete ques
+  const deleteQuestion = (idx:number)=>{
+    console.log("index of the ques",idx)
+    dispatch(setRemoveQuestion(idx))
+  }
 
   // add option
   const addOption = () => {
@@ -152,77 +159,111 @@ export default function Question({ index, data }: Props) {
 
         {/* Main UI based on question type */}
         <div className="mt-4 text-sm text-gray-600 space-y-2">
-          {data.type.name === "Paragraph" && <p>Long-answer text</p>}
+          {data.type.name === "Paragraph" &&
+
+            <div>
+
+              <p>Long-answer text</p>
+              { 
+                questions.length >1 &&
+                <div className="grid grid-flow-col justify-items-end">
+                <button onClick={() => {
+                  deleteQuestion(index)
+                }} className=" flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
+                  <MdDelete size={24} className="text-indigo-600" />
+                  <Tooltip text="Delete" />
+                </button>
+              </div>
+                }
+
+            </div>
+          }
 
           {["Multiple choice", "Checkboxes", "Drop-down"].includes(
             data.type.name
           ) && (
-            <div className="space-y-4">
-              {(data.choices || []).map((opt, i) => (
-                <div key={i} className="flex flex-col gap-1">
-                  <div className="flex gap-2 items-center">
-                    {data.type.name === "Multiple choice" && (
-                      <input type="radio" disabled />
-                    )}
-                    {data.type.name === "Checkboxes" && (
-                      <input type="checkbox" disabled />
-                    )}
-                    <input
-                      type="text"
-                      value={opt.title}
-                      onChange={(e) =>
-                        updateOption(i, "title", e.target.value)
-                      }
-                      placeholder={`Option ${i + 1}`}
-                      className="flex-1 border-b outline-none pb-1"
-                    />
-                    {data.choices && data.choices.length > 1 && (
+              <div className="space-y-4">
+                {(data.choices || []).map((opt, i) => (
+                  <div key={i} className="flex flex-col gap-1">
+                    <div className="flex gap-2 items-center">
+                      {data.type.name === "Multiple choice" && (
+                        <input type="radio" disabled />
+                      )}
+                      {data.type.name === "Checkboxes" && (
+                        <input type="checkbox" disabled />
+                      )}
+                      <input
+                        type="text"
+                        value={opt.title}
+                        onChange={(e) =>
+                          updateOption(i, "title", e.target.value)
+                        }
+                        placeholder={`Option ${i + 1}`}
+                        className="flex-1 border-b outline-none pb-1"
+                      />
+                      {data.choices && data.choices.length > 1 && (
+                        <button
+                          onClick={() => removeOption(i)}
+                          className="text-gray-500"
+                        >
+                          <RxCross1 size={16} className="cursor-pointer" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Option description */}
+                    {opt.description !== null ? (
+                      <div className="flex items-center gap-3 ml-8">
+                        <input
+                          type="text"
+                          value={opt.description}
+                          onChange={(e) =>
+                            updateOption(i, "description", e.target.value)
+                          }
+                          placeholder="Option description"
+                          className="flex-1 border-b outline-none text-sm text-gray-500 px-3"
+                        />
+                        <button
+                          onClick={() => updateOption(i, "description", null)}
+                          className="text-red-400 text-xs cursor-pointer"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ) : (
                       <button
-                        onClick={() => removeOption(i)}
-                        className="text-gray-500"
+                        onClick={() => updateOption(i, "description", "")}
+                        className="text-blue-600 text-xs mt-1 self-start ml-8 cursor-pointer"
                       >
-                        <RxCross1 size={16} className="cursor-pointer" />
+                        + Add description
                       </button>
                     )}
                   </div>
-
-                  {/* Option description */}
-                  {opt.description !== null ? (
-                    <div className="flex items-center gap-3 ml-8">
-                      <input
-                        type="text"
-                        value={opt.description}
-                        onChange={(e) =>
-                          updateOption(i, "description", e.target.value)
-                        }
-                        placeholder="Option description"
-                        className="flex-1 border-b outline-none text-sm text-gray-500 px-3"
-                      />
-                      <button
-                        onClick={() => updateOption(i, "description", null)}
-                        className="text-red-400 text-xs cursor-pointer"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ) : (
+                ))}
+                <div className="flex justify-between items-center">
+                  <div>
                     <button
-                      onClick={() => updateOption(i, "description", "")}
-                      className="text-blue-600 text-xs mt-1 self-start ml-8 cursor-pointer"
+                      onClick={addOption}
+                      className="cursor-pointer hover:bg-white shadow px-2 py-1 text-xs"
                     >
-                      + Add description
+                      Add Option
                     </button>
-                  )}
+                  </div>
+                  {
+                        questions.length >1 &&
+                    <div className="grid grid-flow-col justify-items-end">
+                    <button onClick={() => {
+                      deleteQuestion(index)
+                    }} className=" flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
+                      <MdDelete size={24} className="text-indigo-600" />
+                      <Tooltip text="Delete" />
+                    </button>
+                  </div>
+                    }
                 </div>
-              ))}
-              <button
-                onClick={addOption}
-                className="cursor-pointer hover:bg-white shadow px-2 py-1 text-xs"
-              >
-                Add Option
-              </button>
-            </div>
-          )}
+
+              </div>
+            )}
         </div>
       </div>
     </div>

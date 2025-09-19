@@ -9,7 +9,7 @@ export default function DashboardNav() {
     const { menuOpen } = useAppSelector((store) => store.dashboard)
     const dispatch = useAppDispatch()
     const pathName = usePathname()
-    console.log("pathName",pathName)
+    // console.log("pathName",pathName)
     return (
 
         <nav className=" border-gray-200  bg-white shadow w-full py-3">

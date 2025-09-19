@@ -22,7 +22,7 @@ const page = () => {
     const {name,value} = e.target
     setLoginData((prev)=>({...prev, [name]:value}))
   }
-  console.log(loginData)
+  // console.log(loginData)
   
  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();

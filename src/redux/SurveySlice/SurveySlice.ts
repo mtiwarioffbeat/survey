@@ -41,7 +41,7 @@ const surveySlice = createSlice({
       state.questions[index] = { ...state.questions[index], ...data };
     },
 
-    removeQuestion(state, action: PayloadAction<number>) {
+    setRemoveQuestion(state, action: PayloadAction<number>) {
       state.questions.splice(action.payload, 1);
     },
 
@@ -51,7 +51,7 @@ const surveySlice = createSlice({
   },
 });
 
-export const { setSurvey, setAddQuestion, setUpdateQuestion, removeQuestion, resetSurvey } =
+export const { setSurvey, setAddQuestion, setUpdateQuestion, setRemoveQuestion, resetSurvey } =
   surveySlice.actions;
 
 export default surveySlice.reducer;

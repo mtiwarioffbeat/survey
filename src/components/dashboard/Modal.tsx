@@ -17,11 +17,11 @@ const Modal = () => {
 
     const handleConfirm = async () => {
         dispatch(setLoading(true))
-
         const newSurveyData:Survey['Survey'] = { ...survey, name: name, description: description };
         dispatch(setSurvey(newSurveyData));
         const res = await SurveyRoutes.CreateSurvey(newSurveyData)
-        router.push('/dashboard/survey/1')
+        console.log("response in frontend",res)
+        router.push(`/dashboard/survey/${res.data.sur_id}`)
         dispatch(setLoading(false))
         dispatch(setShowModal(false))
         setName("");

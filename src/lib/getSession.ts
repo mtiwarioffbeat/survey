@@ -11,7 +11,7 @@ export async function getSession() {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!)  as JwtPayload;
-    console.log('decoded obj',decoded)
+    // console.log('decoded obj',decoded)
     return decoded; // {  id, name, email }
   } catch (error) {
     console.error("Invalid token:", error);
