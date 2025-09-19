@@ -8,7 +8,7 @@ import { Auth } from '@/types/auth';
 import { useState } from 'react';
 import { UserService } from '@/services/api/UserService';
 import z from 'zod'
-import Spinner from '@/components/auth/Spinner';
+import Spinner from '@/components/Spinner';
 import { toast } from 'react-toastify';
 import { useNavigation } from '@/hooks/useNavigation'; 
 import  main  from '@/services/db/nodemailer';

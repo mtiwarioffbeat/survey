@@ -1,16 +1,26 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState:{
     menuOpen:boolean,
-    session:Session
+    session:Session,
+    showModal:boolean,
+    loading:boolean
 } = {
     menuOpen:false,
     session:{
         id:null,
         name:null,
-        email:null
-    }
+        email:null,
+    },
+    showModal:false,
+    loading:false
 }
+
+const createSurvey = createAsyncThunk('surveys/createSurvey',
+    async () =>{
+        
+    }
+)
 
 const DashboardSlice = createSlice({
     name:"dashboard",
@@ -21,11 +31,17 @@ const DashboardSlice = createSlice({
         },
         setSession:(state,action:PayloadAction<Session>)=>{
             state.session = action.payload
+        },
+        setShowModal:(state,action:PayloadAction<boolean>)=>{
+            state.showModal = action.payload
+        },
+        setLoading:(state,action:PayloadAction<boolean>)=>{
+            state.loading = action.payload
         }
 
     }
 })
 
 
-export const {setMenuOpen,setSession} = DashboardSlice.actions
+export const {setMenuOpen,setSession,setShowModal,setLoading} = DashboardSlice.actions
 export default DashboardSlice.reducer

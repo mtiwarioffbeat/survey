@@ -1,5 +1,5 @@
 "use client"
-import Spinner from '@/components/auth/Spinner'
+import Spinner from '@/components/Spinner'
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxhooks'
 import { useNavigation } from '@/hooks/useNavigation'
 import { setLoading, setLogin, setLoginErrors } from '@/redux/AuthSlice/AuthSlice'

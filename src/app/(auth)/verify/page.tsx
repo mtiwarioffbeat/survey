@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { setLoading } from "@/redux/AuthSlice/AuthSlice";
 import { toast } from "react-toastify";
 import { useNavigation } from "@/hooks/useNavigation";
-import Spinner from "@/components/auth/Spinner";
+import Spinner from "@/components/Spinner";
 
 export default function Otppage() {
   const [timeLeft, setTimeLeft] = useState(60);
