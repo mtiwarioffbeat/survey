@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db"; // your pg Pool instance
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
-import { getSession } from "@/lib/getSession";
 
 export async function POST(req: NextRequest) {
   try {
