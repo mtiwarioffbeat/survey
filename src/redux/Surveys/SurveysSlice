@@ -1,4 +1,4 @@
-import { Surveys } from "@/types/survey";
+import {Surveys} from "../../types/survey"
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState:Surveys[] =[] 

@@ -73,3 +73,28 @@ export interface Survey{
   }
 
 }
+
+
+export type Surveys = {
+  id:number,
+  title:string,
+  description:string,
+  createdBy:string,
+  isPublished:boolean,
+  isOpenedInEditMode:boolean,
+  questions:[{
+    title:string,
+    description:string,
+    sortOrder:number,
+    // enteredBy:string
+    type:{
+      title:string,
+      description:string | null
+    },
+    choices:[{
+      title:string,
+      description:string,
+      sortOrder:string
+    }]
+  }]
+}
