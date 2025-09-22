@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db"; // your pg Pool instance
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { getSession } from "@/lib/getSession";
 
 export async function POST(req: NextRequest) {
   try {
@@ -39,5 +40,28 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("Error creating survey:", error);
     return NextResponse.json({ error: "Failed to create survey" }, { status: 500 });
+  }
+}
+
+export async function GET(){
+  try{
+
+    const user = await getSession()
+    console.log("get req")
+    if(!user){
+      return NextResponse.json({error:"Unauthorized"},{status:401})
+     
+    }
+    console.log("whs")
+     const {rows} = await pool.query(
+        `SELECT * FROM get_surveys()`
+      )
+
+      console.log("rowssssss",rows)
+      return NextResponse.json({message:"surveys fetched successfully",rows},{status:200})
+
+  } catch(err:unknown){
+    console.log(err)
+    return NextResponse.json({error:"Failed to fetch surveys"},{status:500})
   }
 }
