@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   title: "Survey App",
   description: "Create & Manage your forms! Get real time updations",
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{

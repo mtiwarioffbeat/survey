@@ -4,7 +4,7 @@ import Question from "@/components/dashboard/form/Question";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { setAddQuestion } from "@/redux/SurveySlice/SurveySlice";
 
-export default function FormPage() {
+export default function EditPage() {
   const dispatch = useAppDispatch();
   const { questions } = useAppSelector((store) => store.survey);
   const {session} = useAppSelector((store)=>store.dashboard)

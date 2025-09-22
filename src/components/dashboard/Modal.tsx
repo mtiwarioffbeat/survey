@@ -20,8 +20,9 @@ const Modal = () => {
         const newSurveyData:Survey['Survey'] = { ...survey, name: name, description: description };
         dispatch(setSurvey(newSurveyData));
         const res = await SurveyRoutes.CreateSurvey(newSurveyData)
-        console.log("response in frontend",res)
-        router.push(`/dashboard/survey/${res.data.sur_id}`)
+        console.log("response in frontend",res.data.sur_id)
+
+        router.push(`/dashboard/survey/${res.data.sur_id}/edit`)
         dispatch(setLoading(false))
         dispatch(setShowModal(false))
         setName("");

@@ -10,6 +10,9 @@ export default function DashboardNav() {
     const dispatch = useAppDispatch()
     const pathName = usePathname()
     // console.log("pathName",pathName)
+    // const updateQestion(){
+
+    // }
     return (
 
         <nav className=" border-gray-200  bg-white shadow w-full py-3">
@@ -41,7 +44,7 @@ export default function DashboardNav() {
                         <Tooltip text="Preview"/>
                     </button>
                     {/* save */}
-                     <button type="button" className="text-green-600 font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1  hover:bg-green-600 hover:text-white flex gap-2 cursor-pointer "> Save</button>
+                     <button  type="button" className="text-green-600 font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1  hover:bg-green-600 hover:text-white flex gap-2 cursor-pointer"> Save</button>
                     {/* publish */}
                     <button type="button" className="text-indigo-600 font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1  hover:bg-indigo-600 hover:text-white flex gap-2 cursor-pointer "> Publish</button>
                   
