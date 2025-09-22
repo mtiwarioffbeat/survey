@@ -65,3 +65,36 @@ export async function GET(){
     return NextResponse.json({error:"Failed to fetch surveys"},{status:500})
   }
 }
+
+
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    const {survey_id,title,description,isPublished,isOpenEditMode,questions} = body;
+    const user = await getSession()
+    const createdBy = user?.id
+
+ 
+   const dbres =  await pool.query(
+    `CALL update_survey($1, $2, $3, $4, $5, $6, $7)`, 
+      [ 
+        survey_id, 
+        title,
+        description,
+        isPublished, 
+        isOpenEditMode,
+        createdBy,
+        JSON.stringify(questions),
+    ]);
+
+    console.log("rows",dbres)
+ 
+    return NextResponse.json({ message: "Survey updated successfully" });
+  } catch (error: any) {
+    console.error("Error updating survey:", error);
+    return NextResponse.json(
+      { error: "Failed to update survey" },
+      { status: 500 }
+    );
+  }
+}

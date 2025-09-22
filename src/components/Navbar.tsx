@@ -5,14 +5,34 @@ import { IoMenu } from "react-icons/io5";
 import { MdOutlineRemoveRedEye, MdPublishedWithChanges } from "react-icons/md";
 import Tooltip from "./Tooltip";
 import { usePathname } from "next/navigation";
+import { SurveyRoutes } from "@/services/api/SurveyRoutes";
+import { useNavigation } from "@/hooks/useNavigation";
+import { setLoading } from "@/redux/AuthSlice/AuthSlice";
+import Spinner from "./Spinner";
+import { resetSurvey, setSurvey } from "@/redux/SurveySlice/SurveySlice";
 export default function DashboardNav() {
-    const { menuOpen } = useAppSelector((store) => store.dashboard)
+    const { menuOpen, loading } = useAppSelector((store) => store.dashboard)
     const dispatch = useAppDispatch()
     const pathName = usePathname()
-    // console.log("pathName",pathName)
-    // const updateQestion(){
+    const survey = useAppSelector((store) => store.survey)
+    const { router } = useNavigation()
 
-    // }
+    const handleSave = async () => {
+        dispatch(setLoading(true))
+        try {
+            const res = await SurveyRoutes.UpdateSurvey(survey)
+            console.log("res in anvbar", res)
+           
+            dispatch(resetSurvey())
+            if (res.success) {
+                router.push('/dashboard')
+            }
+        } catch (err: any) {
+            return { success: false, error: "Bad request", status: 400 }
+        }
+
+        dispatch(setLoading(false))
+    }
     return (
 
         <nav className=" border-gray-200  bg-white shadow w-full py-3">
@@ -35,22 +55,24 @@ export default function DashboardNav() {
 
                 {/*button features for survey page  */}
                 {
-                    pathName !="/dashboard" &&
-                      <div className="flex items-center justify-center gap-3">
-                    {/* view */}
-                    <button className="flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
+                    pathName != "/dashboard" &&
+                    <div className="flex items-center justify-center gap-3">
+                        {/* view */}
+                        <button className="flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
 
-                        <MdOutlineRemoveRedEye size={24} className="text-indigo-600" />
-                        <Tooltip text="Preview"/>
-                    </button>
-                    {/* save */}
-                     <button  type="button" className="text-green-600 font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1  hover:bg-green-600 hover:text-white flex gap-2 cursor-pointer"> Save</button>
-                    {/* publish */}
-                    <button type="button" className="text-indigo-600 font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1  hover:bg-indigo-600 hover:text-white flex gap-2 cursor-pointer "> Publish</button>
-                  
-                </div>
+                            <MdOutlineRemoveRedEye size={24} className="text-indigo-600" />
+                            <Tooltip text="Preview" />
+                        </button>
+                        {/* save */}
+                        <button type="button" className="text-green-600 font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1  hover:bg-green-600 hover:text-white flex gap-2 cursor-pointer"
+                            onClick={handleSave}
+                        > {loading ? <Spinner /> : "Save"}</button>
+                        {/* publish */}
+                        <button type="button" className="text-indigo-600 font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1  hover:bg-indigo-600 hover:text-white flex gap-2 cursor-pointer "> Publish</button>
+
+                    </div>
                 }
-              
+
             </div>
         </nav>
 

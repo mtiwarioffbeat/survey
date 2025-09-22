@@ -11,13 +11,14 @@ import { getSession } from '@/lib/getSession';
 import { setSession, setShowModal } from '@/redux/DashboardSlice/DashboardSlice';
 import { useNavigation } from '@/hooks/useNavigation';
 import Modal from '@/components/dashboard/Modal';
+import { resetSurvey } from '@/redux/SurveySlice/SurveySlice';
 const Page = () => {
   const { router } = useNavigation()
   const isMenu = true;
   const survey = useAppSelector((store) => store.survey)
   const { session, showModal } = useAppSelector((store) => store.dashboard)
   const dispatch = useAppDispatch()
-
+ 
   useEffect(() => {
     async function get() {
       const user = await getSession()
@@ -32,7 +33,10 @@ const Page = () => {
     get()
   }, [])
 
-
+// empty survey curr
+useEffect(()=>{
+  dispatch(resetSurvey())
+},[])
 
   const handleSurveyCreation = async () => {
     router.push('/dashboard/survey/1')
