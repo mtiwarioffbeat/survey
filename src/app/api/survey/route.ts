@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db"; // your pg Pool instance
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { getSession } from "@/lib/getSession";
 
 export async function POST(req: NextRequest) {
   try {
@@ -39,21 +40,5 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("Error creating survey:", error);
     return NextResponse.json({ error: "Failed to create survey" }, { status: 500 });
-  }
-}
-export async function PUT(req:Request){
-  try{
-const body = await req.json();
-const {survay_id,title,description,isPublished,isOpenEditMode,createdBy,questions,}= body;
-const query = `CALL update_survey($1,$2,$3,$4,$5,$6,$7)`;
-await pool.query(query,[survay_id,title,description,isPublished,isOpenEditMode,createdBy,JSON.stringify(questions)]);
-return NextResponse.json({message:"Survey Update Succesfully"});
-  }catch(error){
-    console.log("Error Update survey",error);
-    return NextResponse.json(
-{error:"failed to update survey"},
-{status:500}
-    )
-
   }
 }
