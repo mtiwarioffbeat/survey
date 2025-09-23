@@ -45,26 +45,26 @@ export interface Survey{
 
 
 export type Surveys = {
-  id:number,
-  title:string,
-  description:string,
-  createdBy:string,
-  isPublished:boolean,
-  isOpenedInEditMode:boolean,
+  id:number | null,
+  title:string | null ,
+  description:string | null,
+  createdBy:string | null,
+  isPublished:boolean | null,
+  isOpenedInEditMode:boolean | null,
   // isDeleted:boolean,
   questions:[{
-    title:string,
-    description:string,
-    sortOrder:number,
+    title:string | null,
+    description:string | null,
+    sortOrder:number | null,
     // enteredBy:string
     type:{
-      title:string,
+      title:string | null,
       description:string | null
     },
     choices:[{
-      title:string,
-      description:string,
-      sortOrder:string
+      title:string | null,
+      description:string | null,
+      sortOrder:string | null
     }]
   }]
 }

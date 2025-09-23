@@ -20,29 +20,32 @@ const Page = () => {
   const { session, showModal } = useAppSelector((store) => store.dashboard)
   const dispatch = useAppDispatch()
  
-  useEffect(() => {
-    async function get() {
-// get session
-      const user = await getSession()
-      // console.log("user",user)
-      const temp = {
-        id: user?.id,
-        name: user?.name,
-        email: user?.email
+ useEffect(() => {
+  const getData = async () => {
+    try {
+      // Gett session
+      const user = await getSession();
+      if (user) {
+        const temp = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
+        dispatch(setSession(temp));
       }
-      // getsurveys
-      const res = await axios.get('/api/survey')
-      console.log("response for get surveys",res)
-      dispatch(setSession(temp))
+
+      // gettty surveys
+      const res = await axios.get('/api/survey');
+      console.log("response for get surveys", res.data);
+      dispatch(setSurvey)
+    } catch (err) {
+      console.error("Error fetching session/surveys:", err);
     }
+  };
 
+  getData();
+}, [dispatch]);
 
-
-
-
-
-    get()
-  }, [])
 
 // empty survey curr
 useEffect(()=>{

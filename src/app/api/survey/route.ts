@@ -8,9 +8,9 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const { title, description, isPublished, isOpenedInEditMode, questions } = body;
-   console.log("body baclend=>>>>>>>",body)
-   console.log("type",questions[0].type)
-   console.log("question",questions)
+    console.log("body baclend=>>>>>>>", body)
+    console.log("type", questions[0].type)
+    console.log("question", questions)
     // token from cookie
     const cookieStore = await cookies();
     const token = cookieStore.get("session")?.value;
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     const userId = decoded.id;
     let _survey_id = null
     // 3. Call stored procedure
-  const {rows} =   await pool.query(
+    const { rows } = await pool.query(
       `CALL create_survey($1, $2, $3, $4, $5, $6, $7 )`,
       [
         title,
@@ -36,35 +36,43 @@ export async function POST(req: NextRequest) {
       ]
     );
     const sur_id = rows[0]._survey_id
-    console.log("updated survey ",rows)
+    console.log("updated survey ", rows)
     // console.log("response in backend",res)
-    return NextResponse.json({ message: "Survey created successfully",sur_id},{status:201});
+    return NextResponse.json({ message: "Survey created successfully", sur_id }, { status: 201 });
   } catch (error: any) {
     console.error("Error creating survey:", error);
     return NextResponse.json({ error: "Failed to create survey" }, { status: 500 });
   }
 }
 
-export async function GET(){
-  try{
+export async function GET() {
+  try {
 
     const user = await getSession()
     console.log("get req")
-    if(!user){
-      return NextResponse.json({error:"Unauthorized"},{status:401})
-     
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+
     }
     console.log("whs")
-     const {rows} = await pool.query(
-        `SELECT * FROM get_surveys()`
-      )
+    const { rows } = await pool.query(
+      `SELECT * FROM get_surveys()`
+    )
+    const surveys = rows[0]?.get_surveys || []
+    console.log("rows:", rows);
 
-      console.log("rowssssss",rows)
-      return NextResponse.json({message:"surveys fetched successfully",data:rows},{status:200})
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Surveys fetched successfully",
+        data: surveys,
+      },
+      { status: 200 }
+    );
 
-  } catch(err:unknown){
+  } catch (err: unknown) {
     console.log(err)
-    return NextResponse.json({error:"Failed to fetch surveys"},{status:500})
+    return NextResponse.json({ error: "Failed to fetch surveys" }, { status: 500 })
   }
 }
 
@@ -72,25 +80,25 @@ export async function GET(){
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    const {survey_id,title,description,isPublished,isOpenEditMode,questions} = body;
+    const { survey_id, title, description, isPublished, isOpenEditMode, questions } = body;
     const user = await getSession()
     const createdBy = user?.id
 
- 
-   const dbres =  await pool.query(
-    `CALL update_survey($1, $2, $3, $4, $5, $6, $7)`, 
-      [ 
-        survey_id, 
+
+    const dbres = await pool.query(
+      `CALL update_survey($1, $2, $3, $4, $5, $6, $7)`,
+      [
+        survey_id,
         title,
         description,
-        isPublished, 
+        isPublished,
         isOpenEditMode,
         createdBy,
         JSON.stringify(questions),
-    ]);
+      ]);
 
-    console.log("rows",dbres)
- 
+    console.log("rows", dbres)
+
     return NextResponse.json({ message: "Survey updated successfully" });
   } catch (error: any) {
     console.error("Error updating survey:", error);
