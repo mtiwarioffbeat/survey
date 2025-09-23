@@ -7,7 +7,7 @@ import { getSession } from "@/lib/getSession";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, description, isPublished, isOpenedInEditMode, questions } = body;
+    const { title, description, isPublished, isOpenedInEditMode, questions } = body;
    console.log("body baclend=>>>>>>>",body)
    console.log("type",questions[0].type)
    console.log("question",questions)
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   const {rows} =   await pool.query(
       `CALL create_survey($1, $2, $3, $4, $5, $6, $7 )`,
       [
-        name,
+        title,
         description,
         isPublished,
         isOpenedInEditMode,
