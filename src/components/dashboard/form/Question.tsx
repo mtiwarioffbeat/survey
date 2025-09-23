@@ -11,10 +11,10 @@ import type { Survey } from "@/types/survey";
 import Tooltip from "@/components/Tooltip";
 
 const options: Survey["QuestionType"][] = [
-  { name: "Paragraph", description: null },
-  { name: "Multiple choice", description: null },
-  { name: "Checkboxes", description: null },
-  { name: "Drop-down", description: null },
+  { title: "Paragraph", description: null },
+  { title: "Multiple choice", description: null },
+  { title: "Checkboxes", description: null },
+  { title: "Drop-down", description: null },
 ];
 
 type Props = {
@@ -41,7 +41,7 @@ export default function Question({ index, data }: Props) {
   const addOption = () => {
     const newChoices = [
       ...(data.choices || []),
-      { title: `Option ${data.choices?.length! + 1}`, description: null },
+      { title: `Option ${data.choices?.length! + 1}`, description: null,isDeleted:false },
     ];
     updateQuestion({ choices: newChoices });
   };
@@ -120,9 +120,9 @@ export default function Question({ index, data }: Props) {
                     "Multiple choice": <IoMdRadioButtonOn />,
                     Checkboxes: <GrCheckboxSelected />,
                     "Drop-down": <MdOutlineArrowDropDownCircle />,
-                  }[data.type.name]
+                  }[data.type.title]
                 }
-                {data.type.name}
+                {data.type.title}
               </span>
               <IoMdArrowDropdown />
             </button>
@@ -131,11 +131,11 @@ export default function Question({ index, data }: Props) {
               <div className="absolute right-0 mt-1 w-48 bg-white border shadow-lg z-10">
                 {options.map((opt) => (
                   <div
-                    key={opt.name}
+                    key={opt.title}
                     onClick={() => {
                       updateQuestion({
                         type: opt,
-                        choices: [{ title: "Option 1", description: null }],
+                        choices: [{ title: "Option 1", description: null,isDeleted:false }],
                       });
                       setOpen(false);
                     }}
@@ -147,9 +147,9 @@ export default function Question({ index, data }: Props) {
                         "Multiple choice": <IoMdRadioButtonOn />,
                         Checkboxes: <GrCheckboxSelected />,
                         "Drop-down": <MdOutlineArrowDropDownCircle />,
-                      }[opt.name]
+                      }[opt.title]
                     }{" "}
-                    <span>{opt.name}</span>
+                    <span>{opt.title}</span>
                   </div>
                 ))}
               </div>
@@ -159,7 +159,7 @@ export default function Question({ index, data }: Props) {
 
         {/* Main UI based on question type */}
         <div className="mt-4 text-sm text-gray-600 space-y-2">
-          {data.type.name === "Paragraph" &&
+          {data.type.title === "Paragraph" &&
 
             <div>
 
@@ -180,16 +180,16 @@ export default function Question({ index, data }: Props) {
           }
 
           {["Multiple choice", "Checkboxes", "Drop-down"].includes(
-            data.type.name
+            data.type.title
           ) && (
               <div className="space-y-4">
                 {(data.choices || []).map((opt, i) => (
                   <div key={i} className="flex flex-col gap-1">
                     <div className="flex gap-2 items-center">
-                      {data.type.name === "Multiple choice" && (
+                      {data.type.title === "Multiple choice" && (
                         <input type="radio" disabled />
                       )}
-                      {data.type.name === "Checkboxes" && (
+                      {data.type.title === "Checkboxes" && (
                         <input type="checkbox" disabled />
                       )}
                       <input

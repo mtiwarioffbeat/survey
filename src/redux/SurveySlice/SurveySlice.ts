@@ -2,8 +2,9 @@ import { Survey } from "@/types/survey";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: Survey["Survey"] = {
-  name: "",
+  title: "",
   description: "",
+  isDeleted:false,
   isPublished: false,
   isOpenedInEditMode: true,
   // createdBy: null,
@@ -11,8 +12,9 @@ const initialState: Survey["Survey"] = {
     {
       title: "",
       description: "",
+      isDeleted:false,
       type: {
-        name: "Paragraph",
+        title: "Paragraph",
         description: null,
       },
       choices: [],

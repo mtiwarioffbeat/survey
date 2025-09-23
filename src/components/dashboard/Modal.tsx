@@ -6,10 +6,11 @@ import { SurveyRoutes } from "@/services/api/SurveyRoutes";
 import { useNavigation } from "@/hooks/useNavigation";
 import Spinner from "../Spinner";
 import { Survey } from "@/types/survey";
+import { NextResponse } from "next/server";
 
 const Modal = () => {
     const dispatch = useAppDispatch();
-    const [name, setName] = useState("");
+    const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const survey = useAppSelector((store) => store.survey)
     const { loading } = useAppSelector((store) => store.dashboard)
@@ -17,21 +18,29 @@ const Modal = () => {
 
     const handleConfirm = async () => {
         dispatch(setLoading(true))
-        const newSurveyData:Survey['Survey'] = { ...survey, name: name, description: description };
-        dispatch(setSurvey(newSurveyData));
-        const res = await SurveyRoutes.CreateSurvey(newSurveyData)
-        console.log("response in frontend",res.data.sur_id)
+        const newSurveyData:Survey['Survey'] = { ...survey, title: title, description: description };
 
-        router.push(`/dashboard/survey/${res.data.sur_id}/edit`)
+        dispatch(setSurvey(newSurveyData));
+        try{
+
+            const res = await SurveyRoutes.CreateSurvey(newSurveyData)
+            console.log("response in frontend",res.data.sur_id)            
+            router.push(`/dashboard/survey/${res.data.sur_id}/edit`)
+        } catch(err:unknown){
+            console.log("error",err)
+            return NextResponse.json({error:err})
+        }
         dispatch(setLoading(false))
         dispatch(setShowModal(false))
-        setName("");
+        setTitle("");
         setDescription("");
-
+        
     };
-
+    
     const handleClose = () => {
         dispatch(setShowModal(false));
+        dispatch(setLoading(false))
+        
     };
 
     return (
@@ -44,8 +53,8 @@ const Modal = () => {
                         <input
                             type="text"
                             placeholder="Name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
                             className="w-full rounded-md border border-gray-300 p-2 focus:border-indigo-600 focus:outline-none"
                         />
                         <textarea
@@ -67,7 +76,7 @@ const Modal = () => {
                         <button
                             className="ml-2 rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-center text-sm text-white shadow-md transition-all hover:bg-indigo-700 hover:shadow-lg focus:bg-indigo-700 focus:shadow-none active:bg-indigo-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none cursor-pointer"
                             onClick={handleConfirm}
-                            disabled={!name || !description || loading}
+                            disabled={!title || !description || loading}
                         >
                             {loading ? <Spinner /> : "Confirm"}
                         </button>

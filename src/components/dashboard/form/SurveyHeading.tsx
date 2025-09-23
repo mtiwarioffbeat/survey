@@ -8,15 +8,15 @@ export default function SurveyHeading() {
   const dispatch = useAppDispatch();
   const survey = useAppSelector((store) => store.survey);
 
-  const [localName, setLocalName] = useState(survey.name || "");
+  const [localTitle, setLocalTitle] = useState(survey.title || "");
   const [localDesc, setLocalDesc] = useState(survey.description || "");
 
   const descRef = useRef<HTMLDivElement>(null);
 
   // Update Redux whenever local state changes
   useEffect(() => {
-    dispatch(setSurvey({ name: localName, description: localDesc }));
-  }, [localName, localDesc, dispatch]);
+    dispatch(setSurvey({ title: localTitle, description: localDesc }));
+  }, [localTitle, localDesc, dispatch]);
 
   // Initialize description from Redux (only when loading survey)
   useEffect(() => {
@@ -33,8 +33,8 @@ export default function SurveyHeading() {
         <input
           className="text-3xl font-medium outline-none my-5 w-full"
           placeholder="Survey Heading"
-          value={localName}
-          onChange={(e) => setLocalName(e.target.value)}
+          value={localTitle}
+          onChange={(e) => setLocalTitle(e.target.value)}
         />
 
         <hr className="text-gray-300" />

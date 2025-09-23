@@ -14,6 +14,7 @@ export default function EditPage() {
     const newQuestion = {
       title: "",
       description: null,
+      isDeleted:false,
       type: {
         name: "Paragraph", // default type
         description: null,
@@ -21,6 +22,7 @@ export default function EditPage() {
       choices: [] as {
         title: string;
         description: string | null;
+        isDeleted:false
       }[], // empty by default
     };
 

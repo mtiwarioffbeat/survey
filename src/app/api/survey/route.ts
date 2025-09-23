@@ -9,7 +9,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { name, description, isPublished, isOpenedInEditMode, questions } = body;
    console.log("body baclend=>>>>>>>",body)
-    // 1. Extract token from cookie
+   console.log("type",questions[0].type)
+   console.log("question",questions)
+    // token from cookie
     const cookieStore = await cookies();
     const token = cookieStore.get("session")?.value;
     if (!token) {
@@ -22,13 +24,13 @@ export async function POST(req: NextRequest) {
     let _survey_id = null
     // 3. Call stored procedure
   const {rows} =   await pool.query(
-      `CALL create_survey($1, $2, $3, $4, $5, $6, $7)`,
+      `CALL create_survey($1, $2, $3, $4, $5, $6, $7 )`,
       [
         name,
         description,
         isPublished,
         isOpenedInEditMode,
-        userId,                // <-- created_by (from session)
+        userId,                    // <-- created_by (from session)
         JSON.stringify(questions),
         _survey_id
       ]
@@ -58,7 +60,7 @@ export async function GET(){
       )
 
       console.log("rowssssss",rows)
-      return NextResponse.json({message:"surveys fetched successfully",rows},{status:200})
+      return NextResponse.json({message:"surveys fetched successfully",data:rows},{status:200})
 
   } catch(err:unknown){
     console.log(err)

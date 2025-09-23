@@ -12,6 +12,7 @@ import { setSession, setShowModal } from '@/redux/DashboardSlice/DashboardSlice'
 import { useNavigation } from '@/hooks/useNavigation';
 import Modal from '@/components/dashboard/Modal';
 import { resetSurvey } from '@/redux/SurveySlice/SurveySlice';
+import axios from 'axios';
 const Page = () => {
   const { router } = useNavigation()
   const isMenu = true;
@@ -21,6 +22,7 @@ const Page = () => {
  
   useEffect(() => {
     async function get() {
+// get session
       const user = await getSession()
       // console.log("user",user)
       const temp = {
@@ -28,8 +30,17 @@ const Page = () => {
         name: user?.name,
         email: user?.email
       }
+      // getsurveys
+      const res = await axios.get('/api/survey')
+      console.log("response for get surveys",res)
       dispatch(setSession(temp))
     }
+
+
+
+
+
+
     get()
   }, [])
 
