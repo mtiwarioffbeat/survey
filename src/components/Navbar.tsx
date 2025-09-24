@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
-import { setMenuOpen } from "@/redux/DashboardSlice/DashboardSlice";
+import { setMenuOpen, setViewMode } from "@/redux/DashboardSlice/DashboardSlice";
 import { FaFileAlt } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
 import { MdOutlineRemoveRedEye, MdPublishedWithChanges } from "react-icons/md";
@@ -10,6 +10,7 @@ import { useNavigation } from "@/hooks/useNavigation";
 import { setLoading } from "@/redux/AuthSlice/AuthSlice";
 import Spinner from "./Spinner";
 import { resetSurvey, setSurvey } from "@/redux/SurveySlice/SurveySlice";
+import { toast } from "react-toastify";
 export default function DashboardNav() {
     const { menuOpen, loading,viewMode } = useAppSelector((store) => store.dashboard)
     const dispatch = useAppDispatch()
@@ -34,6 +35,20 @@ export default function DashboardNav() {
 
         dispatch(setLoading(false))
     }
+
+     const handleView = () => {
+            // const surveyToView = surveys.find((s) => s.id == survey_id)
+    
+            if (survey) {
+                // dispatch(setSurvey(surveyToView))
+                dispatch(setViewMode(true))
+                router.push(`/dashboard/survey/${survey.id}/preview`)
+            } else {
+                // console.error(`Survey with ID ${id} not found.`);
+                toast.error(`Survey not found.`)
+            }
+        }
+
     return (
 
         <nav className=" border-gray-200  bg-white shadow w-full py-3">
@@ -59,7 +74,7 @@ export default function DashboardNav() {
                     pathName != "/dashboard" && !viewMode &&
                     <div className="flex items-center justify-center gap-3">
                         {/* view */}
-                        <button className="flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
+                        <button className="flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group" onClick={handleView} >
 
                             <MdOutlineRemoveRedEye size={24} className="text-indigo-600" />
                             <Tooltip text="Preview" />

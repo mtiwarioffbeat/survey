@@ -5,7 +5,8 @@ const initialState:{
     session:Session,
     showModal:boolean,
     loading:boolean,
-    viewMode:boolean
+    viewMode:boolean,
+    genModel:boolean
 } = {
     menuOpen:false,
     session:{
@@ -15,7 +16,8 @@ const initialState:{
     },
     showModal:false,
     loading:false,
-    viewMode:false
+    viewMode:false,
+    genModel:false
 }
 
 const createSurvey = createAsyncThunk('surveys/createSurvey',
@@ -42,11 +44,14 @@ const DashboardSlice = createSlice({
         },
         setViewMode:(state,action:PayloadAction<boolean>)=>{
             state.viewMode = action.payload
+        },
+        setGenModel:(state,action:PayloadAction<boolean>)=>{
+            state.genModel = action.payload
         }
 
     }
 })
 
 
-export const {setMenuOpen,setSession,setShowModal,setLoading,setViewMode} = DashboardSlice.actions
+export const {setMenuOpen,setSession,setShowModal,setLoading,setViewMode,setGenModel} = DashboardSlice.actions
 export default DashboardSlice.reducer
