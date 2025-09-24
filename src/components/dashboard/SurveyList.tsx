@@ -5,14 +5,16 @@ import { useNavigation } from "@/hooks/useNavigation"
 import { setSurvey } from "@/redux/SurveySlice/SurveySlice"
 import { Survey } from "@/types/survey"
 import { toast } from "react-toastify"
-import { setViewMode } from "@/redux/DashboardSlice/DashboardSlice"
+import {  setSurveyDeleteConfirm, setViewMode } from "@/redux/DashboardSlice/DashboardSlice"
 
 export default function SurveyList() {
 
     const surveys = useAppSelector((store) => store.surveys)
     const { router } = useNavigation()
     const dispatch = useAppDispatch()
+    const {surveyDeleteConfirm} = useAppSelector((store)=>store.dashboard)
 
+    //edit
     const handleEdit = (id: number | null) => {
         if (id === null) {
             console.log("ID is null. Cannot edit.");
@@ -49,6 +51,13 @@ export default function SurveyList() {
         }
     }
 
+    //delete
+    const handleDelete = (survey_id: number)=>{
+        if(survey_id==null){
+            toast.error("id is not present")
+        }
+        dispatch(setSurveyDeleteConfirm({...surveyDeleteConfirm,delete:true}))
+    }
 
     return (
         <div className="w-full">
@@ -99,7 +108,7 @@ export default function SurveyList() {
                                         <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 hover:underline">
                                             <Link href="">Publish</Link>
                                         </button>
-                                        <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 flex items-center gap-1 hover:underline">
+                                        <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 flex items-center gap-1 hover:underline" onClick={()=>handleDelete(survey.id)}>
                                             <Link href="">Delete</Link>
                                         </button>
                                     </div>
