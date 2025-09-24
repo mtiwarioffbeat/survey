@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { title, description, isPublished, isOpenedInEditMode, questions } = body;
     console.log("body baclend=>>>>>>>", body)
-    console.log("type", questions[0].type)
+    console.log("type", questions[0].type) 
     console.log("question", questions)
     // token from cookie
     const cookieStore = await cookies();
