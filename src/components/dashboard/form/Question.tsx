@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImParagraphLeft } from "react-icons/im";
 import { IoMdRadioButtonOn, IoMdArrowDropdown } from "react-icons/io";
 import { GrCheckboxSelected } from "react-icons/gr";
@@ -32,9 +32,12 @@ export default function Question({ index, data }: Props) {
   const {viewMode} = useAppSelector((store)=>store.dashboard)
 
   // check pathname
-  if(!pathname.includes('/preview')){
-    dispatch(setViewMode(false))
-  }
+  useEffect(()=>{
+    if(!pathname.includes('/preview')){
+      dispatch(setViewMode(false))
+    }
+
+  },[])
 
 
   // update a question (title, desc, type, choices etc.)
