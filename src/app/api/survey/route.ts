@@ -80,9 +80,11 @@ export async function GET() {
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    const { survey_id, title, description, isPublished, isOpenEditMode, questions } = body;
+    console.log("body",body)
+    const { id:survey_id, title, description,  isPublished, isOpenedInEditMode, questions } = body;
+  
     const user = await getSession()
-    const createdBy = user?.id
+    const updatedBy:number = user?.id
 
 
     const dbres = await pool.query(
@@ -92,8 +94,8 @@ export async function PUT(req: Request) {
         title,
         description,
         isPublished,
-        isOpenEditMode,
-        createdBy,
+        isOpenedInEditMode,
+        updatedBy,
         JSON.stringify(questions),
       ]);
 

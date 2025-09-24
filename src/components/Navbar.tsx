@@ -19,12 +19,13 @@ export default function DashboardNav() {
 
     const handleSave = async () => {
         dispatch(setLoading(true))
+        let new_survey = {...survey,isOpenedInEditMode: false}
         try {
-            const res = await SurveyRoutes.UpdateSurvey(survey)
+            const res = await SurveyRoutes.UpdateSurvey(new_survey)
             console.log("res in anvbar", res)
            
-            dispatch(resetSurvey())
             if (res.success) {
+                dispatch(resetSurvey())
                 router.push('/dashboard')
             }
         } catch (err: any) {

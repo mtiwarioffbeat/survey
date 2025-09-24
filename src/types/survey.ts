@@ -6,6 +6,7 @@ export interface Survey {
   },
 
   QuestionOption: {
+    id:number
     title: string,
     description: string | null,
     isDeleted?: boolean,
@@ -34,6 +35,7 @@ export interface Survey {
   },
 
   Question: {
+    id:number
     title: string,
     description: string | null,
     type: Survey['QuestionType']
@@ -61,6 +63,7 @@ export type Surveys = {
   isOpenedInEditMode: boolean,
   // isDeleted:boolean,
   questions: Array<{
+    id:number
     title: string,
     description: string | null,
     sortOrder: number,
@@ -71,6 +74,7 @@ export type Surveys = {
       description: string | null
     },
     choices: Array<{
+      id:number,
       title: string,
       description: string | null,
       sortOrder: string,

@@ -72,7 +72,7 @@ export default function Question({ index, data }: Props) {
             <input
               type="text"
               placeholder="Question"
-              value={data.title}
+              value={data.title? data.title:""}
               onChange={(e) => updateQuestion({ title: e.target.value })}
               className="border-b outline-none pb-2 border-gray-300"
             />
