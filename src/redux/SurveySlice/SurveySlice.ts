@@ -27,7 +27,7 @@ const surveySlice = createSlice({
   name: "survey",
   initialState,
   reducers: {
-    setSurvey(state, action: PayloadAction<Partial<Survey["Survey"]>>) {
+    setSurvey(state, action: PayloadAction<Survey["Survey"]>) {
       return { ...state, ...action.payload };
     },
 

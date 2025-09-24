@@ -16,7 +16,7 @@ export default function EditPage() {
       description: null,
       isDeleted:false,
       type: {
-        name: "Paragraph", // default type
+        title: "Paragraph", // default type
         description: null,
       },
       choices: [] as {

@@ -13,33 +13,35 @@ import { useNavigation } from '@/hooks/useNavigation';
 import Modal from '@/components/dashboard/Modal';
 import { resetSurvey } from '@/redux/SurveySlice/SurveySlice';
 import axios from 'axios';
+import { setSurveys } from '@/redux/SurveysSlice/SurveysSlice';
 const Page = () => {
   const { router } = useNavigation()
   const isMenu = true;
   const survey = useAppSelector((store) => store.survey)
   const { session, showModal } = useAppSelector((store) => store.dashboard)
+  const surveys = useAppSelector((store)=>store.surveys)
   const dispatch = useAppDispatch()
  
- useEffect(() => {
+useEffect(() => {
   const getData = async () => {
     try {
-      // Gett session
+      // get session
       const user = await getSession();
       if (user) {
-        const temp = {
+        dispatch(setSession({
           id: user.id,
           name: user.name,
           email: user.email,
-        };
-        dispatch(setSession(temp));
+        }));
       }
 
-      // gettty surveys
+      // get surveys
       const res = await axios.get('/api/survey');
       console.log("response for get surveys", res.data);
-      dispatch(setSurvey)
+      dispatch(setSurveys(res.data.data || []));
     } catch (err) {
       console.error("Error fetching session/surveys:", err);
+      dispatch(setSurveys([])); 
     }
   };
 

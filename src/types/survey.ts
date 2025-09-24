@@ -1,26 +1,31 @@
-export interface Survey{
-  QuestionType:{
-    title:string,
-    description:string | null,
+export interface Survey {
+  QuestionType: {
+    title: string,
+    description: string | null,
+
   },
 
-  QuestionOption:{
-    title:string,
-    description:string|null,
-    isDeleted: boolean
+  QuestionOption: {
+    title: string,
+    description: string | null,
+    isDeleted?: boolean,
+    sortOrder?: string,
     // QuestionID:INT FK, (will be returned, when question is created)
     // CreatedAt:(System generated)
     // IsActive: (NO req rn)
     // SortOrder:number, (could use or index of array)
   },
 
-  Survey:{
-    title:string,
-    description:string,
-    isDeleted:boolean
-    isPublished:boolean,
-    isOpenedInEditMode:boolean,
-    questions:Array<Survey['Question']>
+  Survey: {
+    id?: number,
+    title: string,
+    description: string,
+    isDeleted?: boolean,
+    createdBy?: string,
+    createdAt?: Date,
+    isPublished: boolean,
+    isOpenedInEditMode: boolean,
+    questions: Array<Survey['Question']>
     // createdBy: number | null,//INT FK, (when axios==> add Createdby from session)
     // CreatedAt:Time (system gen or date.now())
     // IsActve: (No req rn)
@@ -28,43 +33,48 @@ export interface Survey{
     // EditStartBy:Int FK (when axios==>add id from session)
   },
 
-  Question:{
-    title:string,
+  Question: {
+    title: string,
     description: string | null,
-    type:Survey['QuestionType']
-    choices:Array<Survey['QuestionOption']>
-    isDeleted: boolean
+    type: Survey['QuestionType']
+    choices: Array<Survey['QuestionOption']>
+    isDeleted?: boolean,
+    sortOrder?: number,
     // QuestionTypeId: INT FK (backend wehn Question type is created it will return id)
     // SurveyID: INT FK (backend: when survey is create it will return id)
     // enteredBy: number | null //INT FK (frontend:when axios==> add id from session),
     // IsActve: (No req rn),
-     // SortOrder:number, (could use or index of array)
+    // SortOrder:number, (could use or index of array)
   }
 
 }
 
 
 export type Surveys = {
-  id:number | null,
-  title:string | null ,
-  description:string | null,
-  createdBy:string | null,
-  isPublished:boolean | null,
-  isOpenedInEditMode:boolean | null,
+  id: number,
+  title: string,
+  description: string,
+  createdBy: string,
+  createdAt: Date,
+  isDeleted?: boolean
+  isPublished: boolean,
+  isOpenedInEditMode: boolean,
   // isDeleted:boolean,
-  questions:[{
-    title:string | null,
-    description:string | null,
-    sortOrder:number | null,
+  questions: Array<{
+    title: string,
+    description: string | null,
+    sortOrder: number,
+    isDeleted?: boolean,
     // enteredBy:string
-    type:{
-      title:string | null,
-      description:string | null
+    type: {
+      title: string,
+      description: string | null
     },
-    choices:[{
-      title:string | null,
-      description:string | null,
-      sortOrder:string | null
-    }]
-  }]
+    choices: Array<{
+      title: string,
+      description: string | null,
+      sortOrder: string,
+      isDeleted?: boolean
+    }>
+  }>
 }
