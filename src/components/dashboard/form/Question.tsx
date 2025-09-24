@@ -9,6 +9,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { setRemoveQuestion, setSurvey, setUpdateQuestion } from "@/redux/SurveySlice/SurveySlice";
 import type { Survey } from "@/types/survey";
 import Tooltip from "@/components/Tooltip";
+import { usePathname } from "next/navigation";
+import { setViewMode } from "@/redux/DashboardSlice/DashboardSlice";
 
 const options: Survey["QuestionType"][] = [
   { title: "Paragraph", description: null },
@@ -23,9 +25,18 @@ type Props = {
 };
 
 export default function Question({ index, data }: Props) {
+   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const {questions} = useAppSelector((store)=>store.survey)
+  const {viewMode} = useAppSelector((store)=>store.dashboard)
+
+  // check pathname
+  if(!pathname.includes('/preview')){
+    dispatch(setViewMode(false))
+  }
+
+
   // update a question (title, desc, type, choices etc.)
   const updateQuestion = (updates: Partial<Survey["Question"]>) => {
     dispatch(setUpdateQuestion({ index, data: updates }));
@@ -73,6 +84,7 @@ export default function Question({ index, data }: Props) {
               type="text"
               placeholder="Question"
               value={data.title? data.title:""}
+              disabled={viewMode}
               onChange={(e) => updateQuestion({ title: e.target.value })}
               className="border-b outline-none pb-2 border-gray-300"
             />
@@ -96,18 +108,19 @@ export default function Question({ index, data }: Props) {
                   Remove
                 </button>
               </div>
-            ) : (
+            ) : (!viewMode &&
               <button
-                onClick={() => updateQuestion({ description: "" })}
-                className="text-blue-600 text-xs mt-1 self-start cursor-pointer"
+              onClick={() => updateQuestion({ description: "" })}
+              className="text-blue-600 text-xs mt-1 self-start cursor-pointer"
               >
-                + Add description
+              + Add description
               </button>
+            
             )}
           </div>
 
           {/* Question type dropdown */}
-          <div className="relative">
+          {!viewMode && <div className="relative">
             <button
               type="button"
               onClick={() => setOpen(!open)}
@@ -154,7 +167,7 @@ export default function Question({ index, data }: Props) {
                 ))}
               </div>
             )}
-          </div>
+          </div>}
         </div>
 
         {/* Main UI based on question type */}
@@ -165,7 +178,7 @@ export default function Question({ index, data }: Props) {
 
               <p>Long-answer text</p>
               { 
-                questions.length >1 &&
+                questions.length >1 && !viewMode &&
                 <div className="grid grid-flow-col justify-items-end">
                 <button onClick={() => {
                   deleteQuestion(index)

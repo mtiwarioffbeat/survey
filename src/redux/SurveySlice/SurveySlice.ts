@@ -10,6 +10,7 @@ const initialState: Survey["Survey"] = {
   // createdBy: null,
   questions: [
     {
+      id:-1,
       title: "",
       description: "",
       isDeleted:false,

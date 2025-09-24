@@ -1,27 +1,22 @@
-"use client";
-import { useState } from "react";
+'use client'
 import FormHeading from "@/components/dashboard/form/SurveyHeading";
-import FormNav from "@/components/dashboard/form/SurveyNav";
 import Question from "@/components/dashboard/form/Question";
-import Preview from "@/components/dashboard/form/Preview";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
+import { setAddQuestion } from "@/redux/SurveySlice/SurveySlice";
 
-export default function PreviewPage() {
-  const [questions, setQuestions] = useState<any[]>([]);
-  const isMenu = true;
+export default function peviewPage() {
+  const { questions } = useAppSelector((store) => store.survey);
+
 
   return (
-    <div className="w-full flex flex-col px-10 bg-purple-50">
-      <div className="flex">
-        <div className={`transition-all duration-300 flex-1 ${isMenu ? "ml-60" : "ml-0"}`}>
-          <FormNav />
-          <FormHeading />
+    <div className="bg-purple-50 mx-auto mt-10">
+      <div className="flex flex-col gap-8 w-[90%] md:w-[80%] lg:w-[60%] mx-auto">
+        <FormHeading />
 
-          {/* Question Builder */}
-          {/* <Question setQuestions={setQuestions} /> */}
-
-          {/* Preview */}
-          <Preview questions={questions} />
-        </div>
+        {/* Render all questions */}
+        {questions.map((q, idx) => (
+          <Question key={idx} index={idx} data={q} />
+        ))}
       </div>
     </div>
   );

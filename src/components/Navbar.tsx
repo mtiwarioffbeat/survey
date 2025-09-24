@@ -11,12 +11,12 @@ import { setLoading } from "@/redux/AuthSlice/AuthSlice";
 import Spinner from "./Spinner";
 import { resetSurvey, setSurvey } from "@/redux/SurveySlice/SurveySlice";
 export default function DashboardNav() {
-    const { menuOpen, loading } = useAppSelector((store) => store.dashboard)
+    const { menuOpen, loading,viewMode } = useAppSelector((store) => store.dashboard)
     const dispatch = useAppDispatch()
     const pathName = usePathname()
     const survey = useAppSelector((store) => store.survey)
     const { router } = useNavigation()
-
+    
     const handleSave = async () => {
         dispatch(setLoading(true))
         let new_survey = {...survey,isOpenedInEditMode: false}
@@ -56,7 +56,7 @@ export default function DashboardNav() {
 
                 {/*button features for survey page  */}
                 {
-                    pathName != "/dashboard" &&
+                    pathName != "/dashboard" && !viewMode &&
                     <div className="flex items-center justify-center gap-3">
                         {/* view */}
                         <button className="flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
