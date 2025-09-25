@@ -82,3 +82,9 @@ export type Surveys = {
     }>
   }>
 }
+
+export interface PatchSurvey{
+  survey_id:number,
+  to_delete:boolean,
+  to_publish:boolean
+}

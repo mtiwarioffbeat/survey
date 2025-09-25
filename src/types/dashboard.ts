@@ -4,8 +4,10 @@ interface Session{
     email:string | null
 }
 
-interface SurveyDeleteConfirm{
+interface GenModalConfirm{
     survey_id:number,
-    delete:boolean,
+    survey_name:string,
+    to_delete:boolean,
+    to_publish:boolean,
     text:string
 }

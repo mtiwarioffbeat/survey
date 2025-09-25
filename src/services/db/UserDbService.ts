@@ -2,6 +2,7 @@ import pool from "@/lib/db";
 import { TOTP } from "totp-generator";
 import base32 from "hi-base32";
 import { Auth } from "@/types/auth";
+import { PatchSurvey } from "@/types/survey";
 
 export class UserDbService {
   public static async findUserByEmail(email: string) {
@@ -74,6 +75,45 @@ export class OtpService {
 }
 
 
+
+export class SurveyServices{
+  public static async patchSurvey(data:PatchSurvey){
+    console.log("data inside patch",data)
+    const client = await pool.connect()
+    try{
+
+      let result
+      if(data.to_delete){
+        result =  await client.query(
+          `Update survey SET is_Deleted=$1 WHERE id = $2 RETURNING id
+          `,[data.to_delete,data.survey_id]
+        )
+      }
+      else if(data.to_publish){
+        result = await client.query(
+          `Update survey SET is_Published=$1 WHERE id = $2 RETURNING id
+          `,[data.to_publish,data.survey_id]
+        )
+      }
+      
+      const rows = await result?.rows[0]
+      console.log("inside queries",rows)
+      console.log("result====",result)
+      return rows
+    }finally{
+      client.release()
+    }
+
+  }
+}
+
+
+
+
+
+
+
+
 // export class TokenService{
 //   public static async CreateUserToken(session:Auth['userToken']){
 //     const client = await pool.connect()
@@ -92,3 +132,5 @@ export class OtpService {
 //       return null
 //   }
 // }
+
+

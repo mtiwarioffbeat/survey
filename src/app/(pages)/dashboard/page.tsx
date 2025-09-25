@@ -14,14 +14,15 @@ import Modal from '@/components/dashboard/Modal';
 import { resetSurvey } from '@/redux/SurveySlice/SurveySlice';
 import axios from 'axios';
 import { setSurveys } from '@/redux/SurveysSlice/SurveysSlice';
+import GenModal from '@/components/dashboard/GenModal';
 const Page = () => {
   const { router } = useNavigation()
   const isMenu = true;
   const survey = useAppSelector((store) => store.survey)
-  const { session, showModal } = useAppSelector((store) => store.dashboard)
+  const { session, showModal,GenModalConfirm } = useAppSelector((store) => store.dashboard)
   const surveys = useAppSelector((store)=>store.surveys)
   const dispatch = useAppDispatch()
- 
+  
 useEffect(() => {
   const getData = async () => {
     try {
@@ -46,7 +47,7 @@ useEffect(() => {
   };
 
   getData();
-}, [dispatch]);
+}, [dispatch,GenModalConfirm]);
 
 
 // empty survey curr
@@ -62,6 +63,7 @@ useEffect(()=>{
 
   return <>
     {showModal && <Modal />}
+    {(GenModalConfirm?.to_delete || GenModalConfirm?.to_publish) && <GenModal/>}
     <div className='w-full flex flex-col  sm:w-[90%] mx-auto h-full ' >
       <Aside />
       <div className="flex ">

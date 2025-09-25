@@ -6,7 +6,7 @@ const initialState:{
     showModal:boolean,
     loading:boolean,
     viewMode:boolean,
-    surveyDeleteConfirm:SurveyDeleteConfirm 
+    GenModalConfirm:GenModalConfirm 
 } = {
     menuOpen:false,
     session:{
@@ -17,9 +17,11 @@ const initialState:{
     showModal:false,
     loading:false,
     viewMode:false,
-    surveyDeleteConfirm:{
+    GenModalConfirm:{
         survey_id:-1,
-        delete:false,
+        survey_name:'',
+        to_delete:false,
+        to_publish:false,
         text:''
     }
 }
@@ -49,13 +51,13 @@ const DashboardSlice = createSlice({
         setViewMode:(state,action:PayloadAction<boolean>)=>{
             state.viewMode = action.payload
         },
-        setSurveyDeleteConfirm:(state,action:PayloadAction<SurveyDeleteConfirm>)=>{
-            state.surveyDeleteConfirm = action.payload
+        setGenModalConfirm:(state,action:PayloadAction<GenModalConfirm>)=>{
+            state.GenModalConfirm = action.payload
         }
        
     }
 })
 
 
-export const {setMenuOpen,setSession,setShowModal,setLoading,setViewMode,setSurveyDeleteConfirm} = DashboardSlice.actions
+export const {setMenuOpen,setSession,setShowModal,setLoading,setViewMode,setGenModalConfirm} = DashboardSlice.actions
 export default DashboardSlice.reducer

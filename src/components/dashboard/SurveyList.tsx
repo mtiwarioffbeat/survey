@@ -5,14 +5,14 @@ import { useNavigation } from "@/hooks/useNavigation"
 import { setSurvey } from "@/redux/SurveySlice/SurveySlice"
 import { Survey } from "@/types/survey"
 import { toast } from "react-toastify"
-import {  setSurveyDeleteConfirm, setViewMode } from "@/redux/DashboardSlice/DashboardSlice"
+import {  setGenModalConfirm, setViewMode } from "@/redux/DashboardSlice/DashboardSlice"
 
 export default function SurveyList() {
 
     const surveys = useAppSelector((store) => store.surveys)
     const { router } = useNavigation()
     const dispatch = useAppDispatch()
-    const {surveyDeleteConfirm} = useAppSelector((store)=>store.dashboard)
+    const {GenModalConfirm} = useAppSelector((store)=>store.dashboard)
 
     //edit
     const handleEdit = (id: number | null) => {
@@ -52,11 +52,19 @@ export default function SurveyList() {
     }
 
     //delete
-    const handleDelete = (survey_id: number)=>{
+    const handleDelete = (survey_id: number,survey_name:string)=>{
         if(survey_id==null){
             toast.error("id is not present")
         }
-        dispatch(setSurveyDeleteConfirm({...surveyDeleteConfirm,delete:true}))
+        dispatch(setGenModalConfirm({...GenModalConfirm,to_delete:true,survey_name:survey_name,survey_id:survey_id}))
+    }
+
+    //publish
+    const handlePublish = (survey_id:number,survey_name:string)=>{
+        if(survey_id==null){
+            toast.error("id is not present")
+        }
+         dispatch(setGenModalConfirm({...GenModalConfirm,survey_name:survey_name,survey_id:survey_id,to_publish:true}))
     }
 
     return (
@@ -92,25 +100,37 @@ export default function SurveyList() {
                                     {`${survey.isPublished}`}
                                 </td>
                                 <td className="border border-gray-300 px-2 sm:px-3 py-2">
-                                    <div className="flex items-center justify-around">
-                                        <button
-                                            className="px-2 sm:px-3 py-2 font-bold text-indigo-500 hover:underline"
-                                            onClick={() => handleEdit(survey.id)}
-                                        >
-                                            <Link href="">Edit</Link>
-                                        </button>
+                                    <div className="flex items-center ">
+                                        {/* View */}
                                         <button
                                             className="px-2 sm:px-3 py-2 font-bold text-indigo-500 hover:underline"
                                             onClick={() => handleView(survey.id)}
                                         >
                                             <Link href="">View</Link>
                                         </button>
-                                        <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 hover:underline">
+                                        { !survey.isPublished &&
+
+                                       
+                                          
+                                            
+                                            <div className="flex items-center justify-center">
+
+                                        <button
+                                            className="px-2 sm:px-3 py-2 font-bold text-indigo-500 hover:underline"
+                                            onClick={() => handleEdit(survey.id)}
+                                            >
+                                            <Link href="">Edit</Link>
+                                        </button>
+                                        {/* publish */}
+                                        <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 hover:underline" onClick={()=>handlePublish(survey.id,survey.title)}>
                                             <Link href="">Publish</Link>
                                         </button>
-                                        <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 flex items-center gap-1 hover:underline" onClick={()=>handleDelete(survey.id)}>
+                                        {/* delete */}
+                                        <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 flex items-center gap-1 hover:underline" onClick={()=>handleDelete(survey.id,survey.title)}>
                                             <Link href="">Delete</Link>
                                         </button>
+                                            </div>
+                                         }
                                     </div>
                                 </td>
                             </tr>

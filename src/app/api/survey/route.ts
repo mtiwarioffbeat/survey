@@ -3,6 +3,7 @@ import pool from "@/lib/db"; // your pg Pool instance
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { getSession } from "@/lib/getSession";
+import { SurveyServices } from "@/services/db/UserDbService";
 
 export async function POST(req: NextRequest) {
   try {
@@ -108,5 +109,32 @@ export async function PUT(req: Request) {
       { error: "Failed to update survey" },
       { status: 500 }
     );
+  }
+}
+
+
+
+
+
+export async function PATCH(req:Request){
+  try{
+    const body = await req.json()
+    console.log("Body data in patch",body)
+
+    const response = await SurveyServices.patchSurvey(body);
+    let NextResponseMessage='';
+    // if(!response){
+    //   return NextResponse.json({error:"No Survey found"},{status:404})
+    // }
+    if(body.to_delete){
+      NextResponseMessage="Survey deleted successfully"
+    }
+    else if(body.to_publish){
+      NextResponseMessage="Survey published successfully"
+    }
+    return NextResponse.json({status:200,message:NextResponseMessage})
+  }  catch(error:any){
+       console.error("Error updating survey:", error);
+    return NextResponse.json({ error: "Failed to publish/delete survey" }, { status: 500 });
   }
 }

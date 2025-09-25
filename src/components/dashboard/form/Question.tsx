@@ -37,7 +37,7 @@ export default function Question({ index, data }: Props) {
       dispatch(setViewMode(false))
     }
 
-  },[])
+  },[pathname])
 
 
   // update a question (title, desc, type, choices etc.)
