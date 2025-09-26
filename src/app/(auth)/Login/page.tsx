@@ -97,14 +97,14 @@ const page = () => {
             </div>
             <button
               type="submit"
-              className=" mt-2 w-full bg-blue-600 text-white cursor-pointer py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
+              className=" mt-2 w-full bg-indigo-600 text-white cursor-pointer py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200"
            
             >
               {loading ?(<Spinner/>):('Login')}
             </button>
             <p className="text-center text-sm text-gray-600 mt-4">
            Don&#39;t have an Account?
-            <Link href={'/signup'} className="text-blue-600 hover:underline" >{' '}Signup</Link>
+            <Link href={'/signup'} className="text-indigo-600 hover:underline" >{' '}Signup</Link>
           </p>
           </form>
         </div>

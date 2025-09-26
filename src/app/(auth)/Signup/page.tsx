@@ -111,13 +111,13 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           </div>
           <button
             disabled={loading}
-            className="w-full cursor-pointer bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
+            className="w-full cursor-pointer bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200"
           >
             {loading ? (<Spinner />) : ("Sign Up")}
           </button>
           <p className="text-center text-sm text-gray-600 mt-4">
             Already have an account?
-            <Link href={'/login'} className="text-blue-600 hover:underline" >{' '}Login</Link>
+            <Link href={'/login'} className="text-indigo-600 hover:underline" >{' '}Login</Link>
           </p>
         </form>
       </div>
