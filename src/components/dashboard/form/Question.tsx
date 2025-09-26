@@ -48,14 +48,16 @@ export default function Question({ index, data }: Props) {
   // delete ques
   const deleteQuestion = (idx:number)=>{
     console.log("index of the ques",idx)
-    dispatch(setRemoveQuestion(idx))
+    // dispatch(setRemoveQuestion(idx))
+    const updatedQues = {...data,isDeleted:true}
+    dispatch(setUpdateQuestion({index,data:updatedQues}))
   }
 
   // add option
   const addOption = () => {
     const newChoices = [
       ...(data.choices || []),
-      { title: `Option ${data.choices?.length! + 1}`, description: null,isDeleted:false },
+      { title: `Option ${data.choices?.length! + 1}`, description: null,isDeleted:false, sortOrder: `${data.choices?.length! + 1}` },
     ];
     updateQuestion({ choices: newChoices });
   };
@@ -73,9 +75,10 @@ export default function Question({ index, data }: Props) {
 
   // remove option
   const removeOption = (i: number) => {
-    const newChoices = (data.choices || []).filter((_, idx) => idx !== i);
-    updateQuestion({ choices: newChoices });
-  };
+  const newChoices = [...(data.choices || [])];
+  newChoices[i] = { ...newChoices[i], isDeleted: true };
+  updateQuestion({ choices: newChoices });
+};
 
   return (
     <div className="w-full">
@@ -151,7 +154,7 @@ export default function Question({ index, data }: Props) {
                     onClick={() => {
                       updateQuestion({
                         type: opt,
-                        choices: [{ title: "Option 1", description: null,isDeleted:false }],
+                        choices: [{ title: "Option 1", description: null,isDeleted:false, sortOrder:1}],
                       });
                       setOpen(false);
                     }}
@@ -198,10 +201,10 @@ export default function Question({ index, data }: Props) {
           {["Multiple choice", "Checkboxes", "Drop-down"].includes(
             data.type.title
           ) && (
-              <div className="space-y-4 w-full">
+              <div className="space-y-4">
                 {(data.choices || []).map((opt, i) => (
-                  <div key={i} className="flex flex-col gap-1 w-full">
-                    <div className="flex gap-2 items-center flex-wrap">
+                  <div key={i} className="flex flex-col gap-1">
+                    <div className="flex gap-2 items-center">
                       {data.type.title === "Multiple choice" && (
                         <input type="radio" disabled className="flex-shrink-0" />
                       )}
