@@ -76,7 +76,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       
     if (res?.success) {
       toast.success(res.message);
-      router.push('/dashboard')
+      // Refresh the page to ensure cookie is available, then redirect
+      window.location.href = '/dashboard';
     } else if (res) {
       toast.error(res.message || res.error || "An unknown error occurred.");
     }

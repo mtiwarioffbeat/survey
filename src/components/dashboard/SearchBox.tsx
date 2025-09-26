@@ -4,7 +4,7 @@ export default function SearchBox() {
         <div className="relative  max-w-sm ">
             <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Search... form"
                 className="w-full pl-10 pr-3 py-1 text-sm rounded-full border border-gray-300 focus:outline-none  focus:shadow"
             />
             <div className="absolute  ml-3 top-4.5 transform -translate-y-1/2 text-gray-400">

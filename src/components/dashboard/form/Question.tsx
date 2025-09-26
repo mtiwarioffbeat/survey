@@ -78,9 +78,9 @@ export default function Question({ index, data }: Props) {
   };
 
   return (
-    <div>
-      <div className="rounded-lg items-center border-l-6 border-indigo-600 bg-white p-6 shadow">
-        <div className="flex gap-4 justify-between">
+    <div className="w-full">
+      <div className="rounded-lg flex flex-col items-start border-l-6 border-indigo-600 bg-white p-4 sm:p-6 shadow">
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:justify-between sm:items-center">
           <div className="flex flex-col w-full">
             {/* Question title */}
             <input
@@ -89,12 +89,12 @@ export default function Question({ index, data }: Props) {
               value={data.title? data.title:""}
               disabled={viewMode}
               onChange={(e) => updateQuestion({ title: e.target.value })}
-              className="border-b outline-none pb-2 border-gray-300"
+              className="border-b outline-none pb-2 border-gray-300 w-full"
             />
 
             {/* Conditional description */}
             {data.description !== null ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 w-full">
                 <input
                   type="text"
                   placeholder="Question Description"
@@ -106,7 +106,7 @@ export default function Question({ index, data }: Props) {
                 />
                 <button
                   onClick={() => updateQuestion({ description: null })}
-                  className="text-red-500 text-xs cursor-pointer"
+                  className="text-red-500 text-xs cursor-pointer flex-shrink-0 "
                 >
                   Remove
                 </button>
@@ -123,11 +123,11 @@ export default function Question({ index, data }: Props) {
           </div>
 
           {/* Question type dropdown */}
-          {!viewMode && <div className="relative">
+          {!viewMode && <div className="relative w-full sm:w-auto">
             <button
               type="button"
               onClick={() => setOpen(!open)}
-              className="flex cursor-pointer items-center justify-between w-48 border px-3 py-2 text-sm bg-white shadow"
+              className="flex cursor-pointer items-center justify-between w-full sm:w-48 border px-3 py-2 text-sm bg-white shadow"
             >
               <span className="flex items-center gap-2">
                 {
@@ -144,7 +144,7 @@ export default function Question({ index, data }: Props) {
             </button>
 
             {open && (
-              <div className="absolute right-0 mt-1 w-48 bg-white border shadow-lg z-10">
+              <div className="absolute left-0 sm:right-0 mt-1 w-full sm:w-48 bg-white border shadow-lg z-10">
                 {options.map((opt) => (
                   <div
                     key={opt.title}
@@ -174,15 +174,15 @@ export default function Question({ index, data }: Props) {
         </div>
 
         {/* Main UI based on question type */}
-        <div className="mt-4 text-sm text-gray-600 space-y-2">
+        <div className="mt-4 text-sm text-gray-600 space-y-2 w-full">
           {data.type.title === "Paragraph" &&
 
-            <div>
+            <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
 
-              <p>Long-answer text</p>
+              <p className="flex-shrink-0">Long-answer text</p>
               { 
                 questions.length >1 && !viewMode &&
-                <div className="grid grid-flow-col justify-items-end">
+                <div className="flex justify-end">
                 <button onClick={() => {
                   deleteQuestion(index)
                 }} className=" flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
@@ -198,15 +198,15 @@ export default function Question({ index, data }: Props) {
           {["Multiple choice", "Checkboxes", "Drop-down"].includes(
             data.type.title
           ) && (
-              <div className="space-y-4">
+              <div className="space-y-4 w-full">
                 {(data.choices || []).map((opt, i) => (
-                  <div key={i} className="flex flex-col gap-1">
-                    <div className="flex gap-2 items-center">
+                  <div key={i} className="flex flex-col gap-1 w-full">
+                    <div className="flex gap-2 items-center flex-wrap">
                       {data.type.title === "Multiple choice" && (
-                        <input type="radio" disabled />
+                        <input type="radio" disabled className="flex-shrink-0" />
                       )}
                       {data.type.title === "Checkboxes" && (
-                        <input type="checkbox" disabled />
+                        <input type="checkbox" disabled className="flex-shrink-0" />
                       )}
                       <input
                         type="text"
@@ -215,12 +215,12 @@ export default function Question({ index, data }: Props) {
                           updateOption(i, "title", e.target.value)
                         }
                         placeholder={`Option ${i + 1}`}
-                        className="flex-1 border-b outline-none pb-1"
+                        className="flex-1 border-b outline-none pb-1 min-w-0"
                       />
                       {data.choices && data.choices.length > 1 && (
                         <button
                           onClick={() => removeOption(i)}
-                          className="text-gray-500"
+                          className="text-gray-500 flex-shrink-0"
                         >
                           <RxCross1 size={16} className="cursor-pointer" />
                         </button>
@@ -229,7 +229,7 @@ export default function Question({ index, data }: Props) {
 
                     {/* Option description */}
                     {opt.description !== null ? (
-                      <div className="flex items-center gap-3 ml-8">
+                      <div className="flex items-center gap-3 ml-4 sm:ml-8 w-full">
                         <input
                           type="text"
                           value={opt.description}
@@ -237,11 +237,11 @@ export default function Question({ index, data }: Props) {
                             updateOption(i, "description", e.target.value)
                           }
                           placeholder="Option description"
-                          className="flex-1 border-b outline-none text-sm text-gray-500 px-3"
+                          className="flex-1 border-b outline-none text-sm text-gray-500 px-3 min-w-0"
                         />
                         <button
                           onClick={() => updateOption(i, "description", null)}
-                          className="text-red-400 text-xs cursor-pointer"
+                          className="text-red-400 text-xs cursor-pointer flex-shrink-0 mr-6"
                         >
                           Remove
                         </button>
@@ -249,25 +249,25 @@ export default function Question({ index, data }: Props) {
                     ) : (
                       <button
                         onClick={() => updateOption(i, "description", "")}
-                        className="text-blue-600 text-xs mt-1 self-start ml-8 cursor-pointer"
+                        className="text-blue-600 text-xs mt-1 self-start ml-4 sm:ml-8 cursor-pointer"
                       >
                         + Add description
                       </button>
                     )}
                   </div>
                 ))}
-                <div className="flex justify-between items-center">
-                  <div>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                  <div className="w-full sm:w-auto">
                     <button
                       onClick={addOption}
-                      className="cursor-pointer hover:bg-white shadow px-2 py-1 text-xs"
+                      className="cursor-pointer hover:bg-white shadow px-2 py-1 text-xs w-full sm:w-auto"
                     >
                       Add Option
                     </button>
                   </div>
                   {
                         questions.length >1 &&
-                    <div className="grid grid-flow-col justify-items-end">
+                    <div className="flex justify-end">
                     <button onClick={() => {
                       deleteQuestion(index)
                     }} className=" flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
