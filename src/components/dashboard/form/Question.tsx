@@ -218,9 +218,9 @@ export default function Question({ index, data }: Props) {
                           updateOption(i, "title", e.target.value)
                         }
                         placeholder={`Option ${i + 1}`}
-                        className="flex-1 border-b outline-none pb-1"
+                        className={`flex-1 ${viewMode ? "":"border-b"} outline-none pb-1`}
                       />
-                      {data.choices && data.choices.length > 1 && (
+                      {data.choices && data.choices.length > 1 && !viewMode &&(
                         <button
                           onClick={() => removeOption(i)}
                           className="text-gray-500"
@@ -250,15 +250,18 @@ export default function Question({ index, data }: Props) {
                         </button>
                       </div>
                     ) : (
-                      <button
+                     
+                      !viewMode &&
+                     ( <button
                         onClick={() => updateOption(i, "description", "")}
                         className="text-blue-600 text-xs mt-1 self-start ml-8 cursor-pointer"
                       >
                         + Add description
-                      </button>
+                      </button> )
                     )}
                   </div>
                 ))}
+                { !viewMode &&
                 <div className="flex justify-between items-center">
                   <div>
                     <button
@@ -280,7 +283,7 @@ export default function Question({ index, data }: Props) {
                   </div>
                     }
                 </div>
-
+}
               </div>
             )}
         </div>
