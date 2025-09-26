@@ -15,6 +15,7 @@ export default function EditPage() {
       title: "",
       description: null,
       isDeleted:false,
+      sortOrder:questions.length+1,
       type: {
         title: "Paragraph", // default type
         description: null,
@@ -22,7 +23,8 @@ export default function EditPage() {
       choices: [] as {
         title: string;
         description: string | null;
-        isDeleted:false
+        isDeleted:false,
+        sortOrder:1
       }[], // empty by default
     };
 
@@ -35,7 +37,7 @@ export default function EditPage() {
         <FormHeading />
 
         {/* Render all questions */}
-        {questions.map((q, idx) => (
+        {questions.filter(q => !q.isDeleted).map((q, idx) => (
           <Question key={idx} index={idx} data={q} />
         ))}
 

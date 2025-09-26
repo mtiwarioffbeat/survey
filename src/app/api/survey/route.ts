@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       ]
     );
     const sur_id = rows[0]._survey_id
-    console.log("updated survey ", rows)
+    console.log("post survey ", rows)
     // console.log("response in backend",res)
     return NextResponse.json({ message: "Survey created successfully", sur_id }, { status: 201 });
   } catch (error: any) {
@@ -82,22 +82,24 @@ export async function PUT(req: Request) {
   try {
     const body = await req.json();
     console.log("body",body)
+     
     const { id:survey_id, title, description,  isPublished, isOpenedInEditMode, questions } = body;
   
     const user = await getSession()
-    const updatedBy:number = user?.id
+    const enteredBy:number = user?.id
 
-
+    
     const dbres = await pool.query(
-      `CALL update_survey($1, $2, $3, $4, $5, $6, $7)`,
+      `CALL update_survey($1, $2, $3, $4, $5, $6, $7,$8)`,
       [
         survey_id,
         title,
         description,
         isPublished,
         isOpenedInEditMode,
-        updatedBy,
+        enteredBy,
         JSON.stringify(questions),
+        null
       ]);
 
     console.log("rows", dbres)

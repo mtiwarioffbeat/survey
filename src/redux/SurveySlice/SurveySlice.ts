@@ -9,11 +9,11 @@ const initialState: Survey["Survey"] = {
   isOpenedInEditMode: true,
   // createdBy: null,
   questions: [
-    {
-      id:-1,
+    { 
       title: "",
       description: "",
       isDeleted:false,
+      sortOrder:1,
       type: {
         title: "Paragraph",
         description: null,

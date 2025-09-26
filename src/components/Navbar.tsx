@@ -13,6 +13,7 @@ import Spinner from "./Spinner";
 import { resetSurvey, setSurvey } from "@/redux/SurveySlice/SurveySlice";
 import { toast } from "react-toastify";
 import { useState } from "react";
+
 export default function DashboardNav() {
     const [publishLoading, setPublishLoading] = useState(false)
     const { menuOpen, loading, viewMode } = useAppSelector((store) => store.dashboard)
@@ -20,7 +21,7 @@ export default function DashboardNav() {
     const pathName = usePathname()
     const survey = useAppSelector((store) => store.survey)
     const { router } = useNavigation()
-
+    
     const handleSave = async () => {
         dispatch(setLoading(true))
         let new_survey = { ...survey, isOpenedInEditMode: false }

@@ -19,7 +19,7 @@ const Page = () => {
   const { router } = useNavigation()
   const isMenu = true;
   const survey = useAppSelector((store) => store.survey)
-  const { session, showModal,GenModalConfirm } = useAppSelector((store) => store.dashboard)
+  const { session, showModal,GenModalConfirm,loading } = useAppSelector((store) => store.dashboard)
   const surveys = useAppSelector((store)=>store.surveys)
   const dispatch = useAppDispatch()
   
@@ -37,9 +37,13 @@ useEffect(() => {
       }
 
       // get surveys
-      const res = await axios.get('/api/survey');
-      console.log("response for get surveys", res.data);
-      dispatch(setSurveys(res.data.data || []));
+      // const res = await axios.get('/api/survey');
+
+      // console.log("response for get surveys", res.data);
+      // dispatch(setSurveys(res.data.data || []));
+      const res = await SurveyRoutes.GetSurvey()
+      console.log("resposne in useEffect",res)
+      dispatch(setSurveys(res.data?.data || []))
     } catch (err) {
       console.error("Error fetching session/surveys:", err);
       dispatch(setSurveys([])); 
@@ -47,7 +51,7 @@ useEffect(() => {
   };
 
   getData();
-}, [dispatch,GenModalConfirm]);
+}, [dispatch,GenModalConfirm,loading]);
 
 
 // empty survey curr
