@@ -11,6 +11,7 @@ import type { Survey } from "@/types/survey";
 import Tooltip from "@/components/Tooltip";
 import { usePathname } from "next/navigation";
 import { setViewMode } from "@/redux/DashboardSlice/DashboardSlice";
+import { getSocket } from "@/utils/socket";
 
 const options: Survey["QuestionType"][] = [
   { title: "Paragraph", description: null },
@@ -30,7 +31,8 @@ export default function Question({ index, data }: Props) {
   const [open, setOpen] = useState(false);
   const {questions} = useAppSelector((store)=>store.survey)
   const {viewMode} = useAppSelector((store)=>store.dashboard)
-
+  const survey = useAppSelector((store)=>store.survey)
+  const socket = getSocket()
   // check pathname
   useEffect(()=>{
     if(!pathname.includes('/preview')){
@@ -40,9 +42,21 @@ export default function Question({ index, data }: Props) {
   },[pathname])
 
 
-  // update a question (title, desc, type, choices etc.)
+  // update a ques (title, desc,type, choices etc)
   const updateQuestion = (updates: Partial<Survey["Question"]>) => {
+    console.log("updates data ffrom question type",updates)
+    // socket update call
+    const updatedSurvey = {
+      ...survey,
+      questions:[...survey.questions, {...questions[index],...updates}]
+      
+    }
     dispatch(setUpdateQuestion({ index, data: updates }));
+    console.log("updated survey",updatedSurvey)
+    socket.emit("survey_update",{
+      survey_room:`survey:${survey.id}`,
+      updatedSurvey
+    })
   };
 
   // delete ques
@@ -127,7 +141,7 @@ export default function Question({ index, data }: Props) {
 
           {/* Question type dropdown */}
           {!viewMode && <div className="relative">
-            <button
+           <button
               type="button"
               onClick={() => setOpen(!open)}
               className="flex cursor-pointer items-center justify-between w-48 border px-3 py-2 text-sm bg-white shadow"

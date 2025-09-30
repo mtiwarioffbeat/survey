@@ -12,27 +12,9 @@ export default function peviewPage() {
   const dispatch = useAppDispatch();
   const socket = getSocket();
 
-  // useEffect(() => {
-
-  //   // join a unique room for this survey
-  //   socket.emit("join_survey_room", `survey:${survey?.id}`);
-
-  //   // listen for updates
-  //   socket.on("survey_update", (updatedSurvey) => {
-  //     console.log("Got survey update:", updatedSurvey);
-  //     dispatch(setSurvey(updatedSurvey))
-  //   });
-
-  //   return () => {
-  //     socket.off("survey_update");
-  //   };
-  // }, [socket]);
-
-  // const socket = getSocket();
 useEffect(() => {
-
   socket.emit("join_survey_room", `survey:${survey?.id}`);
-
+  
   socket.on("survey_update", (updatedSurvey) => {
     console.log("Got survey update:", updatedSurvey);
     dispatch(setSurvey(updatedSurvey));
