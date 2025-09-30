@@ -38,7 +38,7 @@ export class SurveyRoutes {
   // updating publish/delete check in survey
   public static async PatchSurvey(payload:PatchSurvey){
     try{
-      const response = await axios.patch("/api//survey",payload)
+      const response = await axios.patch("/api/survey",payload)
       console.log("response in patchsurvey",response)
       return {success:true,data:response.data}
     } catch(error:any){
@@ -49,6 +49,17 @@ export class SurveyRoutes {
     }
   }
  
+  public static async GetSurvey(){
+    try{
+      const response = await axios.get('/api/survey')
+      return {success:true,data:response.data}
+    } catch(error:any){
+      return{
+        success:false,
+        message:error.response?.data?.error || "cannot get surveys"
+      }
+    }
+  }
 
 }
 

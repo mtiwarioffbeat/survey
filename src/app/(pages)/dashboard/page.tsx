@@ -50,55 +50,55 @@ const Page = () => {
           return;
         }
         dispatch(setSurveys([]));
-  const { router } = useNavigation()
-  const isMenu = true;
-  const survey = useAppSelector((store) => store.survey)
-  const { session, showModal,GenModalConfirm,loading } = useAppSelector((store) => store.dashboard)
-  const surveys = useAppSelector((store)=>store.surveys)
-  const dispatch = useAppDispatch()
-  
-useEffect(() => {
-  const getData = async () => {
-    try {
-      // get session
-      const user = await getSession();
-      if (user) {
-        dispatch(setSession({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-        }));
+        const { router } = useNavigation()
+        const isMenu = true;
+        const survey = useAppSelector((store) => store.survey)
+        const { session, showModal, GenModalConfirm, loading } = useAppSelector((store) => store.dashboard)
+        const surveys = useAppSelector((store) => store.surveys)
+        const dispatch = useAppDispatch()
+
+        useEffect(() => {
+          const getData = async () => {
+            try {
+              // get session
+              const user = await getSession();
+              if (user) {
+                dispatch(setSession({
+                  id: user.id,
+                  name: user.name,
+                  email: user.email,
+                }));
+              }
+            };
+
+            getData();
+          }, [dispatch, GenModalConfirm, router]);
+
+        useEffect(() => {
+          dispatch(resetSurvey());
+        }, [dispatch]);
+        // get surveys
+        // const res = await axios.get('/api/survey');
+
+        // console.log("response for get surveys", res.data);
+        // dispatch(setSurveys(res.data.data || []));
+        const res = await SurveyRoutes.GetSurvey()
+        console.log("resposne in useEffect", res)
+        dispatch(setSurveys(res.data?.data || []))
+      } catch (err) {
+        console.error("Error fetching session/surveys:", err);
+        dispatch(setSurveys([]));
       }
     };
 
     getData();
-  }, [dispatch, GenModalConfirm, router]);
+  }, [dispatch, GenModalConfirm, loading]);
 
+
+  // empty survey curr
   useEffect(() => {
-    dispatch(resetSurvey());
-  }, [dispatch]);
-      // get surveys
-      // const res = await axios.get('/api/survey');
-
-      // console.log("response for get surveys", res.data);
-      // dispatch(setSurveys(res.data.data || []));
-      const res = await SurveyRoutes.GetSurvey()
-      console.log("resposne in useEffect",res)
-      dispatch(setSurveys(res.data?.data || []))
-    } catch (err) {
-      console.error("Error fetching session/surveys:", err);
-      dispatch(setSurveys([])); 
-    }
-  };
-
-  getData();
-}, [dispatch,GenModalConfirm,loading]);
-
-
-// empty survey curr
-useEffect(()=>{
-  dispatch(resetSurvey())
-},[])
+    dispatch(resetSurvey())
+  }, [])
 
   const handleSurveyCreation = async () => {
     const res = await SurveyRoutes.CreateSurvey(survey);
@@ -116,7 +116,7 @@ useEffect(()=>{
         {/* Sidebar + Content */}
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar */}
-         
+
 
           {/* Main Content */}
           <main className="flex-1 flex flex-col">

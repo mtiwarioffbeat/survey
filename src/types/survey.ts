@@ -10,7 +10,7 @@ export interface Survey {
     title: string,
     description: string | null,
     isDeleted?: boolean,
-    sortOrder?: string,
+    sortOrder?: number,
     // QuestionID:INT FK, (will be returned, when question is created)
     // CreatedAt:(System generated)
     // IsActive: (NO req rn)
@@ -35,7 +35,7 @@ export interface Survey {
   },
 
   Question: {
-    id:number
+    id?:number
     title: string,
     description: string | null,
     type: Survey['QuestionType']

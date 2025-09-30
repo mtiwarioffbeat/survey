@@ -7,6 +7,7 @@ import { useNavigation } from "@/hooks/useNavigation";
 import Spinner from "../Spinner";
 import { Survey } from "@/types/survey";
 import { NextResponse } from "next/server";
+import { setSurveys } from "@/redux/SurveysSlice/SurveysSlice";
 
 
 
@@ -17,16 +18,25 @@ const Modal = () => {
     const survey = useAppSelector((store) => store.survey)
     const { loading } = useAppSelector((store) => store.dashboard)
     const { router } = useNavigation()
-
+    const surveys = useAppSelector((store)=>store.surveys)
     const handleConfirm = async () => {
         dispatch(setLoading(true))
         const newSurveyData:Survey['Survey'] = { ...survey, title: title, description: description };
 
-        dispatch(setSurvey(newSurveyData));
+        // dispatch(setSurvey(newSurveyData));
         try{
 
             const res = await SurveyRoutes.CreateSurvey(newSurveyData)
-            console.log("response in frontend",res.data.sur_id)            
+            console.log("response in frontend",res.data.sur_id)
+            const getsurveys = await SurveyRoutes.GetSurvey()
+            if(getsurveys.success){
+                 dispatch(setSurveys(getsurveys.data?.data || []))
+            }
+            // console.log("res2",res2.data.data[0])
+            // dispatch(setSurvey(res2.data.data[0]))
+            const surveyToView =await getsurveys.data.data.find((s:any) => s.id == res.data.sur_id)  
+            console.log("survey to biew ",surveyToView)
+            dispatch(setSurvey(surveyToView))        
             router.push(`/dashboard/survey/${res.data.sur_id}/edit`)
         } catch(err:unknown){
             console.log("error",err)
