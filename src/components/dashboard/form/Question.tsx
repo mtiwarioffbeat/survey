@@ -11,6 +11,7 @@ import type { Survey } from "@/types/survey";
 import Tooltip from "@/components/Tooltip";
 import { usePathname } from "next/navigation";
 import { setViewMode } from "@/redux/DashboardSlice/DashboardSlice";
+import { getSocket } from "@/utils/socket";
 
 const options: Survey["QuestionType"][] = [
   { title: "Paragraph", description: null },
@@ -30,7 +31,8 @@ export default function Question({ index, data }: Props) {
   const [open, setOpen] = useState(false);
   const {questions} = useAppSelector((store)=>store.survey)
   const {viewMode} = useAppSelector((store)=>store.dashboard)
-
+  const survey = useAppSelector((store)=>store.survey)
+  const socket = getSocket()
   // check pathname
   useEffect(()=>{
     if(!pathname.includes('/preview')){
@@ -40,9 +42,21 @@ export default function Question({ index, data }: Props) {
   },[pathname])
 
 
-  // update a question (title, desc, type, choices etc.)
+  // update a ques (title, desc,type, choices etc)
   const updateQuestion = (updates: Partial<Survey["Question"]>) => {
+    console.log("updates data ffrom question type",updates)
+    // socket update call
+    // const updatedSurvey = {
+    //   ...survey,
+    //   questions:[...survey.questions, {...questions[index],...updates}]
+      
+    // }
     dispatch(setUpdateQuestion({ index, data: updates }));
+    // console.log("updated survey",updatedSurvey)
+    // socket.emit("survey_update",{
+    //   survey_room:`survey:${survey.id}`,
+    //   updatedSurvey
+    // })
   };
 
   // delete ques
@@ -57,7 +71,8 @@ export default function Question({ index, data }: Props) {
   const addOption = () => {
     const newChoices = [
       ...(data.choices || []),
-      { title: `Option ${data.choices?.length! + 1}`, description: null,isDeleted:false, sortOrder: `${data.choices?.length! + 1}` },
+      // { title: `Option ${data.choices?.length! + 1}`, description: null,isDeleted:false, sortOrder: `${data.choices?.length! + 1}` },
+      { title: `Option ${data.choices?.length! + 1}`, description: null,isDeleted:false },
     ];
     updateQuestion({ choices: newChoices });
   };
@@ -81,9 +96,9 @@ export default function Question({ index, data }: Props) {
 };
 
   return (
-    <div className="w-full">
-      <div className="rounded-lg flex flex-col items-start border-l-6 border-indigo-600 bg-white p-4 sm:p-6 shadow">
-        <div className="flex flex-col sm:flex-row gap-4 w-full sm:justify-between sm:items-center">
+    <div>
+      <div className="rounded-lg items-center border-l-6 border-indigo-600 bg-white p-6 shadow">
+        <div className="flex gap-4 justify-between">
           <div className="flex flex-col w-full">
             {/* Question title */}
             <input
@@ -126,7 +141,7 @@ export default function Question({ index, data }: Props) {
           </div>
 
           {/* Question type dropdown */}
-          {!viewMode && <div className="relative w-full sm:w-auto">
+          {!viewMode && <div className="relative">
             <button
               type="button"
               onClick={() => setOpen(!open)}
@@ -154,7 +169,8 @@ export default function Question({ index, data }: Props) {
                     onClick={() => {
                       updateQuestion({
                         type: opt,
-                        choices: [{ title: "Option 1", description: null,isDeleted:false, sortOrder:1}],
+                        // choices: [{ title: "Option 1", description: null,isDeleted:false, sortOrder:1}],
+                        choices: [{ title: "Option 1", description: null,isDeleted:false}],
                       });
                       setOpen(false);
                     }}
@@ -202,7 +218,7 @@ export default function Question({ index, data }: Props) {
             data.type.title
           ) && (
               <div className="space-y-4">
-                {(data.choices || []).map((opt, i) => (
+                {(data.choices || []).filter( opt => !opt.isDeleted).map((opt, i) => (
                   <div key={i} className="flex flex-col gap-1">
                     <div className="flex gap-2 items-center">
                       {data.type.title === "Multiple choice" && (

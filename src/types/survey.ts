@@ -10,7 +10,7 @@ export interface Survey {
     title: string,
     description: string | null,
     isDeleted?: boolean,
-    sortOrder?: number,
+    sortOrder?: number | null,
     // QuestionID:INT FK, (will be returned, when question is created)
     // CreatedAt:(System generated)
     // IsActive: (NO req rn)
@@ -41,7 +41,7 @@ export interface Survey {
     type: Survey['QuestionType']
     choices: Array<Survey['QuestionOption']>
     isDeleted?: boolean,
-    sortOrder?: number,
+    sortOrder?: number | null,
     // QuestionTypeId: INT FK (backend wehn Question type is created it will return id)
     // SurveyID: INT FK (backend: when survey is create it will return id)
     // enteredBy: number | null //INT FK (frontend:when axios==> add id from session),
@@ -66,7 +66,7 @@ export type Surveys = {
     id:number
     title: string,
     description: string | null,
-    sortOrder: number,
+    sortOrder: number | null,
     isDeleted?: boolean,
     // enteredBy:string
     type: {
@@ -77,7 +77,7 @@ export type Surveys = {
       id:number,
       title: string,
       description: string | null,
-      sortOrder: string,
+      sortOrder: number | null,
       isDeleted?: boolean
     }>
   }>

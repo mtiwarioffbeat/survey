@@ -11,7 +11,6 @@ export default function EditPage() {
   const {session} = useAppSelector((store)=>store.dashboard)
   const survey = useAppSelector((store)=>store.survey)
   
-
   const socket = getSocket();
   const handleAddQuestion = () => {
 
@@ -19,7 +18,7 @@ export default function EditPage() {
     title: "",
     description: null,
     isDeleted: false,
-    sortOrder: questions.length + 1,
+    // sortOrder:null,
     type: {
       title: "Paragraph", // default type
       description: null,
@@ -28,7 +27,7 @@ export default function EditPage() {
       title: string;
       description: string | null;
       isDeleted: false;
-      sortOrder: 1;
+      // sortOrder: 1;
     }[],
   };
 
@@ -45,43 +44,13 @@ export default function EditPage() {
   });
 };
 
-
-//   const handleAddQuestion = () => {
-//   const socket = getSocket();
-
-//   const newQuestion = {
-//     title: "",
-//     description: null,
-//     isDeleted: false,
-//     sortOrder: questions.length + 1,
-//     type: {
-//       title: "Paragraph",
-//       description: null,
-//     },
-//     choices: [],
-//   };
-
-//   // update Redux first
-//   dispatch(setAddQuestion(newQuestion));
-
-//   // then emit update
-//   socket.emit("survey_update", {
-//     survey_room: `survey:${survey.id}`,
-//     updatedSurvey: {
-//       ...survey,
-//       questions: [...survey.questions, newQuestion],
-//     },
-//   });
-  
-// };
-
   return (
     <div className="bg-purple-50 mx-auto mt-10">
       <div className="flex flex-col gap-8 w-[90%] md:w-[80%] lg:w-[60%] mx-auto">
         <FormHeading />
 
         {/* Render all questions */}
-        {questions.filter(q => !q.isDeleted).map((q, idx) => (
+        {questions.map((q, idx) => (
           <Question key={idx} index={idx} data={q} />
         ))}
 
