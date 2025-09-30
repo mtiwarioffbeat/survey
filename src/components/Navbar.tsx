@@ -52,6 +52,11 @@ export default function Navbar() {
       dispatch(setLoading(false));
     }
   };
+     const handleEdit = () => {
+    if (!survey.id) return toast.error("Survey ID is required");
+    dispatch(setViewMode(false));
+    router.push(`/dashboard/survey/${survey.id}/edit`);
+  };
 
   const handleView = () => {
     if (survey) {
@@ -104,8 +109,10 @@ export default function Navbar() {
         </div>
 
         {/* Right profile + menu toggle */}
-        
+
         <div className=" flex items-center gap-3 relative" ref={dropdownRef}>
+          {pathName === "/dashboard" && (
+            <>
           <div className="hidden sm:flex flex-col text-right">
             <p className="text-sm font-semibold">Abhishek</p>
             <p className="text-xs text-gray-500">Joined: 03-09-2025</p>
@@ -128,7 +135,8 @@ export default function Navbar() {
               </button>
             </div>
           )}
-
+          </>
+        )}
           {/* Mobile menu toggle */}
           <button
             onClick={() => dispatch(setMenuOpen(!menuOpen))}
@@ -138,13 +146,11 @@ export default function Navbar() {
           </button>
         </div>
       </div>
-
       {/* Mobile Sidebar/Menu */}
       {menuOpen && (
         <div className="sm:hidden border-t border-gray-200 bg-white px-4 py-3 space-y-3">
           {/* Show Aside sidebar */}
           <Aside />
-
           {pathName !== "/dashboard" && !viewMode && (
             <>
               <button
@@ -172,12 +178,20 @@ export default function Navbar() {
               </button>
             </>
           )}
+           {pathName.includes("/dashboard/survey/") && pathName.includes("/preview") && (
+            <button
+              className="w-full text-indigo-600 font-medium rounded-md text-sm px-3 py-2 border flex justify-center hover:bg-indigo-600 hover:text-white"
+              onClick={handleEdit}
+            >
+              Edit
+            </button>
+          )}
         </div>
       )}
 
       {/* Desktop Buttons */}
       {pathName !== "/dashboard" && !viewMode && (
-        <div className="hidden sm:flex items-center justify-end gap-2 px-5 pb-3 px-16">
+        <div className="hidden sm:flex items-center justify-end gap-2 pb-3 px-20">
           <button
             className="flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group"
             onClick={handleView}
@@ -201,6 +215,16 @@ export default function Navbar() {
             disabled={publishLoading}
           >
             {publishLoading ? <Spinner /> : "Publish"}
+          </button>
+        </div>
+      )}
+      {pathName.includes("/dashboard/survey/") && pathName.includes("/preview") && (
+        <div className="hidden sm:flex justify-end pb-3 px-20">
+          <button
+            className="text-indigo-600 font-medium rounded-lg text-sm px-3 py-2.5 border flex gap-2 cursor-pointer hover:bg-indigo-600 hover:text-white"
+            onClick={handleEdit}
+          >
+            Edit
           </button>
         </div>
       )}
