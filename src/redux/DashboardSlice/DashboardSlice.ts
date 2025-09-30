@@ -8,7 +8,8 @@ const initialState:{
     showModal:boolean,
     loading:boolean,
     viewMode:boolean,
-    GenModalConfirm:GenModalConfirm 
+    GenModalConfirm:GenModalConfirm ,
+    searchValue:string
 } = {
     menuOpen:false,
     session:{
@@ -25,7 +26,8 @@ const initialState:{
         to_delete:false,
         to_publish:false,
         text:''
-    }
+    },
+    searchValue:''
 }
 
 const createSurvey = createAsyncThunk('surveys/createSurvey',
@@ -55,6 +57,9 @@ const DashboardSlice = createSlice({
         setGenModalConfirm:(state,action:PayloadAction<GenModalConfirm>)=>{
             state.GenModalConfirm = action.payload
         },
+        setSearchValue:(state,action:PayloadAction<string>)=>{
+            state.searchValue=action.payload
+        },
         resetSession:(state)=>{
 state.session = {id:null,name:null,email:null};
 state.showModal =false;
@@ -64,5 +69,5 @@ state.GenModalConfirm ={survey_id:-1,survey_name:'',to_delete:false,to_publish:f
 })
 
 
-export const {setMenuOpen,setSession,setShowModal,setLoading,setViewMode,setGenModalConfirm,resetSession} = DashboardSlice.actions
+export const {setMenuOpen,setSession,setShowModal,setLoading,setViewMode,setGenModalConfirm,resetSession,setSearchValue} = DashboardSlice.actions
 export default DashboardSlice.reducer
