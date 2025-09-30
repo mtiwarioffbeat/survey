@@ -13,7 +13,7 @@ const initialState: Survey["Survey"] = {
       title: "",
       description: "",
       isDeleted:false,
-      sortOrder:1,
+      sortOrder:null,
       type: {
         title: "Paragraph",
         description: null,

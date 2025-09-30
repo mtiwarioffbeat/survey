@@ -46,17 +46,17 @@ export default function Question({ index, data }: Props) {
   const updateQuestion = (updates: Partial<Survey["Question"]>) => {
     console.log("updates data ffrom question type",updates)
     // socket update call
-    const updatedSurvey = {
-      ...survey,
-      questions:[...survey.questions, {...questions[index],...updates}]
+    // const updatedSurvey = {
+    //   ...survey,
+    //   questions:[...survey.questions, {...questions[index],...updates}]
       
-    }
+    // }
     dispatch(setUpdateQuestion({ index, data: updates }));
-    console.log("updated survey",updatedSurvey)
-    socket.emit("survey_update",{
-      survey_room:`survey:${survey.id}`,
-      updatedSurvey
-    })
+    // console.log("updated survey",updatedSurvey)
+    // socket.emit("survey_update",{
+    //   survey_room:`survey:${survey.id}`,
+    //   updatedSurvey
+    // })
   };
 
   // delete ques
@@ -71,7 +71,8 @@ export default function Question({ index, data }: Props) {
   const addOption = () => {
     const newChoices = [
       ...(data.choices || []),
-      { title: `Option ${data.choices?.length! + 1}`, description: null,isDeleted:false, sortOrder: `${data.choices?.length! + 1}` },
+      // { title: `Option ${data.choices?.length! + 1}`, description: null,isDeleted:false, sortOrder: `${data.choices?.length! + 1}` },
+      { title: `Option ${data.choices?.length! + 1}`, description: null,isDeleted:false },
     ];
     updateQuestion({ choices: newChoices });
   };
@@ -95,8 +96,8 @@ export default function Question({ index, data }: Props) {
 };
 
   return (
-    <div>
-      <div className="rounded-lg items-center border-l-6 border-indigo-600 bg-white p-6 shadow">
+    <div className={`${data.isDeleted ? "hidden":"block"}`}>
+      <div className={` rounded-lg items-center border-l-6 border-indigo-600 bg-white p-6 shadow`}>
         <div className="flex gap-4 justify-between">
           <div className="flex flex-col w-full">
             {/* Question title */}
@@ -168,7 +169,8 @@ export default function Question({ index, data }: Props) {
                     onClick={() => {
                       updateQuestion({
                         type: opt,
-                        choices: [{ title: "Option 1", description: null,isDeleted:false, sortOrder:1}],
+                        // choices: [{ title: "Option 1", description: null,isDeleted:false, sortOrder:1}],
+                        choices: [{ title: "Option 1", description: null,isDeleted:false}],
                       });
                       setOpen(false);
                     }}
@@ -216,8 +218,8 @@ export default function Question({ index, data }: Props) {
             data.type.title
           ) && (
               <div className="space-y-4">
-                {(data.choices || []).filter( opt => !opt.isDeleted).map((opt, i) => (
-                  <div key={i} className="flex flex-col gap-1">
+                {(data.choices || []).map((opt, i) => (
+                  <div key={i} className={`${opt.isDeleted? "hidden":"flex"}  flex-col gap-1`}>
                     <div className="flex gap-2 items-center">
                       {data.type.title === "Multiple choice" && (
                         <input type="radio" disabled />
