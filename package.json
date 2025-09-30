@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "server": "ts-node -P tsconfig.server.json server.ts"
   },
   "browser": {
     "child_process": false
@@ -28,6 +29,8 @@
     "react-spinners": "^0.17.0",
     "react-toastify": "^11.0.5",
     "redux-persist": "^6.0.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "totp-generator": "^1.1.0",
     "zod": "^4.1.5"
   },
@@ -35,7 +38,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^20",
+    "@types/node": "^20.19.18",
     "@types/nodemailer": "^7.0.1",
     "@types/pg": "^8.15.5",
     "@types/react": "^19",
@@ -43,6 +46,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }

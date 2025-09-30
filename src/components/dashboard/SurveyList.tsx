@@ -10,6 +10,7 @@ import {  setGenModalConfirm, setViewMode } from "@/redux/DashboardSlice/Dashboa
 export default function SurveyList() {
 
     const surveys = useAppSelector((store) => store.surveys)
+    const {searchValue} = useAppSelector((store)=>store.dashboard)
     const { router } = useNavigation()
     const dispatch = useAppDispatch()
     const {GenModalConfirm} = useAppSelector((store)=>store.dashboard)
@@ -78,29 +79,29 @@ export default function SurveyList() {
                     <thead className="bg-indigo-600">
                         <tr>
                             <th className="border border-gray-300 py-2 px-2 text-white">Name</th>
-                            <th className="border border-gray-300 py-2 px-2 text-white">Created_By</th>
-                            <th className="border border-gray-300 py-2 px-2 text-white">Created_At</th>
-                            <th className="border border-gray-300 py-2 px-2 text-white">Is_Published</th>
+                            <th className="border border-gray-300 py-2 px-2 text-white">Created by</th>
+                            <th className="border border-gray-300 py-2 px-2 text-white">Created at</th>
+                            <th className="border border-gray-300 py-2 px-2 text-white">Published</th>
                             <th className="border border-gray-300 py-2 px-2 text-white" colSpan={4}>Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white">
-                        {surveys.map((survey) => (
+                        {surveys.filter((survey)=>survey.title.startsWith(searchValue)).map((survey) => (
                             <tr key={survey.id}>
-                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600">
+                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
                                     {survey.title}
                                 </td>
-                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600">
+                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
                                     {survey.createdBy}
                                 </td>
-                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600">
+                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
                                     {survey.createdAt?.toString()}
                                 </td>
-                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600">
+                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
                                     {`${survey.isPublished}`}
                                 </td>
                                 <td className="border border-gray-300 px-2 sm:px-3 py-2">
-                                    <div className="flex items-center ">
+                                    <div className="flex items-center justify-center">
                                         {/* View */}
                                         <button
                                             className="px-2 sm:px-3 py-2 font-bold text-indigo-500 hover:underline"

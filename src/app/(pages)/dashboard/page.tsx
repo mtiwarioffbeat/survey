@@ -15,6 +15,9 @@ import { resetSurvey } from '@/redux/SurveySlice/SurveySlice';
 import axios from 'axios';
 import { setSurveys } from '@/redux/SurveysSlice/SurveysSlice';
 import GenModal from '@/components/dashboard/GenModal';
+import { io, Socket } from "socket.io-client";
+let socket: Socket;
+
 const Page = () => {
   const { router } = useNavigation()
   const isMenu = true;
@@ -54,6 +57,7 @@ useEffect(() => {
 }, [dispatch,GenModalConfirm,loading]);
 
 
+
 // empty survey curr
 useEffect(()=>{
   dispatch(resetSurvey())
@@ -79,7 +83,6 @@ useEffect(()=>{
             <div className="my-10  ">
               <h1 className="text-3xl flex flex-col items-center ml-20 font-bold">Welcom Admin</h1>
               <div className="flex w-full  flex-row justify-between my-5">
-                <SearchBox />
 
                 <div className="flex">
                   <button className="flex bg-indigo-600  hover:bg-indigo-700 transition-all duration-300 ease-in-out px-2 py-1 rounded text-white gap-2 group cursor-pointer" onClick={() => dispatch(setShowModal(true))}>
@@ -87,6 +90,7 @@ useEffect(()=>{
                     <IoAddCircle className="text-2xl mt-1 group-hover:animate-bounce" />
                   </button>
                 </div>
+                <SearchBox />
               </div>
               <SurveyList />
             </div>
