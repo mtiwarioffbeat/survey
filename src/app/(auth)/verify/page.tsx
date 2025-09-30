@@ -141,20 +141,20 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             <div className="flex flex-col items-center justify-center">
               <p className="text-xs">
                 Remaining Time:{" "}
-                <span className="text-blue-600">
+                <span className="text-indigo-600">
                   {`00:${timeLeft < 10 ? `0 ${timeLeft}` : timeLeft}`}
                 </span>
               </p>
             </div>
             <p className="text-xs">
               Didn’t get the code?
-              <button className="text-blue-600 cursor-pointer hover:underline " type="submit" name="resendOtp">Resend</button>
+              <button className="text-indigo-600 cursor-pointer hover:underline " type="submit" name="resendOtp">Resend</button>
             </p>
           </div>
           <button type="submit"
             name="submitOtp"
             disabled={loading}
-            className={`mt-4 w-full ${loading ? "bg-blue-300" : "bg-blue-600"} bg-blue-600 cursor-pointer  text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 `}>
+            className={`mt-4 w-full ${loading ? "bg-indigo-300" : "bg-indigo-600"} bg-indigo-600 cursor-pointer  text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 `}>
             {loading ? (<Spinner />) : ("Verify")}
           </button>
         </form>

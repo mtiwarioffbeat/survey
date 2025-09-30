@@ -15,6 +15,9 @@ import { setSurveys } from "@/redux/SurveysSlice/SurveysSlice";
 import GenModal from "@/components/dashboard/GenModal";
 import axios from "axios";
 
+import { io, Socket } from "socket.io-client";
+let socket: Socket;
+
 const Page = () => {
   const { router } = useNavigation();
   const survey = useAppSelector((store) => store.survey);

@@ -6,7 +6,7 @@ export interface Survey {
   },
 
   QuestionOption: {
-    id:number
+    id?:number
     title: string,
     description: string | null,
     isDeleted?: boolean,
