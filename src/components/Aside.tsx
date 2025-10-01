@@ -1,31 +1,40 @@
-
-"use client"
+"use client";
 import React from "react";
-import { MdDrafts } from "react-icons/md";
-import { IoMenu } from "react-icons/io5";
 import { FaRegUserCircle } from "react-icons/fa";
-import { MdDashboard } from "react-icons/md";
-import Link from "next/link";
-import { IoIosLogOut } from "react-icons/io";
 import { RiCloseFill } from "react-icons/ri";
-import { usePathname } from "next/navigation";
+import { IoIosLogOut } from "react-icons/io";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
-import { setMenuOpen } from "@/redux/DashboardSlice/DashboardSlice";
+import { resetSession, setMenuOpen } from "@/redux/DashboardSlice/DashboardSlice";
+import { resetSurvey } from "@/redux/SurveySlice/SurveySlice";
 
 export default function Aside() {
   const pathname = usePathname();
-  const {menuOpen} = useAppSelector((store)=>store.dashboard)
-  const dispatch = useAppDispatch()
+  const { menuOpen } = useAppSelector((store) => store.dashboard);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      dispatch(resetSession());
+      dispatch(resetSurvey());
+      localStorage.clear();
+      sessionStorage.clear();
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+      router.push("/login");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
   return (
     <>
-    
-      {/* Toggle Button (when sidebar is closed) */}
-     
-      {/* Sidebar */}
+      {/* Mobile-only aside menu */}
       {menuOpen && (
-        <div className="w-60 bg-white shadow h-screen  flex flex-col fixed top-0 left-0 z-100 transition-all duration-300 ease-in-out">
+        <div className="block sm:hidden w-55 bg-white shadow h-screen flex flex-col fixed top-0 right-0 z-50 transition-all duration-300 ease-in-out">
+          {/* Header */}
           <div className="py-6 px-5 border-b flex justify-between items-center">
-            {/* Profile Section */}
             <div className="flex items-center gap-3">
               <FaRegUserCircle className="text-3xl text-gray-600" />
               <div>
@@ -33,42 +42,37 @@ export default function Aside() {
                 <p className="text-xs text-gray-500">Joined: 03-09-2025</p>
               </div>
             </div>
-            {/* Toggle Close */}
-            <div>
-              <RiCloseFill
-                onClick={() => dispatch(setMenuOpen(false))}
-                className="text-3xl cursor-pointer"
-              />
-            </div>
+
+            <RiCloseFill
+              onClick={() => dispatch(setMenuOpen(false))}
+              className="text-2xl cursor-pointer"
+            />
           </div>
 
-          {/* Sidebar Menu */}
-          <div className="py-6 px-5  flex-1 space-y-4">
-            <div className={`flex items-center gap-3 p-2 cursor-pointer  ${pathname === "/dashboard" ? "bg-gray-300" : "hover:bg-gray-300"} `} >
-              <MdDashboard className="text-xl" />
-              <Link href="/dashboard" className="text-sm font-bold">
-                Dashboard
-              </Link>
-            </div>
-            <div className={`flex items-center gap-3 p-2 cursor-pointer  ${pathname === "/draft" ? "bg-gray-300" : "hover:bg-gray-300 p-2"} `}>
-              <MdDrafts className="text-xl" />
-              <Link href="/draft" className="font-bold text-sm">
-                Drafts
-              </Link>
+          {/* Menu */}
+          <div className="py-6 px-5 flex flex-col items-center justify-between  space-y-4 h-full">
+            <div className="w-full">
+              <Link
+              href="/dashboard"
+              className={`flex items-center gap-3 p-2 rounded text-white ${
+                pathname === "/dashboard" ? "bg-indigo-600" : "hover:bg-indigo-700"
+              }`}
+            >
+              <span className="text-sm font-bold">Dashboard</span>
+            </Link>
             </div>
 
-            {/* Logout Button */}
-            <div className="border-t mt-90 ">
-              <button className="w-full font-bold cursor-pointer flex items-center gap-2 text-sm text-gray-700 px-4 py-3">
-                <IoIosLogOut className="text-lg" />
-                Logout
-              </button>
-            </div>
+            {/* Logout */}
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-2 text-sm text-gray-700 font-bold px-4 py-3  hover:bg-gray-100 rounded"
+            >
+              <IoIosLogOut className="text-lg" />
+              Logout
+            </button>
           </div>
         </div>
       )}
     </>
   );
-};
-
-
+}
