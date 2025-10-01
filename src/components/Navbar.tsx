@@ -1,3 +1,4 @@
+'use client'
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { setMenuOpen, setViewMode } from "@/redux/DashboardSlice/DashboardSlice";
 import { FaFileAlt } from "react-icons/fa";
