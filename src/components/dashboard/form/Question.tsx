@@ -43,27 +43,46 @@ export default function Question({ index, data }: Props) {
 
 
   // update a ques (title, desc,type, choices etc)
-  const updateQuestion = (updates: Partial<Survey["Question"]>) => {
-    console.log("updates data ffrom question type",updates)
-    // socket update call
-    // const updatedSurvey = {
-    //   ...survey,
-    //   questions:[...survey.questions, {...questions[index],...updates}]
-      
-    // }
-    dispatch(setUpdateQuestion({ index, data: updates }));
-    // console.log("updated survey",updatedSurvey)
-    // socket.emit("survey_update",{
-    //   survey_room:`survey:${survey.id}`,
-    //   updatedSurvey
-    // })
+ const updateQuestion = (updates: Partial<Survey["Question"]>) => {
+  const updatedQuestions = [...survey.questions]; 
+  updatedQuestions[index] = {
+    ...updatedQuestions[index],
+    ...updates,
   };
+
+  const updatedSurvey = {
+    ...survey,
+    questions: updatedQuestions,
+  };
+
+  dispatch(setUpdateQuestion({ index, data: updates }));
+
+  socket.emit("survey_update", {
+    survey_room: `survey:${survey.id}`,
+    updatedSurvey,
+  });
+};
 
   // delete ques
   const deleteQuestion = (idx:number)=>{
     console.log("index of the ques",idx)
     // dispatch(setRemoveQuestion(idx))
     const updatedQues = {...data,isDeleted:true}
+    const updatedQuestions = [...survey.questions]
+     updatedQuestions[index] = {
+    ...updatedQuestions[index],
+    ...updatedQues,
+  };
+
+  const updatedSurvey = {
+    ...survey,
+    questions: updatedQuestions,
+  };
+
+   socket.emit("survey_update", {
+    survey_room: `survey:${survey.id}`,
+    updatedSurvey,
+  });
     dispatch(setUpdateQuestion({index,data:updatedQues}))
   }
 

@@ -85,7 +85,7 @@ useEffect(()=>{
               <div className="flex w-full  flex-row justify-between my-5">
 
                 <div className="flex">
-                  <button className="flex bg-indigo-600  hover:bg-indigo-700 transition-all duration-300 ease-in-out px-2 py-1 rounded text-white gap-2 group cursor-pointer" onClick={() => dispatch(setShowModal(true))}>
+                  <button className="flex items-center justify-center bg-indigo-600  hover:bg-indigo-700 transition-all duration-300 ease-in-out px-2 py-1 rounded text-white gap-2 group cursor-pointer" onClick={() => dispatch(setShowModal(true))}>
                     Create new Survey
                     <IoAddCircle className="text-2xl mt-1 group-hover:animate-bounce" />
                   </button>
