@@ -6,7 +6,7 @@ import { IoIosLogOut } from "react-icons/io";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
-import { resetSession, setMenuOpen } from "@/redux/DashboardSlice/DashboardSlice";
+import { setMenuOpen } from "@/redux/DashboardSlice/DashboardSlice";
 import { resetSurvey } from "@/redux/SurveySlice/SurveySlice";
 
 export default function Aside() {
@@ -17,7 +17,7 @@ export default function Aside() {
 
   const handleLogout = async () => {
     try {
-      dispatch(resetSession());
+   
       dispatch(resetSurvey());
       localStorage.clear();
       sessionStorage.clear();

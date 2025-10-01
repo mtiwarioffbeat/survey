@@ -30,7 +30,6 @@ export function middleware(request: NextRequest) {
     try {
       // Basic JWT structure validation (header.payload.signature)
       const parts = token.split('.');
-      if (parts.length !== 3) return false;
       
       // Decode payload to check expiration
       const payload = JSON.parse(atob(parts[1]));
@@ -83,7 +82,7 @@ export function middleware(request: NextRequest) {
   }
 
   // If accessing protected API route with token, verify it
-  if (isProtectedApiRoute && token) {
+  if (isProtectedApiRoute && token) { 
     if (isValidToken(token)) {
       console.log('Access granted to protected API route');
       return NextResponse.next()
