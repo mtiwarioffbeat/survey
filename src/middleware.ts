@@ -4,30 +4,32 @@ import type { NextRequest } from 'next/server'
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-
+  
   // Get the session token from cookies
   const token = request.cookies.get('session')?.value
   console.log('Middleware - Path:', pathname, 'Token:', token ? 'Present' : 'Missing');
-
+  
   // Define protected routes
-  const protectedRoutes = ['/dashboard']
+  const protectedRoutes = ['/dashboard', '/draft']
   const authRoutes = ['/login', '/signup', '/verify']
   const protectedApiRoutes = ['/api/survey', '/api/search']
+  
   // Check if the current path is protected
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
   const isAuthRoute = authRoutes.some(route => pathname.startsWith(route))
   const isProtectedApiRoute = protectedApiRoutes.some(route => pathname.startsWith(route))
+  
   // If accessing protected route without token, redirect to login
   if (isProtectedRoute && !token) {
     console.log('Redirecting to login - no token for protected route');
     return NextResponse.redirect(new URL('/login', request.url))
   }
+  
   // Simple token validation function for Edge runtime
   function isValidToken(token: string): boolean {
     try {
       // Basic JWT structure validation (header.payload.signature)
       const parts = token.split('.');
-      if (parts.length !== 3) return false;
       
       // Decode payload to check expiration
       const payload = JSON.parse(atob(parts[1]));
@@ -80,7 +82,7 @@ export function middleware(request: NextRequest) {
   }
 
   // If accessing protected API route with token, verify it
-  if (isProtectedApiRoute && token) {
+  if (isProtectedApiRoute && token) { 
     if (isValidToken(token)) {
       console.log('Access granted to protected API route');
       return NextResponse.next()

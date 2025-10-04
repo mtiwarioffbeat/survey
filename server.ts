@@ -23,6 +23,18 @@ io.on("connection", (socket) => {
     io.to(survey_room).emit("survey_update", updatedSurvey);
   });
 
+  socket.on("get_all_surveys", (allSurveys) => {
+    console.log("Broadcasting all surveys to others...");
+    socket.broadcast.emit("get_all_surveys", allSurveys); 
+  });
+
+  socket.on("survey_patch",(patchSurvey)=>{
+    socket.broadcast.emit("survey_patch",patchSurvey)
+  })
+
+    
+
+  
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
   });

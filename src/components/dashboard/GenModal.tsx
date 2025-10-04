@@ -3,23 +3,27 @@ import Spinner from "../Spinner"
 import { setGenModalConfirm, setLoading } from "@/redux/DashboardSlice/DashboardSlice"
 import { toast } from "react-toastify"
 import { SurveyRoutes } from "@/services/api/SurveyRoutes"
+import { getSocket } from "@/utils/socket"
 
  const GenModal = ()=>{
     const dispatch= useAppDispatch()
     const {loading,GenModalConfirm} = useAppSelector((store)=>store.dashboard)
-
+    const socket = getSocket();
+    
     const handleConfirm = async () =>{
         dispatch(setLoading(true))
         const data = {
             survey_id:GenModalConfirm.survey_id,
             to_publish:GenModalConfirm.to_publish,
-            to_delete:GenModalConfirm.to_delete
+            to_delete:GenModalConfirm.to_delete,
+          
         }
         try{
             const res = await SurveyRoutes.PatchSurvey(data)
-            console.log("response in genModal",res)
+            // console.log("response in genModal",res)
             if(res.success){
-                
+                // socket emitt
+                socket.emit('survey_patch',data)
                 toast.success(res.data?.message)
                  
             }

@@ -3,32 +3,61 @@ import Link from "next/link"
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks"
 import { useNavigation } from "@/hooks/useNavigation"
 import { setSurvey } from "@/redux/SurveySlice/SurveySlice"
+import { Survey } from "@/types/survey"
 import { toast } from "react-toastify"
 import { setGenModalConfirm, setViewMode } from "@/redux/DashboardSlice/DashboardSlice"
+import { useEffect } from "react"
+import { getSocket } from "@/utils/socket"
+import { setSurveys } from "@/redux/SurveysSlice/SurveysSlice"
+import { SurveyRoutes } from "@/services/api/SurveyRoutes"
+
 
 export default function SurveyList() {
+
     const surveys = useAppSelector((store) => store.surveys)
+
     const { searchValue } = useAppSelector((store) => store.dashboard)
     const { router } = useNavigation()
     const dispatch = useAppDispatch()
     const { GenModalConfirm } = useAppSelector((store) => store.dashboard)
+    const socket = getSocket()
 
-    // edit
+    // socket listener
+    useEffect(() => {
+        socket.on("get_all_surveys", (allSurveys) => {
+            console.log("Received surveys:", allSurveys);
+            dispatch(setSurveys(allSurveys));
+        });
+
+        socket.on("survey_patch", async () => {
+            const get_all_surveys = await SurveyRoutes.GetSurvey()
+            dispatch(setSurveys(get_all_surveys.data?.data));
+
+        })
+        return () => {
+            socket.off("get_all_surveys");
+            socket.off("survey_patch");
+        };
+    }, [socket]);
+
+    //edit
     const handleEdit = (id: number | null) => {
         if (id === null) {
-            console.log("ID is null. Cannot edit.")
+            console.log("ID is null. Cannot edit.");
             return
         }
 
-        const surveyToEdit = surveys.find((s) => s.id === id)
+        const surveyToEdit = surveys.find((s) => s.id === id);
 
         if (surveyToEdit) {
-            dispatch(setSurvey(surveyToEdit))
-            router.push(`/dashboard/survey/${id}/edit`)
+            dispatch(setSurvey(surveyToEdit));
+            router.push(`/dashboard/survey/${id}/edit`);
         } else {
+            // console.error(`Survey with ID ${id} not found.`);
             toast.error(`Survey with ID ${id} not found.`)
         }
-    }
+    };
+
 
     // view
     const handleView = (survey_id: number) => {
@@ -43,123 +72,113 @@ export default function SurveyList() {
             dispatch(setViewMode(true))
             router.push(`/dashboard/survey/${survey_id}/preview`)
         } else {
+            // console.error(`Survey with ID ${id} not found.`);
             toast.error(`Survey with ID ${survey_id} not found.`)
         }
     }
 
-    // delete
+    //delete
     const handleDelete = (survey_id: number, survey_name: string) => {
         if (survey_id == null) {
             toast.error("id is not present")
         }
-        dispatch(setGenModalConfirm({
-            ...GenModalConfirm,
-            to_delete: true,
-            survey_name,
-            survey_id
-        }))
+        dispatch(setGenModalConfirm({ ...GenModalConfirm, to_delete: true, survey_name: survey_name, survey_id: survey_id }))
     }
 
-    // publish
+    //publish
     const handlePublish = (survey_id: number, survey_name: string) => {
         if (survey_id == null) {
             toast.error("id is not present")
         }
-        dispatch(setGenModalConfirm({
-            ...GenModalConfirm,
-            survey_name,
-            survey_id,
-            to_publish: true
-        }))
+        dispatch(setGenModalConfirm({ ...GenModalConfirm, survey_name: survey_name, survey_id: survey_id, to_publish: true }))
     }
-    // const filterSurvey = surveys.filter(survey => survey.title.startsWith(searchValue))
-    const filterSurvey = surveys.filter(survey =>
-        survey.title.toLowerCase().startsWith(searchValue.toLowerCase())
-    );
+
+
+    const handleCopyUrl = async (id:number) => {
+        console.log("url",process.env.NEXT_PUBLIC_RESPONDER_URL)
+        try {
+            // const responderUrl = `http://localhost:3000/surveys/${id}`
+            const responderUrl = `${process.env.NEXT_PUBLIC_RESPONDER_URL}/${id}`
+            // const responderUrl = `https://cqgdsgvd-3000.inc1.devtunnels.ms/surveys/${id}`
+            await navigator.clipboard.writeText(responderUrl)
+            toast.dark('Copied to clipboard')
+        } catch (err) {
+            toast.error("Failed to copy URL")
+        }
+    }
+
     return (
         <div className="w-full">
-            <div>
-                <p className="text-base sm:text-lg md:text-xl font-bold">Survey List</p>
-            </div>
-            <hr className="text-gray-300 w-full mt-3" />
+
             <div className="w-full mt-3 overflow-x-auto">
-                <table className="w-full min-w-[600px] border border-gray-300 mt-5 text-xs sm:text-sm md:text-base">
+                <table className="w-full border border-gray-300 mt-5 text-xs sm:text-sm md:text-base min-w-[600px]">
                     <thead className="bg-indigo-600">
                         <tr>
                             <th className="border border-gray-300 py-2 px-2 text-white">Name</th>
-                            <th className="border border-gray-300 py-2 px-2 text-white">Created By</th>
-                            <th className="border border-gray-300 py-2 px-2 text-white">Created At</th>
+                            <th className="border border-gray-300 py-2 px-2 text-white">Created by</th>
+                            <th className="border border-gray-300 py-2 px-2 text-white">Created at</th>
                             <th className="border border-gray-300 py-2 px-2 text-white">Published</th>
                             <th className="border border-gray-300 py-2 px-2 text-white" colSpan={4}>Action</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white">
-                        {filterSurvey.length > 0 ? (
-                            filterSurvey.map((survey) => (
-                                <tr key={survey.id} className="hover:bg-gray-50">
-                                    <td className="border border-gray-300 px-2 sm:px-3 py-2 text-center text-gray-600 whitespace-nowrap">
-                                        {survey.title}
-                                    </td>
-                                    <td className="border border-gray-300 px-2 sm:px-3 py-2 text-center text-gray-600 whitespace-nowrap">
-                                        {survey.createdBy}
-                                    </td>
-                                    <td className="border border-gray-300 px-2 sm:px-3 py-2 text-center text-gray-600 whitespace-nowrap">
-                                        {survey.createdAt?.toString()}
-                                    </td>
-                                    <td className="border border-gray-300 px-2 sm:px-3 py-2 text-center text-gray-600 whitespace-nowrap">
-                                        {`${survey.isPublished}`}
-                                    </td>
-                                    <td className="border border-gray-300 px-2 sm:px-3 py-2">
-                                        <div className="flex flex-wrap gap-2 sm:gap-0 ">
-                                            {/* View */}
-                                            <button
-                                                className="px-2 sm:px-0 text-xs py-1 font-bold text-indigo-500 hover:underline ml-2"
-                                                onClick={() => handleView(survey.id)}
-                                            >
-                                                <Link href="">View</Link>
+                        {surveys.filter((survey) => survey.title.startsWith(searchValue)).map((survey) => (
+                            <tr key={survey.id}>
+                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
+                                    {survey.title}
+                                </td>
+                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
+                                    {survey.createdBy}
+                                </td>
+                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
+                                    {survey.createdAt?.toString()}
+                                </td>
+                                <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
+                                    {`${survey.isPublished}`}
+                                </td>
+                                <td className="border border-gray-300 px-2 sm:px-3 py-2">
+                                    <div className="flex items-center justify-center gap-1">
+                                        {/* View */}
+                                        <button
+                                            className=" sm:px-3 font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm"
+                                            onClick={() => handleView(survey.id)}
+                                        >
+                                            <Link href="">View</Link>
+                                        </button>
+                                        {
+                                            survey.isPublished && <button onClick={()=>handleCopyUrl(survey.id)} className='cursor-pointer  font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm'>
+                                                Copy responder Link
                                             </button>
+                                        }
+                                        {!survey.isPublished &&
 
-                                            {!survey.isPublished && (
-                                                <>
-                                                    {/* Edit */}
-                                                    <button
-                                                        className="px-2 sm:px-0 text-xs py-1 font-bold text-indigo-500 hover:underline ml-2"
-                                                        onClick={() => handleEdit(survey.id)}
-                                                    >
-                                                        <Link href="">Edit</Link>
-                                                    </button>
 
-                                                    {/* Publish */}
-                                                    <button
-                                                        className="px-2 sm:px-0 py-1 font-bold text-indigo-500 hover:underline ml-2"
-                                                        onClick={() => handlePublish(survey.id, survey.title)}
-                                                    >
-                                                        <Link href="" className="text-xs">
-                                                            Publish
-                                                        </Link>
-                                                    </button>
 
-                                                    {/* Delete */}
-                                                    <button
-                                                        className="px-2 sm:px-0 text-xs py-1 font-bold text-indigo-500 flex items-center  hover:underline ml-2"
-                                                        onClick={() => handleDelete(survey.id, survey.title)}
-                                                    >
-                                                        <Link href="">Delete</Link>
-                                                    </button>
-                                                </>
-                                            )}
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan={8} className="text-center py-3 text-xl font-bold  text-white bg-red-400">
-                                    No surveys found.
+
+                                            <div className="flex items-center gap-1">
+
+                                                <button
+                                                    className="sm:px-3  font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm"
+                                                    onClick={() => handleEdit(survey.id)}
+                                                >
+                                                    <Link href="">Edit</Link>
+                                                </button>
+                                                {/* publish */}
+                                                <button className="sm:px-3  font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm" onClick={() => handlePublish(survey.id, survey.title)}>
+                                                    <Link href="">Publish</Link>
+                                                </button>
+                                                {/* delete */}
+                                                <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 flex items-center gap-1  border-1 border-gray-300 hover:bg-indigo-50 rounded-sm" onClick={() => handleDelete(survey.id, survey.title)}>
+                                                    <Link href="">Delete</Link>
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
                                 </td>
                             </tr>
-                        )}
+                        ))}
                     </tbody>
+
                 </table>
             </div>
         </div>

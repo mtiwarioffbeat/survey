@@ -42,9 +42,12 @@ export default function Otppage() {
   };
 
   const handleKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       console.log("input ref", inputsRef)
       inputsRef.current[index - 1]?.focus();
+    } else{
+      return
     }
   };
 
@@ -76,8 +79,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       
     if (res?.success) {
       toast.success(res.message);
-      // Refresh the page to ensure cookie is available, then redirect
-      window.location.href = '/dashboard';
+      router.push('/dashboard')
     } else if (res) {
       toast.error(res.message || res.error || "An unknown error occurred.");
     }

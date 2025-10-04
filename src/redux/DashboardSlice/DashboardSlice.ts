@@ -1,6 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { boolean } from "zod";
-import { fa } from "zod/locales";
 
 const initialState:{
     menuOpen:boolean,
@@ -9,7 +7,7 @@ const initialState:{
     loading:boolean,
     viewMode:boolean,
     GenModalConfirm:GenModalConfirm,
-    searchValue:string,
+    searchValue:string
 } = {
     menuOpen:false,
     session:{
@@ -27,8 +25,7 @@ const initialState:{
         to_delete:false,
         to_publish:false,
         text:''
-    },
-    searchValue:''
+    }
 }
 
 const createSurvey = createAsyncThunk('surveys/createSurvey',
@@ -36,6 +33,7 @@ const createSurvey = createAsyncThunk('surveys/createSurvey',
         
     }
 )
+
 const DashboardSlice = createSlice({
     name:"dashboard",
    initialState,
@@ -61,15 +59,15 @@ const DashboardSlice = createSlice({
         setSearchValue:(state,action:PayloadAction<string>)=>{
             state.searchValue = action.payload
         },
-      
-        resetSession:(state)=>{
+          resetSession:(state)=>{
 state.session = {id:null,name:null,email:null};
 state.showModal =false;
 state.GenModalConfirm ={survey_id:-1,survey_name:'',to_delete:false,to_publish:false,text:''};
         }
+       
     }
 })
 
 
-export const {setMenuOpen,setSession,setShowModal,setLoading,setViewMode,setGenModalConfirm,resetSession,setSearchValue} = DashboardSlice.actions
+export const {setMenuOpen,setSession,setShowModal,setLoading,setViewMode,setGenModalConfirm,setSearchValue,resetSession} = DashboardSlice.actions
 export default DashboardSlice.reducer

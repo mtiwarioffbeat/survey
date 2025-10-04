@@ -30,7 +30,7 @@ export default function SearchBox() {
   };
 
   return (
-    <div className="relative max-w-sm">
+    <div className="relative w-full sm:max-w-[45%] lg:max-w-[25%]">
       <input
         type="text"
         defaultValue={searchValue}

@@ -21,13 +21,13 @@ export class UserService {
 
   // Login POST
   public static async LoginUser(payload: Auth['login']) {
-    const formData = {
-      email: payload.email,
-
+     const formData = {
+      email:payload.email,
+    
     }
     try {
       const response = await axios.post("/api/auth/login", formData);
-      console.log("response present in userService", response)
+       console.log("response present in userService",response)
       return response.data
     } catch (err: any) {
       return {
@@ -37,59 +37,58 @@ export class UserService {
   }
 
   // verify POST
-  public static async OtpVerify(payload: Auth['verify']) {
+  public static async OtpVerify(payload:Auth['verify']){
     const formData = {
-      email: payload.email,
-      otp: payload.otp
+      email:payload.email,
+      otp:payload.otp
     }
-    try {
-      const response = await axios.post('/api/auth/verify', formData)
-      console.log("response present in userService", response)
-      return response.data
-    } catch (err: any) {
+    try{
+         const response = await axios.post('/api/auth/verify',formData)
+         console.log("response present in userService",response)
+         return response.data
+    } catch(err:any){
       return {
-        success: false,
-        message: err.response?.data?.error || "verification faild"
+        success:false,
+        message:err.response?.data?.error ||"verification faild"
       }
     }
   }
 
-  public static async ResendOtp(payload: string | undefined) {
-    if (!payload) {
-      return {
-        success: false,
-        message: "Email address is missing."
-      };
-    }
-
-    const formData = {
-      email: payload,
+  public static async ResendOtp(payload: string | undefined){
+  if (!payload) {
+    return {
+      success: false,
+      message: "Email address is missing."
     };
-    try {
-      const response = await axios.post('/api/auth/verify', formData);
-      console.log("response present in userService", response.data);
-      return response.data;
-    } catch (err: any) {
-      return {
-        success: false,
-        message: err.response?.data?.error || "OTP resend failed, Please try again later"
-      };
-    }
   }
+
+  const formData = {
+    email: payload,
+  };
+  try {
+    const response = await axios.post('/api/auth/verify', formData);
+    console.log("response present in userService", response.data);
+    return response.data;
+  } catch (err: any) {
+    return {
+      success: false,
+      message: err.response?.data?.error || "OTP resend failed, Please try again later"
+    };
+  }
+}
 
 
   // Check if user exists by email (GET)
   public static async CheckUserByEmail(email: string) {
-    try {
-      const response = await axios.get(`/api/auth/signup?email=${encodeURIComponent(email)}`);
-      return { success: true, data: response.data };
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.response?.data?.message || error.response?.data?.error || "Failed to check email",
-      };
-    }
+  try {
+    const response = await axios.get(`/api/auth/signup?email=${encodeURIComponent(email)}`);
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.response?.data?.message || error.response?.data?.error || "Failed to check email",
+    };
   }
- 
 }
 
+}

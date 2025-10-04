@@ -79,7 +79,7 @@ const Page = () => {
       <div className="w-[90%] mx-auto flex flex-col h-full px-3 py-6">
         <div className="flex flex-col lg:flex-row gap-6">
           <main className="flex-1 flex flex-col">
-            <h1 className="text-2xl sm:text-3xl font-bold text-center lg:text-left mb-6">
+            <h1 className="text-2xl sm:text-3xl font-bold text-center mx-auto lg:text-left mb-6">
               Welcome Admin
             </h1>
 
@@ -92,14 +92,22 @@ const Page = () => {
                 Create new Survey
                 <IoAddCircle className="text-xl sm:text-2xl group-hover:animate-bounce" />
               </button>
-               <div className="flex-1 w-full items-end justify-end flex">
+               <div className="flex-1 w-full items-end justify-end hidden sm:flex">
                 <SearchBox />
               </div>
             </div>
 
+            <div className="flex items-center justify-between mb-4">
+                <p className="text-base sm:text-lg md:text-xl font-bold">Survey List</p>  
+                <div className="block sm:hidden w-auto">
+                <SearchBox />
+                </div>
+            </div>
+            <hr className="text-gray-300 w-full" />
             <div className="overflow-x-auto">
               <SurveyList />
             </div>
+            
           </main>
         </div>
       </div>
