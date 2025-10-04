@@ -114,10 +114,6 @@ export async function PUT(req: Request) {
   }
 }
 
-
-
-
-
 export async function PATCH(req:Request){
   try{
     const body = await req.json()

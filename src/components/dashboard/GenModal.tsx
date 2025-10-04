@@ -16,7 +16,6 @@ import { getSocket } from "@/utils/socket"
             survey_id:GenModalConfirm.survey_id,
             to_publish:GenModalConfirm.to_publish,
             to_delete:GenModalConfirm.to_delete,
-          
         }
         try{
             const res = await SurveyRoutes.PatchSurvey(data)
@@ -41,10 +40,6 @@ import { getSocket } from "@/utils/socket"
         dispatch(setLoading(false))
         dispatch(setGenModalConfirm({...GenModalConfirm,to_delete:false,survey_id:-1,survey_name:'',to_publish:false}))
     }
-
-    
-  
-
       return (
         <div className="fixed inset-0 z-[100] grid place-items-center " style={{ background: 'rgba(0,0,0,0.2)' }} >
             <div className="relative m-4 w-[80%] md:max-w-[50%] rounded-lg bg-white p-6 shadow-sm">

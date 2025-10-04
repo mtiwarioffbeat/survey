@@ -1,15 +1,17 @@
-import { getSession } from "@/lib/getSession";
-import { Auth } from "@/types/auth";
+// import { getSession } from "@/lib/getSession";
+// import { Auth } from "@/types/auth";
 import { PatchSurvey, Survey } from "@/types/survey";
 import axios, { AxiosError } from "axios";
-import { useEffect } from "react";
+// import { useEffect } from "react";
+// import { success } from "zod";
+// import { fa } from "zod/v4/locales";
 
 export class SurveyRoutes {
   // Signup POST
-  public static async CreateSurvey(payload:Survey['Survey']) {
-   
-    console.log('payload',payload)
-    
+  public static async CreateSurvey(payload: Survey['Survey']) {
+
+    console.log('payload', payload)
+
     try {
       const response = await axios.post("/api/survey", payload);
       return { success: true, data: response.data };
@@ -22,44 +24,68 @@ export class SurveyRoutes {
   }
 
 
-  public static async UpdateSurvey(payload:Survey['Survey']){
-    try{
-      const response = await axios.put("/api/survey",payload)
-      console.log("resposne in updat",response)
-      return {success:true, data:response.data}
-    } catch(error:any){
+  public static async UpdateSurvey(payload: Survey['Survey']) {
+    try {
+      const response = await axios.put("/api/survey", payload)
+      console.log("resposne in updat", response)
+      return { success: true, data: response.data }
+    } catch (error: any) {
       return {
-        success:false,
-        message:error.response?.data?.error || "Updation failed"
+        success: false,
+        message: error.response?.data?.error || "Updation failed"
+      }
+    }
+  }
+  // updating publish/delete check in survey
+  public static async PatchSurvey(payload: PatchSurvey) {
+    try {
+      const response = await axios.patch("/api/survey", payload)
+      console.log("response in patchsurvey", response)
+      return { success: true, data: response.data }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response?.data?.error || "Publish failed"
       }
     }
   }
 
-  // updating publish/delete check in survey
-  public static async PatchSurvey(payload:PatchSurvey){
-    try{
-      const response = await axios.patch("/api/survey",payload)
-      console.log("response in patchsurvey",response)
-      return {success:true,data:response.data}
-    } catch(error:any){
-      return {
-        success:false,
-        message:error.response?.data?.error || "Publish failed"
-      }
-    }
-  }
- 
-  public static async GetSurvey(){
-    try{
+  public static async GetSurvey() {
+    try {
       const response = await axios.get('/api/survey')
-      return {success:true,data:response.data}
-    } catch(error:any){
-      return{
-        success:false,
-        message:error.response?.data?.error || "cannot get surveys"
+      return { success: true, data: response.data }
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error.response?.data?.error || "cannot get surveys"
       }
     }
   }
+  public static async GetSurveysforSearch(payload: string) {
+    if (payload.trim() === '') {
+      return {
+        success: false,
+        message: "value is required",
+      };
+    }
+
+    try {
+      const response = await axios.post("/api/search/surveys", payload, {
+        headers: { "Content-Type": "text/plain" },
+      });
+
+      return {
+        success: true,
+        data: response.data,
+      };
+    } catch (err: any) {
+      return {
+        success: false,
+        message: err.response?.data?.error || "can't get search survey",
+      };
+    }
+  }
+
 
 }
 

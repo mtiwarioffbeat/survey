@@ -4,20 +4,39 @@ import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { setSearchValue } from "@/redux/DashboardSlice/DashboardSlice";
 import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
-
+import { setInterval } from "timers/promises";
+import { SurveyRoutes } from "@/services/api/SurveyRoutes";
+import { setSurveys } from "@/redux/SurveysSlice/SurveysSlice";
 export default function SearchBox() {
- 
-
-    
-    const dispatch = useAppDispatch()
-    const {searchValue} = useAppSelector((store)=>store.dashboard)
-    const handleChange = (e:any)=>{
-        const val = e.target.value
-        // setSearch
-        dispatch(setSearchValue(val))
-        console.log("val",val)
-        // console.log("val",searchValue)
+  const dispatch = useAppDispatch()
+  const { searchValue } = useAppSelector((store) => store.dashboard)
+  async function getSearchData(val: string) {
+    try {
+      const res = await SurveyRoutes.GetSurveysforSearch(val);
+      if (res.success) {
+        console.log("Search Results:", res.data);
+        dispatch(setSurveys(res.data))
+      } else {
+        console.log("Search Error:", res.message);
+      }
+    } catch (err) {
+      console.log("Error message", err);
     }
+  }
+  let timer: ReturnType<typeof setTimeout>;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    dispatch(setSearchValue(val));
+    console.log("val", val);
+    if (searchValue) {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        getSearchData(searchValue);
+      }, 300);
+    }
+    // debounce: waits 300ms after user stops typing
+  };
+
   return (
     <div className="relative w-full sm:max-w-[45%] lg:max-w-[25%]">
       <input

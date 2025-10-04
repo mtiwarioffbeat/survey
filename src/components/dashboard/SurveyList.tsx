@@ -122,7 +122,7 @@ export default function SurveyList() {
                         </tr>
                     </thead>
                     <tbody className="bg-white">
-                        {surveys.filter((survey) => survey.title.startsWith(searchValue)).map((survey) => (
+                        {surveys.map((survey) => (
                             <tr key={survey.id}>
                                 <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
                                     {survey.title}
@@ -151,10 +151,6 @@ export default function SurveyList() {
                                             </button>
                                         }
                                         {!survey.isPublished &&
-
-
-
-
                                             <div className="flex items-center gap-1">
 
                                                 <button
