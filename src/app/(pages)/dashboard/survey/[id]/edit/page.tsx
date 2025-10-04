@@ -1,53 +1,58 @@
 'use client'
-import FormHeading from "@/components/dashboard/form/SurveyHeading";
+import SurveyHeading from "@/components/dashboard/form/SurveyHeading";
 import Question from "@/components/dashboard/form/Question";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { setAddQuestion, setSurvey } from "@/redux/SurveySlice/SurveySlice";
 import { getSocket } from "@/utils/socket";
 import { useEffect } from "react";
+import { setViewMode } from "@/redux/DashboardSlice/DashboardSlice";
 export default function EditPage() {
   const dispatch = useAppDispatch();
   const { questions } = useAppSelector((store) => store.survey);
-  const {session} = useAppSelector((store)=>store.dashboard)
-  const survey = useAppSelector((store)=>store.survey)
-  
+  const { session } = useAppSelector((store) => store.dashboard)
+  const survey = useAppSelector((store) => store.survey)
+
   const socket = getSocket();
+  useEffect(() => {
+      dispatch(setViewMode(false));
+    }, [dispatch]);
+    
   const handleAddQuestion = () => {
-
-  const newQuestion = {
-    title: "",
-    description: null,
-    isDeleted: false,
-    // sortOrder:null,
-    type: {
-      title: "Paragraph", // default type
+    
+    const newQuestion = {
+      title: "",
       description: null,
-    },
-    choices: [] as {
-      title: string;
-      description: string | null;
-      isDeleted: false;
-      // sortOrder: 1;
-    }[],
+      isDeleted: false,
+      // sortOrder:null,
+      type: {
+        title: "Paragraph", // default type
+        description: null,
+      },
+      choices: [] as {
+        title: string;
+        description: string | null;
+        isDeleted: false;
+        // sortOrder: 1;
+      }[],
+    };
+
+    const updatedSurvey = {
+      ...survey,
+      questions: [...survey.questions, newQuestion],
+    };
+
+    dispatch(setSurvey(updatedSurvey));
+
+    socket.emit("survey_update", {
+      survey_room: `survey:${survey.id}`,
+      updatedSurvey,
+    });
   };
-
-   const updatedSurvey = {
-    ...survey,
-    questions: [...survey.questions, newQuestion],
-  };
-
-  dispatch(setSurvey(updatedSurvey));
-
-  socket.emit("survey_update", {
-    survey_room: `survey:${survey.id}`,
-    updatedSurvey,
-  });
-};
 
   return (
     <div className="bg-purple-50 mx-auto mt-10">
       <div className="flex flex-col gap-8 w-[90%] md:w-[80%] lg:w-[60%] mx-auto">
-        <FormHeading />
+        <SurveyHeading />
 
         {/* Render all questions */}
         {questions.map((q, idx) => (

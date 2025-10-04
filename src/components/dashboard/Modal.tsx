@@ -8,6 +8,7 @@ import Spinner from "../Spinner";
 import { Survey } from "@/types/survey";
 import { NextResponse } from "next/server";
 import { setSurveys } from "@/redux/SurveysSlice/SurveysSlice";
+import { getSocket } from "@/utils/socket";
 
 
 
@@ -19,21 +20,34 @@ const Modal = () => {
     const { loading } = useAppSelector((store) => store.dashboard)
     const { router } = useNavigation()
     const surveys = useAppSelector((store)=>store.surveys)
+    const socket = getSocket()
+    
     const handleConfirm = async () => {
         dispatch(setLoading(true))
         const newSurveyData:Survey['Survey'] = { ...survey, title: title, description: description };
 
         // dispatch(setSurvey(newSurveyData));
         try{
-
+            // creating surveys
             const res = await SurveyRoutes.CreateSurvey(newSurveyData)
             console.log("response in frontend",res.data.sur_id)
+
+            // get all surveys
             const getsurveys = await SurveyRoutes.GetSurvey()
             if(getsurveys.success){
                  dispatch(setSurveys(getsurveys.data?.data || []))
             }
+
+            let getAllSurveys = getsurveys.data?.data
+            console.log("get all survy econle",getAllSurveys)
+            //EMIT SOCKET ALL SURVEYS
+           socket.emit("get_all_surveys", getAllSurveys);
+
+
             // console.log("res2",res2.data.data[0])
             // dispatch(setSurvey(res2.data.data[0]))
+
+            // servey to view
             const surveyToView =await getsurveys.data.data.find((s:any) => s.id == res.data.sur_id)  
             console.log("survey to biew ",surveyToView)
             dispatch(setSurvey(surveyToView))        

@@ -85,14 +85,14 @@ export class SurveyServices{
       let result
       if(data.to_delete){
         result =  await client.query(
-          `Update survey SET is_Deleted=$1 WHERE id = $2 RETURNING id
-          `,[data.to_delete,data.survey_id]
+          `Update survey SET is_Deleted=$1,is_opened_in_edit_mode=$3 WHERE id = $2 RETURNING id
+          `,[data.to_delete,data.survey_id,false]
         )
       }
       else if(data.to_publish){
         result = await client.query(
-          `Update survey SET is_Published=$1 WHERE id = $2 RETURNING id
-          `,[data.to_publish,data.survey_id]
+          `Update survey SET is_Published=$1,is_opened_in_edit_mode=$3 WHERE id = $2 RETURNING id
+          `,[data.to_publish,data.survey_id,false]
         )
       }
       

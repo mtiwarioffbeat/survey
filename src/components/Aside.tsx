@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
-import { FaRegUserCircle } from "react-icons/fa";
+import { FaFileAlt, FaRegUserCircle } from "react-icons/fa";
 import { RiCloseFill } from "react-icons/ri";
 import { IoIosLogOut } from "react-icons/io";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
-import { setMenuOpen } from "@/redux/DashboardSlice/DashboardSlice";
+import { resetSession, setMenuOpen } from "@/redux/DashboardSlice/DashboardSlice";
 import { resetSurvey } from "@/redux/SurveySlice/SurveySlice";
 
 export default function Aside() {
@@ -14,13 +14,11 @@ export default function Aside() {
   const { menuOpen } = useAppSelector((store) => store.dashboard);
   const dispatch = useAppDispatch();
   const router = useRouter();
-
+  const {session} = useAppSelector((store)=>store.dashboard)
   const handleLogout = async () => {
     try {
-   
+      dispatch(resetSession());
       dispatch(resetSurvey());
-      localStorage.clear();
-      sessionStorage.clear();
       await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
       router.push("/login");
     } catch (err) {
@@ -36,10 +34,10 @@ export default function Aside() {
           {/* Header */}
           <div className="py-6 px-5 border-b flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <FaRegUserCircle className="text-3xl text-gray-600" />
+             <FaFileAlt className="text-3xl text-indigo-700 cursor-pointer" />
               <div>
-                <p className="text-sm font-semibold">Abhishek</p>
-                <p className="text-xs text-gray-500">Joined: 03-09-2025</p>
+                <p className="text-sm font-semibold">{session?.name}</p>
+                {/* <p className="text-xs text-gray-500">Joined: 03-09-2025</p> */}
               </div>
             </div>
 

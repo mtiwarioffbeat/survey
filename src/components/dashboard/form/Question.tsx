@@ -34,12 +34,12 @@ export default function Question({ index, data }: Props) {
   const survey = useAppSelector((store) => store.survey)
   const socket = getSocket()
   // check pathname
-  useEffect(() => {
-    if (!pathname.includes('/preview')) {
-      dispatch(setViewMode(false))
-    }
+  // useEffect(() => {
+  //   if (!pathname.includes('/preview')) {
+  //     dispatch(setViewMode(false))
+  //   }
 
-  }, [pathname])
+  // }, [pathname])
 
   const [selectedOption, setSelectedOption] = useState(null); // State to store the currently selected option
 

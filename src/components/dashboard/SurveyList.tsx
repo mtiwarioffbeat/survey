@@ -5,15 +5,40 @@ import { useNavigation } from "@/hooks/useNavigation"
 import { setSurvey } from "@/redux/SurveySlice/SurveySlice"
 import { Survey } from "@/types/survey"
 import { toast } from "react-toastify"
-import {  setGenModalConfirm, setViewMode } from "@/redux/DashboardSlice/DashboardSlice"
+import { setGenModalConfirm, setViewMode } from "@/redux/DashboardSlice/DashboardSlice"
+import { useEffect } from "react"
+import { getSocket } from "@/utils/socket"
+import { setSurveys } from "@/redux/SurveysSlice/SurveysSlice"
+import { SurveyRoutes } from "@/services/api/SurveyRoutes"
+
 
 export default function SurveyList() {
 
     const surveys = useAppSelector((store) => store.surveys)
-    const {searchValue} = useAppSelector((store)=>store.dashboard)
+
+    const { searchValue } = useAppSelector((store) => store.dashboard)
     const { router } = useNavigation()
     const dispatch = useAppDispatch()
-    const {GenModalConfirm} = useAppSelector((store)=>store.dashboard)
+    const { GenModalConfirm } = useAppSelector((store) => store.dashboard)
+    const socket = getSocket()
+
+    // socket listener
+    useEffect(() => {
+        socket.on("get_all_surveys", (allSurveys) => {
+            console.log("Received surveys:", allSurveys);
+            dispatch(setSurveys(allSurveys));
+        });
+
+        socket.on("survey_patch", async () => {
+            const get_all_surveys = await SurveyRoutes.GetSurvey()
+            dispatch(setSurveys(get_all_surveys.data?.data));
+
+        })
+        return () => {
+            socket.off("get_all_surveys");
+            socket.off("survey_patch");
+        };
+    }, [socket]);
 
     //edit
     const handleEdit = (id: number | null) => {
@@ -53,27 +78,38 @@ export default function SurveyList() {
     }
 
     //delete
-    const handleDelete = (survey_id: number,survey_name:string)=>{
-        if(survey_id==null){
+    const handleDelete = (survey_id: number, survey_name: string) => {
+        if (survey_id == null) {
             toast.error("id is not present")
         }
-        dispatch(setGenModalConfirm({...GenModalConfirm,to_delete:true,survey_name:survey_name,survey_id:survey_id}))
+        dispatch(setGenModalConfirm({ ...GenModalConfirm, to_delete: true, survey_name: survey_name, survey_id: survey_id }))
     }
 
     //publish
-    const handlePublish = (survey_id:number,survey_name:string)=>{
-        if(survey_id==null){
+    const handlePublish = (survey_id: number, survey_name: string) => {
+        if (survey_id == null) {
             toast.error("id is not present")
         }
-         dispatch(setGenModalConfirm({...GenModalConfirm,survey_name:survey_name,survey_id:survey_id,to_publish:true}))
+        dispatch(setGenModalConfirm({ ...GenModalConfirm, survey_name: survey_name, survey_id: survey_id, to_publish: true }))
+    }
+
+
+    const handleCopyUrl = async (id:number) => {
+        console.log("url",process.env.NEXT_PUBLIC_RESPONDER_URL)
+        try {
+            // const responderUrl = `http://localhost:3000/surveys/${id}`
+            const responderUrl = `${process.env.NEXT_PUBLIC_RESPONDER_URL}/${id}`
+            // const responderUrl = `https://cqgdsgvd-3000.inc1.devtunnels.ms/surveys/${id}`
+            await navigator.clipboard.writeText(responderUrl)
+            toast.dark('Copied to clipboard')
+        } catch (err) {
+            toast.error("Failed to copy URL")
+        }
     }
 
     return (
         <div className="w-full">
-            <div>
-                <p className="text-base sm:text-lg md:text-xl font-bold">Survey List</p>
-            </div>
-            <hr className="text-gray-300 w-full" />
+
             <div className="w-full mt-3 overflow-x-auto">
                 <table className="w-full border border-gray-300 mt-5 text-xs sm:text-sm md:text-base min-w-[600px]">
                     <thead className="bg-indigo-600">
@@ -86,7 +122,7 @@ export default function SurveyList() {
                         </tr>
                     </thead>
                     <tbody className="bg-white">
-                        {surveys.filter((survey)=>survey.title.startsWith(searchValue)).map((survey) => (
+                        {surveys.filter((survey) => survey.title.startsWith(searchValue)).map((survey) => (
                             <tr key={survey.id}>
                                 <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
                                     {survey.title}
@@ -101,37 +137,42 @@ export default function SurveyList() {
                                     {`${survey.isPublished}`}
                                 </td>
                                 <td className="border border-gray-300 px-2 sm:px-3 py-2">
-                                    <div className="flex items-center justify-center">
+                                    <div className="flex items-center justify-center gap-1">
                                         {/* View */}
                                         <button
-                                            className="px-2 sm:px-3 py-2 font-bold text-indigo-500 hover:underline"
+                                            className=" sm:px-3 font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm"
                                             onClick={() => handleView(survey.id)}
                                         >
                                             <Link href="">View</Link>
                                         </button>
-                                        { !survey.isPublished &&
+                                        {
+                                            survey.isPublished && <button onClick={()=>handleCopyUrl(survey.id)} className='cursor-pointer  font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm'>
+                                                Copy responder Link
+                                            </button>
+                                        }
+                                        {!survey.isPublished &&
 
-                                       
-                                          
-                                            
-                                            <div className="flex items-center justify-center">
 
-                                        <button
-                                            className="px-2 sm:px-3 py-2 font-bold text-indigo-500 hover:underline"
-                                            onClick={() => handleEdit(survey.id)}
-                                            >
-                                            <Link href="">Edit</Link>
-                                        </button>
-                                        {/* publish */}
-                                        <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 hover:underline" onClick={()=>handlePublish(survey.id,survey.title)}>
-                                            <Link href="">Publish</Link>
-                                        </button>
-                                        {/* delete */}
-                                        <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 flex items-center gap-1 hover:underline" onClick={()=>handleDelete(survey.id,survey.title)}>
-                                            <Link href="">Delete</Link>
-                                        </button>
+
+
+                                            <div className="flex items-center gap-1">
+
+                                                <button
+                                                    className="sm:px-3  font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm"
+                                                    onClick={() => handleEdit(survey.id)}
+                                                >
+                                                    <Link href="">Edit</Link>
+                                                </button>
+                                                {/* publish */}
+                                                <button className="sm:px-3  font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm" onClick={() => handlePublish(survey.id, survey.title)}>
+                                                    <Link href="">Publish</Link>
+                                                </button>
+                                                {/* delete */}
+                                                <button className="px-2 sm:px-3 py-2 font-bold text-indigo-500 flex items-center gap-1  border-1 border-gray-300 hover:bg-indigo-50 rounded-sm" onClick={() => handleDelete(survey.id, survey.title)}>
+                                                    <Link href="">Delete</Link>
+                                                </button>
                                             </div>
-                                         }
+                                        }
                                     </div>
                                 </td>
                             </tr>

@@ -58,11 +58,16 @@ const DashboardSlice = createSlice({
         },
         setSearchValue:(state,action:PayloadAction<string>)=>{
             state.searchValue = action.payload
+        },
+          resetSession:(state)=>{
+state.session = {id:null,name:null,email:null};
+state.showModal =false;
+state.GenModalConfirm ={survey_id:-1,survey_name:'',to_delete:false,to_publish:false,text:''};
         }
        
     }
 })
 
 
-export const {setMenuOpen,setSession,setShowModal,setLoading,setViewMode,setGenModalConfirm,setSearchValue} = DashboardSlice.actions
+export const {setMenuOpen,setSession,setShowModal,setLoading,setViewMode,setGenModalConfirm,setSearchValue,resetSession} = DashboardSlice.actions
 export default DashboardSlice.reducer

@@ -19,7 +19,7 @@ export default function SearchBox() {
         // console.log("val",searchValue)
     }
   return (
-    <div className="relative max-w-sm">
+    <div className="relative w-full sm:max-w-[45%] lg:max-w-[25%]">
       <input
         type="text"
         placeholder="Search... form"
