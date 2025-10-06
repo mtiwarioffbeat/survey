@@ -50,41 +50,32 @@ export class SurveyRoutes {
     }
   }
 
-  public static async GetSurvey() {
-    try {
-      const response = await axios.get('/api/survey')
-      return { success: true, data: response.data }
-    } catch (error: any) {
-      return {
-        success: false,
-        message: error.response?.data?.error || "cannot get surveys"
-      }
-    }
+  // public static async GetSurvey() {
+  //   try {
+  //     const response = await axios.get('/api/survey')
+  //     return { success: true, data: response.data }
+  //   } catch (error: any) {
+  //     return {
+  //       success: false,
+  //       message: error.response?.data?.error || "cannot get surveys"
+  //     }
+  //   }
+  // }
+  public  static async  GetSurveys(searchTerm = "") {
+  try {
+    const response = await axios.get("/api/survey", {
+      params: {
+        search: searchTerm,
+      },
+    });
+    return { success: true, data: response.data.data };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.response?.data?.error || "cannot get surveys",
+    };
   }
-  public static async GetSurveysforSearch(payload: string) {
-    if (payload.trim() === '') {
-      return {
-        success: false,
-        message: "value is required",
-      };
-    }
-
-    try {
-      const response = await axios.post("/api/search/surveys", payload, {
-        headers: { "Content-Type": "text/plain" },
-      });
-
-      return {
-        success: true,
-        data: response.data,
-      };
-    } catch (err: any) {
-      return {
-        success: false,
-        message: err.response?.data?.error || "can't get search survey",
-      };
-    }
-  }
+}
 
 
 }

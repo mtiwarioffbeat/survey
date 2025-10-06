@@ -45,8 +45,8 @@ const Page = () => {
         );
 
         // get surveys
-        const res = await SurveyRoutes.GetSurvey();
-        dispatch(setSurveys(res.data?.data || []));
+        const res = await SurveyRoutes.GetSurveys();
+        dispatch(setSurveys(res.data));
       } catch (err: any) {
         console.error("Error fetching session/surveys:", err);
         if (err.response?.status === 401) {
