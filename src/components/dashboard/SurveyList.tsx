@@ -41,23 +41,46 @@ export default function SurveyList() {
     }, [socket]);
 
     //edit
-    const handleEdit = (id: number | null) => {
-        if (id === null) {
-            console.log("ID is null. Cannot edit.");
-            return
-        }
+    // const handleEdit = (id: number | null) => {
+    //     if (id === null) {
+    //         console.log("ID is null. Cannot edit.");
+    //         return
+    //     }
 
-        const surveyToEdit = surveys.find((s) => s.id === id);
+    //     const surveyToEdit = surveys.find((s) => s.id === id);
+
+    //     if (surveyToEdit) {
+    //         dispatch(setSurvey(surveyToEdit));
+    //         router.push(`/dashboard/survey/${id}/edit`);
+    //     } else {
+    //         // console.error(`Survey with ID ${id} not found.`);
+    //         toast.error(`Survey with ID ${id} not found.`)
+    //     }
+    // };
+    const handleEdit = (survey_id: number, survey_name: string) => {
+        if (!survey_id) {
+            toast.error("id is not present");
+            return;
+        }
+        const surveyToEdit = surveys.find((s) => s.id === survey_id);
 
         if (surveyToEdit) {
-            dispatch(setSurvey(surveyToEdit));
-            router.push(`/dashboard/survey/${id}/edit`);
+            dispatch(
+            setGenModalConfirm({
+                ...GenModalConfirm,
+                survey_name,
+                survey_id,
+                to_edit: true, // 🆕 new flag
+            })
+        );
+            dispatch(setSurvey({...surveyToEdit,isOpenedInEditMode:true}));
+            router.push(`/dashboard/survey/${survey_id}/edit`);
         } else {
             // console.error(`Survey with ID ${id} not found.`);
-            toast.error(`Survey with ID ${id} not found.`)
+            toast.error(`Survey with ID ${survey_id} not found.`)
         }
+        
     };
-
 
     // view
     const handleView = (survey_id: number) => {
@@ -94,8 +117,8 @@ export default function SurveyList() {
     }
 
 
-    const handleCopyUrl = async (id:number) => {
-        console.log("url",process.env.NEXT_PUBLIC_RESPONDER_URL)
+    const handleCopyUrl = async (id: number) => {
+        console.log("url", process.env.NEXT_PUBLIC_RESPONDER_URL)
         try {
             // const responderUrl = `http://localhost:3000/surveys/${id}`
             const responderUrl = `${process.env.NEXT_PUBLIC_RESPONDER_URL}/${id}`
@@ -146,19 +169,20 @@ export default function SurveyList() {
                                             <Link href="">View</Link>
                                         </button>
                                         {
-                                            survey.isPublished && <button onClick={()=>handleCopyUrl(survey.id)} className='cursor-pointer  font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm'>
+                                            survey.isPublished && <button onClick={() => handleCopyUrl(survey.id)} className='cursor-pointer  font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm'>
                                                 Copy responder Link
                                             </button>
                                         }
-                                        {!survey.isPublished &&
+                                    {(!survey.isPublished && !survey.isOpenedInEditMode)&&
                                             <div className="flex items-center gap-1">
 
                                                 <button
-                                                    className="sm:px-3  font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm"
-                                                    onClick={() => handleEdit(survey.id)}
+                                                    className="sm:px-3 font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm"
+                                                    onClick={() => handleEdit(survey.id, survey.title)}
                                                 >
                                                     <Link href="">Edit</Link>
                                                 </button>
+
                                                 {/* publish */}
                                                 <button className="sm:px-3  font-bold text-indigo-500 border-1 border-gray-300 px-2 py-2 hover:bg-indigo-50 rounded-sm" onClick={() => handlePublish(survey.id, survey.title)}>
                                                     <Link href="">Publish</Link>

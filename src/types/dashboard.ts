@@ -9,5 +9,6 @@ interface GenModalConfirm{
     survey_name:string,
     to_delete:boolean,
     to_publish:boolean,
-    text:string
+    text:string,
+    to_edit:boolean
 }

@@ -73,38 +73,49 @@ export class OtpService {
     return otp == expectedOtp;
   }
 }
-
-
-
 export class SurveyServices{
-  public static async patchSurvey(data:PatchSurvey){
-    console.log("data inside patch",data)
-    const client = await pool.connect()
-    try{
+public static async patchSurvey(data: PatchSurvey) {
+  console.log("data inside patch", data);
+  const client = await pool.connect();
+  try {
+    let result;
 
-      let result
-      if(data.to_delete){
-        result =  await client.query(
-          `Update survey SET is_Deleted=$1,is_opened_in_edit_mode=$3 WHERE id = $2 RETURNING id
-          `,[data.to_delete,data.survey_id,false]
-        )
-      }
-      else if(data.to_publish){
-        result = await client.query(
-          `Update survey SET is_Published=$1,is_opened_in_edit_mode=$3 WHERE id = $2 RETURNING id
-          `,[data.to_publish,data.survey_id,false]
-        )
-      }
-      
-      const rows = await result?.rows[0]
-      console.log("inside queries",rows)
-      console.log("result====",result)
-      return rows
-    }finally{
-      client.release()
+    if (data.to_delete) {
+      result = await client.query(
+        `UPDATE survey 
+         SET is_deleted = $1, is_opened_in_edit_mode = false 
+         WHERE id = $2 
+         RETURNING id`,
+        [data.to_delete, data.survey_id]
+      );
+    } else if (data.to_publish) {
+      result = await client.query(
+        `UPDATE survey 
+         SET is_published = $1, is_opened_in_edit_mode = false 
+         WHERE id = $2 
+         RETURNING id`,
+        [data.to_publish, data.survey_id]
+      );
+    } else if (data.to_edit) {
+      // 🆕 Handle edit mode
+      result = await client.query(
+        `UPDATE survey 
+         SET is_opened_in_edit_mode = true 
+         WHERE id = $1 
+         RETURNING id`,
+        [data.survey_id]
+      );
     }
 
+    const row = result?.rows[0];
+    console.log("inside queries", row);
+    console.log("result====", result);
+    return row;
+  } finally {
+    client.release();
   }
+}
+
 }
 
 

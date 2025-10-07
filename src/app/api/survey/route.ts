@@ -130,6 +130,10 @@ export async function PATCH(req:Request){
     else if(body.to_publish){
       NextResponseMessage="Survey published successfully"
     }
+    else if (body.to_edit) { // 🆕 add edit case
+      NextResponseMessage = "Survey is now open in edit mode";
+    }
+
     return NextResponse.json({status:200,message:NextResponseMessage})
   }  catch(error:any){
        console.error("Error updating survey:", error);

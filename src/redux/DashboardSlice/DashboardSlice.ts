@@ -24,6 +24,7 @@ const initialState:{
         survey_name:'',
         to_delete:false,
         to_publish:false,
+        to_edit:false,
         text:''
     }
 }
@@ -62,7 +63,7 @@ const DashboardSlice = createSlice({
           resetSession:(state)=>{
 state.session = {id:null,name:null,email:null};
 state.showModal =false;
-state.GenModalConfirm ={survey_id:-1,survey_name:'',to_delete:false,to_publish:false,text:''};
+state.GenModalConfirm ={survey_id:-1,survey_name:'',to_delete:false,to_publish:false,text:'',to_edit:false};
         }
        
     }
