@@ -30,8 +30,8 @@ export default function SurveyList() {
         });
 
         socket.on("survey_patch", async () => {
-            const get_all_surveys = await SurveyRoutes.GetSurvey()
-            dispatch(setSurveys(get_all_surveys.data?.data));
+            const get_all_surveys = await SurveyRoutes.GetSurveys()
+            dispatch(setSurveys(get_all_surveys.data));
 
         })
         return () => {
@@ -111,8 +111,8 @@ export default function SurveyList() {
         <div className="w-full">
 
             <div className="w-full mt-3 overflow-x-auto">
-                <table className="w-full border border-gray-300 mt-5 text-xs sm:text-sm md:text-base min-w-[600px]">
-                    <thead className="bg-indigo-600">
+                <table className="w-full border border-gray-300 mt-5 text-xs sm:text-sm md:text-base min-w-[600px]" suppressHydrationWarning={true}>
+                    <thead className="bg-indigo-600" >
                         <tr>
                             <th className="border border-gray-300 py-2 px-2 text-white">Name</th>
                             <th className="border border-gray-300 py-2 px-2 text-white">Created by</th>
@@ -121,9 +121,11 @@ export default function SurveyList() {
                             <th className="border border-gray-300 py-2 px-2 text-white" colSpan={4}>Action</th>
                         </tr>
                     </thead>
-                    <tbody className="bg-white">
-                        {surveys.filter((survey) => survey.title.startsWith(searchValue)).map((survey) => (
-                            <tr key={survey.id}>
+                    { surveys.length >0 &&
+                    <tbody >
+                        
+                        {surveys.map((survey) => (
+                            <tr key={survey.id}   suppressHydrationWarning={true} className="bg-white">
                                 <td className="border border-gray-300 px-2 sm:px-3 py-2 text-gray-600 text-center">
                                     {survey.title}
                                 </td>
@@ -151,10 +153,6 @@ export default function SurveyList() {
                                             </button>
                                         }
                                         {!survey.isPublished &&
-
-
-
-
                                             <div className="flex items-center gap-1">
 
                                                 <button
@@ -177,9 +175,11 @@ export default function SurveyList() {
                                 </td>
                             </tr>
                         ))}
+                    
                     </tbody>
-
+}                       
                 </table>
+    {surveys.length<=0 && <div className="text-center w-full bg-white"><h4>No Surveys found</h4></div>}
             </div>
         </div>
     )

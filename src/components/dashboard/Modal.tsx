@@ -33,12 +33,12 @@ const Modal = () => {
             console.log("response in frontend",res.data.sur_id)
 
             // get all surveys
-            const getsurveys = await SurveyRoutes.GetSurvey()
+            const getsurveys = await SurveyRoutes.GetSurveys()
             if(getsurveys.success){
-                 dispatch(setSurveys(getsurveys.data?.data || []))
+                 dispatch(setSurveys(getsurveys.data))
             }
 
-            let getAllSurveys = getsurveys.data?.data
+            let getAllSurveys = getsurveys.data
             console.log("get all survy econle",getAllSurveys)
             //EMIT SOCKET ALL SURVEYS
            socket.emit("get_all_surveys", getAllSurveys);
@@ -48,7 +48,7 @@ const Modal = () => {
             // dispatch(setSurvey(res2.data.data[0]))
 
             // servey to view
-            const surveyToView =await getsurveys.data.data.find((s:any) => s.id == res.data.sur_id)  
+            const surveyToView =await getsurveys.data.find((s:any) => s.id == res.data.sur_id)  
             console.log("survey to biew ",surveyToView)
             dispatch(setSurvey(surveyToView))        
             router.push(`/dashboard/survey/${res.data.sur_id}/edit`)
