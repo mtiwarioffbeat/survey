@@ -106,7 +106,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     toast.error("An unexpected error occurred.");
   } finally {
     dispatch(setLoading(false));
-    // router.push('/dashboard')
   }
 };
 
