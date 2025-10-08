@@ -143,6 +143,9 @@ export async function PATCH(req:Request){
     }
     else if(body.to_publish){
       NextResponseMessage="Survey published successfully"
+    } 
+    else if(body.isOpenedInEditMode){
+      NextResponseMessage="Survey edit mode updated successfully"
     }
     return NextResponse.json({status:200,message:NextResponseMessage})
   }  catch(error:any){
