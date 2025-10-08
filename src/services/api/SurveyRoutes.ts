@@ -50,17 +50,6 @@ export class SurveyRoutes {
     }
   }
 
-  // public static async GetSurvey() {
-  //   try {
-  //     const response = await axios.get('/api/survey')
-  //     return { success: true, data: response.data }
-  //   } catch (error: any) {
-  //     return {
-  //       success: false,
-  //       message: error.response?.data?.error || "cannot get surveys"
-  //     }
-  //   }
-  // }
   public  static async  GetSurveys(searchTerm = "") {
   try {
     const response = await axios.get("/api/survey", {
