@@ -13,14 +13,9 @@ import Modal from "@/components/dashboard/Modal";
 import { resetSurvey } from "@/redux/SurveySlice/SurveySlice";
 import { setSurveys } from "@/redux/SurveysSlice/SurveysSlice";
 import GenModal from "@/components/dashboard/GenModal";
-import axios from "axios";
-
-import { io, Socket } from "socket.io-client";
-let socket: Socket;
 
 const Page = () => {
   const { router } = useNavigation();
-  const survey = useAppSelector((store) => store.survey);
   const { showModal, GenModalConfirm, loading } = useAppSelector(
     (store) => store.dashboard
   );
@@ -45,8 +40,8 @@ const Page = () => {
         );
 
         // get surveys
-        const res = await SurveyRoutes.GetSurvey();
-        dispatch(setSurveys(res.data?.data || []));
+        const res = await SurveyRoutes.GetSurveys();
+        dispatch(setSurveys(res.data));
       } catch (err: any) {
         console.error("Error fetching session/surveys:", err);
         if (err.response?.status === 401) {
@@ -65,12 +60,6 @@ const Page = () => {
     dispatch(resetSurvey());
   }, [dispatch]);
 
-
-  // const handleSurveyCreation = async () => {
-  //   const res = await SurveyRoutes.CreateSurvey(survey);
-  //   console.log("response from survey creation", res);
-  //   router.push("/dashboard/survey/1");
-  // };
   return (
     <>
       {showModal && <Modal />}

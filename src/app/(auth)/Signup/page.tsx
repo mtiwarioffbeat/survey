@@ -11,7 +11,6 @@ import z from 'zod'
 import Spinner from '@/components/Spinner';
 import { toast } from 'react-toastify';
 import { useNavigation } from '@/hooks/useNavigation'; 
-import  main  from '@/services/db/nodemailer';
 
 const page = () => {
   const dispatch = useAppDispatch();
@@ -61,7 +60,6 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
   //   user exists 
   const res = await UserService.SignupUser(signupData);
-  // console.log("response",res)
   if (res.success) {
     if (res.data.exists) {
       toast.error(res.data.message);
@@ -69,7 +67,7 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       return 
     } else {
       toast.success("please verify OTP");
-      dispatch(setSignup(signupData)); // temp signup data
+      dispatch(setSignup(signupData));
     router.push('/verify')
     }
   } else {

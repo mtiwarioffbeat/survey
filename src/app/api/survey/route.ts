@@ -46,34 +46,48 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+
+export async function GET(request: Request) {
   try {
-
-    const user = await getSession()
-    console.log("get req")
+    const user = await getSession(); // your existing auth check
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    console.log("whs")
-    const { rows } = await pool.query(
-      `SELECT * FROM get_surveys()`
-    )
-    const surveys = rows[0]?.get_surveys || []
-    console.log("rows:", rows);
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Surveys fetched successfully",
-        data: surveys,
-      },
-      { status: 200 }
-    );
+    // Parse search param from URL
+    const url = new URL(request.url);
+    const search = url.searchParams.get("search")?.trim() || "";
 
-  } catch (err: unknown) {
-    console.log(err)
-    return NextResponse.json({ error: "Failed to fetch surveys" }, { status: 500 })
+    if (!search) {
+      // No search term, return all surveys
+      const { rows } = await pool.query(`SELECT * FROM get_surveys()`);
+      const surveys = rows[0]?.get_surveys || [];
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: "Surveys fetched successfully",
+          data: surveys,
+        },
+        { status: 200 }
+      );
+    } else {
+      // Search term provided, run search query
+      const result = await pool.query("SELECT get_surveys($1) AS data", [search]);
+      const surveys = result.rows[0].data || [];
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: `Surveys fetched for search term "${search}"`,
+          data: surveys,
+        },
+        { status: 200 }
+      );
+    }
+  } catch (err) {
+    console.error("Failed to fetch surveys", err);
+    return NextResponse.json({ error: "Failed to fetch surveys" }, { status: 500 });
   }
 }
 
@@ -129,6 +143,9 @@ export async function PATCH(req:Request){
     }
     else if(body.to_publish){
       NextResponseMessage="Survey published successfully"
+    } 
+    else if(body.isOpenedInEditMode){
+      NextResponseMessage="Survey edit mode updated successfully"
     }
     else if (body.to_edit) { // 🆕 add edit case
       NextResponseMessage = "Survey is now open in edit mode";

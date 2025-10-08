@@ -12,14 +12,14 @@ import { useNavigation } from "@/hooks/useNavigation";
 import Spinner from "@/components/Spinner";
 
 export default function Otppage() {
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(180);
   const { signup, loading,login } = useAppSelector((store) => store.auth)
   const [otp, setOtp] = useState(["", "", "", ""]);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
 
   useEffect(() => {
     const timer = new Countdown(
-      60,
+      180,
       (time) => setTimeLeft(time), // onTick
       () => console.log("Time over!") // onComplete
     );
@@ -106,7 +106,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     toast.error("An unexpected error occurred.");
   } finally {
     dispatch(setLoading(false));
-    // router.push('/dashboard')
   }
 };
 
@@ -144,7 +143,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               <p className="text-xs">
                 Remaining Time:{" "}
                 <span className="text-indigo-600">
-                  {`00:${timeLeft < 10 ? `0 ${timeLeft}` : timeLeft}`}
+                   {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+
                 </span>
               </p>
             </div>

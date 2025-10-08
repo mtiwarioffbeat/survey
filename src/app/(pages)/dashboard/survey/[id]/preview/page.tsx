@@ -2,7 +2,7 @@
 import FormHeading from "@/components/dashboard/form/SurveyHeading";
 import Question from "@/components/dashboard/form/Question";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
-import { setAddQuestion, setSurvey } from "@/redux/SurveySlice/SurveySlice";
+import { setSurvey } from "@/redux/SurveySlice/SurveySlice";
 import { useEffect } from "react";
 import { getSocket } from "@/utils/socket";
 

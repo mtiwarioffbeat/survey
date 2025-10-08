@@ -10,5 +10,4 @@ interface GenModalConfirm{
     to_delete:boolean,
     to_publish:boolean,
     text:string,
-    to_edit:boolean
 }

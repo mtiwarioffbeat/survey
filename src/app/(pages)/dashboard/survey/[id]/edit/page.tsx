@@ -2,14 +2,13 @@
 import SurveyHeading from "@/components/dashboard/form/SurveyHeading";
 import Question from "@/components/dashboard/form/Question";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
-import { setAddQuestion, setSurvey } from "@/redux/SurveySlice/SurveySlice";
+import { setSurvey } from "@/redux/SurveySlice/SurveySlice";
 import { getSocket } from "@/utils/socket";
 import { useEffect } from "react";
 import { setViewMode } from "@/redux/DashboardSlice/DashboardSlice";
 export default function EditPage() {
   const dispatch = useAppDispatch();
   const { questions } = useAppSelector((store) => store.survey);
-  const { session } = useAppSelector((store) => store.dashboard)
   const survey = useAppSelector((store) => store.survey)
 
   const socket = getSocket();
@@ -23,16 +22,14 @@ export default function EditPage() {
       title: "",
       description: null,
       isDeleted: false,
-      // sortOrder:null,
       type: {
-        title: "Paragraph", // default type
+        title: "Paragraph",
         description: null,
       },
       choices: [] as {
         title: string;
         description: string | null;
         isDeleted: false;
-        // sortOrder: 1;
       }[],
     };
 
