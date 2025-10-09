@@ -19,7 +19,7 @@ import { getSocket } from "@/utils/socket"
         }
         try{
             const res = await SurveyRoutes.PatchSurvey(data)
-            // console.log("response in genModal",res)
+
             if(res.success){
                 // socket emitt
                 socket.emit('survey_patch',data)
@@ -56,7 +56,6 @@ import { getSocket } from "@/utils/socket"
                         <button
                             className="ml-2 rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-center text-sm text-white shadow-md transition-all hover:bg-indigo-700 hover:shadow-lg focus:bg-indigo-700 focus:shadow-none active:bg-indigo-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none cursor-pointer"
                             onClick={handleConfirm}
-                            // disabled={!title || !description || loading}
                         >
                             {loading ? <Spinner /> : "Confirm"}
                         </button>

@@ -2,11 +2,10 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { setSearchValue } from "@/redux/DashboardSlice/DashboardSlice";
-import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { setInterval } from "timers/promises";
 import { SurveyRoutes } from "@/services/api/SurveyRoutes";
 import { setSurveys } from "@/redux/SurveysSlice/SurveysSlice";
+
 export default function SearchBox() {
   const dispatch = useAppDispatch()
   const { searchValue } = useAppSelector((store) => store.dashboard)
@@ -42,7 +41,7 @@ export default function SearchBox() {
     <div className="relative w-full sm:max-w-[45%] lg:max-w-[25%]">
       <input
         type="text"
-        placeholder="Search... form"
+        placeholder="Search... among surveys"
         value={searchValue}
         onChange={handleChange}
         className="w-full pl-10 pr-3 py-1 text-sm rounded-full border border-gray-300 focus:outline-none focus:shadow"

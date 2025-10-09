@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import pool from "@/lib/db"; // your pg Pool instance
+import pool from "@/lib/db"; 
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { getSession } from "@/lib/getSession";
@@ -38,7 +38,6 @@ export async function POST(req: NextRequest) {
     );
     const sur_id = rows[0]._survey_id
     console.log("post survey ", rows)
-    // console.log("response in backend",res)
     return NextResponse.json({ message: "Survey created successfully", sur_id }, { status: 201 });
   } catch (error: any) {
     console.error("Error creating survey:", error);
@@ -135,9 +134,6 @@ export async function PATCH(req:Request){
 
     const response = await SurveyServices.patchSurvey(body);
     let NextResponseMessage='';
-    // if(!response){
-    //   return NextResponse.json({error:"No Survey found"},{status:404})
-    // }
     if(body.to_delete){
       NextResponseMessage="Survey deleted successfully"
     }

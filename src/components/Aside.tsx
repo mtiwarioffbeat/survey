@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { FaFileAlt, FaRegUserCircle } from "react-icons/fa";
+import { FaFileAlt } from "react-icons/fa";
 import { RiCloseFill } from "react-icons/ri";
 import { IoIosLogOut } from "react-icons/io";
 import Link from "next/link";
@@ -30,14 +30,13 @@ export default function Aside() {
     <>
       {/* Mobile-only aside menu */}
       {menuOpen && (
-        <div className="block sm:hidden w-55 bg-white shadow h-screen flex flex-col fixed top-0 right-0 z-50 transition-all duration-300 ease-in-out">
+        <div className=" sm:hidden w-55 bg-white shadow h-screen flex flex-col fixed top-0 right-0 z-50 transition-all duration-300 ease-in-out">
           {/* Header */}
           <div className="py-6 px-5 border-b flex justify-between items-center">
             <div className="flex items-center gap-3">
              <FaFileAlt className="text-3xl text-indigo-700 cursor-pointer" />
               <div>
                 <p className="text-sm font-semibold">{session?.name}</p>
-                {/* <p className="text-xs text-gray-500">Joined: 03-09-2025</p> */}
               </div>
             </div>
 

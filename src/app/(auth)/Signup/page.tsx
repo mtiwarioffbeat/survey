@@ -91,7 +91,7 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               placeholder="Enter Your Name"
               onChange={(e) => handleChange(e)}
               value={signupData.name}
-              className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
             />
             {signupErrors?.name && <p className="text-red-500">{signupErrors.name}</p>}
           </div>
@@ -103,13 +103,13 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               value={signupData.email}
               onChange={(e) => handleChange(e)}
               placeholder="Enter your Email"
-              className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
             />
             {signupErrors?.email && <p className="text-red-500">{signupErrors.email}</p>}
           </div>
           <button
             disabled={loading}
-            className="w-full cursor-pointer bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200"
+             className={`mt-2 w-full ${loading ?'bg-indigo-300 hover:cursor-not-allowed':'bg-indigo-600 hover:bg-indigo-700 cursor-pointer'} text-white  py-2 rounded-lg font-semibold transition duration-200 `}
           >
             {loading ? (<Spinner />) : ("Sign Up")}
           </button>

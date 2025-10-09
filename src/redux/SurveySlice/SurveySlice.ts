@@ -7,7 +7,6 @@ const initialState: Survey["Survey"] = {
   isDeleted:false,
   isPublished: false,
   isOpenedInEditMode: true,
-  // createdBy: null,
   questions: [
     { 
       title: "",
@@ -19,7 +18,6 @@ const initialState: Survey["Survey"] = {
         description: null,
       },
       choices: [],
-      // enteredBy: null 
     },
   ],
 };

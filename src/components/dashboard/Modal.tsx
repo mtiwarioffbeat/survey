@@ -26,7 +26,6 @@ const Modal = () => {
         dispatch(setLoading(true))
         const newSurveyData:Survey['Survey'] = { ...survey, title: title, description: description };
 
-        // dispatch(setSurvey(newSurveyData));
         try{
             // creating surveys
             const res = await SurveyRoutes.CreateSurvey(newSurveyData)
@@ -42,10 +41,6 @@ const Modal = () => {
             console.log("get all survy econle",getAllSurveys)
             //EMIT SOCKET ALL SURVEYS
            socket.emit("get_all_surveys", getAllSurveys);
-
-
-            // console.log("res2",res2.data.data[0])
-            // dispatch(setSurvey(res2.data.data[0]))
 
             // servey to view
             const surveyToView =await getsurveys.data.find((s:any) => s.id == res.data.sur_id)  

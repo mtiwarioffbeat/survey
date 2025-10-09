@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     }
     // generate otp
     const generated_OTP = await OtpService.generateOtp(email)
-    // console.log('generated_OTP',generated_OTP)
+    
     if(generated_OTP){
       const emailSent = Mailer(email,generated_OTP)
     }

@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server";
-import { TOTP } from "totp-generator";
-import base32 from "hi-base32"; // Required for base32 encoding
-import { OtpService, TokenService, UserDbService } from "@/services/db/UserDbService";
+import { OtpService, UserDbService } from "@/services/db/UserDbService";
 import Mailer from "@/services/db/nodemailer";
 import jwt from 'jsonwebtoken'
 import { cookies } from "next/headers";
-import { Auth } from "@/types/auth";
 // it generater or verify otp
 export async function POST(req: Request) {
   const { email, otp } = await req.json();
@@ -17,7 +14,7 @@ export async function POST(req: Request) {
 
   // if otp is provided, verifing it
   if (otp) {
-    // console.log(otp)
+
     const isValid = await OtpService.verifyOtp(email, otp);
     if (isValid) {
 
@@ -63,9 +60,6 @@ export async function POST(req: Request) {
   if (generatedOtp) {
     const emailSent = Mailer(email, generatedOtp)
   }
-  // console.log(`OTP for ${email} = ${generatedOtp}`);
-
-
-  // console.log("inside verify route1", user)
+  
   return NextResponse.json({ success: 200, message: "OTP sent successfully" });
 }

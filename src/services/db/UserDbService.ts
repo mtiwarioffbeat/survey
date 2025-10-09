@@ -1,7 +1,6 @@
 import pool from "@/lib/db";
 import { TOTP } from "totp-generator";
 import base32 from "hi-base32";
-import { Auth } from "@/types/auth";
 import { PatchSurvey } from "@/types/survey";
 
 export class UserDbService {
@@ -12,9 +11,7 @@ export class UserDbService {
         "SELECT id, name, email FROM users WHERE email = $1 LIMIT 1",
         [email]
       );
-// console.log("res",result);
       if (result.rowCount) {
-        // console.log("finduserbyemail", result.rows[0])
         return result.rows[0]; // user exists
       }
       return null; // user does not exist
@@ -53,8 +50,6 @@ export class OtpService {
       period: OTP_WINDOW,
     });
 
-    // console.log("OTP+++>", otp)
-
     return otp;
   }
 
@@ -62,9 +57,7 @@ export class OtpService {
   // Verify the provided OTP against the expected one
 
   public static async verifyOtp(email: string, otp: string): Promise<boolean> {
-    // console.log("inside verify otp", email, otp)
     const secret = base32.encode(email).replace(/=+$/, "");
-    // console.log(secret)
     const { otp: expectedOtp } = await TOTP.generate(secret, {
       digits: 4,
       period: OTP_WINDOW,

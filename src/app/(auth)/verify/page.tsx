@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
 import { Countdown } from "@/utils/Auth/Countdown";
 import { UserService } from "@/services/api/UserService";
-import { Auth, ResendOTP } from "@/types/auth";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { setLoading } from "@/redux/AuthSlice/AuthSlice";
 import { toast } from "react-toastify";
@@ -53,15 +51,15 @@ export default function Otppage() {
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
-  dispatch(setLoading(true));
-
+  
   const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
   const userEmail = signup?.email || login?.email;
-
+  
   try {
     let res;
-
+    
     if (submitter.name === "submitOtp") {
+      dispatch(setLoading(true));
       const otpString = otp.join('');
 
       if (!otpString) {
@@ -90,7 +88,13 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         toast.error("User email is not available for resend.");
         return;
       }
-
+       const timer = new Countdown(
+      180,
+      (time) => setTimeLeft(time), // onTick
+      () => console.log("Time over!") // onComplete
+    );
+    timer.start();
+    
       res = await UserService.ResendOtp(userEmail);
       
     if (res?.success) {
@@ -130,7 +134,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                   type="text"
                   inputMode="numeric"
                   maxLength={1}
-                  className="w-10 h-10 text-center text-2xl border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                  className="w-10 h-10 text-center text-2xl border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 bg-white"
                   value={digit}
                   onChange={e => handleChange(idx, e.target.value)}
                   onKeyDown={e => handleKeyDown(idx, e)}
@@ -138,8 +142,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               ))}
             </div>
           </div>
-          <div className="flex justify-between mt-4">
-            <div className="flex flex-col items-center justify-center">
+          <div className={`flex  ${timeLeft ? 'justify-between':'justify-end'} mt-4`}>
+            <div className={`${timeLeft?"flex":"hidden"} flex-col items-center justify-center`}>
               <p className="text-xs">
                 Remaining Time:{" "}
                 <span className="text-indigo-600">
@@ -149,21 +153,22 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               </p>
             </div>
             <p className="text-xs">
-              Didn’t get the code?
-              <button className="text-indigo-600 cursor-pointer hover:underline " type="submit" name="resendOtp">Resend</button>
+              Didn’t get the code?{' '}
+              <button className={` ${timeLeft?"text-indigo-300 cursor-not-allowed":"text-indigo-600  hover:underline cursor-pointer"} `} type="submit" name="resendOtp" disabled={timeLeft? true:false}>Resend</button>
             </p>
           </div>
           <button type="submit"
             name="submitOtp"
-            disabled={loading}
-            className={`mt-4 w-full ${loading ? "bg-indigo-300" : "bg-indigo-600"} bg-indigo-600 cursor-pointer  text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 `}>
+             disabled={loading}
+             className={`mt-2 w-full ${loading ?'bg-indigo-300 hover:cursor-not-allowed':'bg-indigo-600 hover:bg-indigo-700 cursor-pointer'} text-white  py-2 rounded-lg font-semibold transition duration-200 `}      
+            >
             {loading ? (<Spinner />) : ("Verify")}
           </button>
         </form>
         <button
       
           
-          className="mt-2 w-full bg-white border-2 cursor-pointer border-blue-600 text-blue-600 py-2 rounded-lg font-semibold transition duration-200" onClick={()=>router.back()}>
+          className="mt-2 w-full bg-white border-2 cursor-pointer border-indigo-00 text-indigo-600 py-2 rounded-lg font-semibold transition duration-200" onClick={()=>router.back()}>
           Cancel
         </button>
       </div>

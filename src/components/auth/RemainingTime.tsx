@@ -1,8 +1,7 @@
 import React from 'react'
-import { useEffect,useState } from 'react';
-const RemainingTime = ( {timeLeft , setTimeLeft}  :any ) => {
-    
+import { useEffect } from 'react';
 
+const RemainingTime = ( {timeLeft , setTimeLeft}  :any ) => {
     useEffect(()=>{
         if (timeLeft <= 0) return;
         const intervalId =  setInterval(()=>{
@@ -11,7 +10,6 @@ const RemainingTime = ( {timeLeft , setTimeLeft}  :any ) => {
        return () => clearInterval(intervalId); 
     },[timeLeft])
 
-    //   console.log("outside", timeLeft)
     return (
         <div>
             <span className="flex flex-col items-center justify-center">
@@ -19,7 +17,6 @@ const RemainingTime = ( {timeLeft , setTimeLeft}  :any ) => {
                    
                     Remaining Time:{" "}
                     <span className="text-blue-600">
-                        {/* {`00:${timeLeft < 10 ? `0${timeLeft}` : timeLeft}`} */}
                         {timeLeft}
                     </span>
                 </p>

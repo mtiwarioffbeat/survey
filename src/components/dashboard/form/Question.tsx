@@ -33,18 +33,10 @@ export default function Question({ index, data }: Props) {
   const { viewMode } = useAppSelector((store) => store.dashboard)
   const survey = useAppSelector((store) => store.survey)
   const socket = getSocket()
-  // check pathname
-  // useEffect(() => {
-  //   if (!pathname.includes('/preview')) {
-  //     dispatch(setViewMode(false))
-  //   }
-
-  // }, [pathname])
 
   const [selectedOption, setSelectedOption] = useState(null); // State to store the currently selected option
 
   const handleCheckboxChange = (event:any) => {
-    // console.log()
     const { value, checked } = event.target;
     console.log("checked value", checked, value)
 
@@ -74,8 +66,6 @@ export default function Question({ index, data }: Props) {
 
   // delete ques
   const deleteQuestion = (idx: number) => {
-    console.log("index of the ques", idx)
-    // dispatch(setRemoveQuestion(idx))
     const updatedQues = { ...data, isDeleted: true }
     const updatedQuestions = [...survey.questions]
     updatedQuestions[index] = {
@@ -99,7 +89,6 @@ export default function Question({ index, data }: Props) {
   const addOption = () => {
     const newChoices = [
       ...(data.choices || []),
-      // { title: `Option ${data.choices?.length! + 1}`, description: null,isDeleted:false, sortOrder: `${data.choices?.length! + 1}` },
       { title: `Option ${data.choices?.length! + 1}`, description: null, isDeleted: false },
     ];
     updateQuestion({ choices: newChoices });
@@ -200,7 +189,6 @@ export default function Question({ index, data }: Props) {
                     onClick={() => {
                       updateQuestion({
                         type: opt,
-                        // choices: [{ title: "Option 1", description: null,isDeleted:false, sortOrder:1}],
                         choices: [{ title: "Option 1", description: null, isDeleted: false }],
                       });
                       setOpen(false);

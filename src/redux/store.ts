@@ -4,18 +4,14 @@ import authSlice from '../redux/AuthSlice/AuthSlice'
 import dashboardSlice from '../redux/DashboardSlice/DashboardSlice'
 import surveySlice from '../redux/SurveySlice/SurveySlice'
 import surveysSlice from '../redux/SurveysSlice/SurveysSlice'
-import {FLUSH,REHYDRATE,PAUSE,PERSIST,PURGE,REGISTER} from 'redux-persist';
-// import storage from 'redux-persist/lib/storage'
 import storage from './storageEngine'
+
 // redux persist config
 const persistConfig = {
   key:'root',
   storage,
   whitelist:['dashboard','survey','surveys']
 }
-
-// const persistedReducer = persistReducer(persistConfig,dashboardSlice)
-// const surveyReducer = persistReducer(persistConfig,surveySlice)
 
 // Combine reducers
 const rootReducer = combineReducers({

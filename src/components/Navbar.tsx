@@ -3,21 +3,20 @@ import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
 import { setMenuOpen, setViewMode } from "@/redux/DashboardSlice/DashboardSlice";
 import { FaFileAlt, FaUserCircle } from "react-icons/fa";
 import { IoMenu } from "react-icons/io5";
-import { MdOutlineRemoveRedEye, MdPublishedWithChanges } from "react-icons/md";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
 import Tooltip from "./Tooltip";
 import { usePathname } from "next/navigation";
 import { SurveyRoutes } from "@/services/api/SurveyRoutes";
 import { useNavigation } from "@/hooks/useNavigation";
 import { setLoading } from "@/redux/AuthSlice/AuthSlice";
-// import { setLoading } from "@/redux/DashboardSlice/DashboardSlice";
 import Spinner from "./Spinner";
-import { resetSurvey, setSurvey } from "@/redux/SurveySlice/SurveySlice";
+import { resetSurvey } from "@/redux/SurveySlice/SurveySlice";
 import { toast } from "react-toastify";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { getSocket } from "@/utils/socket";
 import Aside from "./Aside";
 import { resetSession } from "@/redux/DashboardSlice/DashboardSlice";
-import { getSession } from "@/lib/getSession";
+
 export default function Navbar() {
 
     const [profileOpen, setProfileOpen] = useState(false);
@@ -31,18 +30,6 @@ export default function Navbar() {
     const { router } = useNavigation();
     const dropdownRef = useRef<HTMLDivElement>(null);
 
-
-    // useEffect(() => {
-    //     const handleClickOutside = (event: MouseEvent) => {
-    //         if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-    //             setProfileOpen(false);
-    //         }
-    //     };
-    //     document.addEventListener("mousedown", handleClickOutside);
-    //     return () => document.removeEventListener("mousedown", handleClickOutside);
-    // }, []);
-
-    
 
     const handleLogout = async () => {
         try {
@@ -142,7 +129,6 @@ export default function Navbar() {
                             <>
                                 <div className="hidden sm:flex flex-col text-right">
                                     <p className="text-sm font-semibold">{session?.name}</p>
-                                    {/* <p className="text-xs text-gray-500">Joined: {session.}</p> */}
                                 </div>
 
                                 <button
@@ -213,16 +199,19 @@ export default function Navbar() {
                 {
                     pathName != "/dashboard" && !viewMode &&
                     <div className="flex items-center justify-center gap-3">
+                        
                         {/* view */}
                         <button className="flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group" onClick={handleView} >
 
                             <MdOutlineRemoveRedEye size={24} className="text-indigo-600" />
                             <Tooltip text="Preview" />
                         </button>
+
                         {/* save */}
                         <button type="button" className="font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1 border-white  bg-green-600 text-white flex gap-2 cursor-pointer  hover:border-green-600 hover:text-green-600 hover:bg-white transition-all duration-300"
                             onClick={handleSave}
                         > {loading ? <Spinner /> : "Save"}</button>
+
                         {/* publish */}
                         <button type="button" className="font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1  bg-indigo-600 text-white flex gap-2 cursor-pointer hover:bg-white hover:border-indigo-600 hover:text-indigo-600" onClick={handlePublish} disabled={publishLoading}> {publishLoading ? <Spinner /> : "Publish"}</button>
 

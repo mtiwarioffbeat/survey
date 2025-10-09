@@ -75,7 +75,7 @@ const Page = () => {
             {/* Search + Create Survey */}
             <div className="flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4 mb-6">
               <button
-                className="flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 px-4 py-2 rounded text-white gap-2 w-full sm:w-auto"
+                className="flex items-center justify-center cursor-pointer bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 px-4 py-2 rounded text-white gap-2 w-full sm:w-auto"
                 onClick={() => dispatch(setShowModal(true))}
               >
                 Create new Survey

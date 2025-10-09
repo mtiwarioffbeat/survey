@@ -89,7 +89,7 @@ const page = () => {
                 type="email"
                 name='email'
                 placeholder="Enter your Email"
-                className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300"
                 value={loginData.email}
                 onChange={(e)=>handleChange(e)}
               />
@@ -97,7 +97,8 @@ const page = () => {
             </div>
             <button
               type="submit"
-              className=" mt-2 w-full bg-indigo-600 text-white cursor-pointer py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200"
+               className={`mt-2 w-full ${loading ?'bg-indigo-300 hover:cursor-not-allowed':'bg-indigo-600 hover:bg-indigo-700 cursor-pointer'} text-white  py-2 rounded-lg font-semibold transition duration-200 `}
+              disabled={loading}
            
             >
               {loading ?(<Spinner/>):('Login')}

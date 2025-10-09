@@ -1,11 +1,5 @@
-// import { getSession } from "@/lib/getSession";
-// import { Auth } from "@/types/auth";
 import { PatchSurvey, Survey } from "@/types/survey";
-import axios, { AxiosError } from "axios";
-// import { useEffect } from "react";
-// import { success } from "zod";
-// import { fa } from "zod/v4/locales";
-
+import axios from "axios";
 export class SurveyRoutes {
   // Signup POST
   public static async CreateSurvey(payload: Survey['Survey']) {
@@ -36,6 +30,7 @@ export class SurveyRoutes {
       }
     }
   }
+  
   // updating publish/delete check in survey
   public static async PatchSurvey(payload: PatchSurvey) {
     try {

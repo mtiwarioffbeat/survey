@@ -23,7 +23,6 @@ export interface Auth{
         token:string,
         is_used:boolean,
         user_id:number
-        // used_at:number 
     }
 
 }

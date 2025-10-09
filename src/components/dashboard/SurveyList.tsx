@@ -1,23 +1,19 @@
-import { RiCloseFill } from "react-icons/ri"
 import Link from "next/link"
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks"
 import { useNavigation } from "@/hooks/useNavigation"
 import { setSurvey } from "@/redux/SurveySlice/SurveySlice"
-import { Survey, Surveys } from "@/types/survey"
 import { toast } from "react-toastify"
 import { setGenModalConfirm, setViewMode } from "@/redux/DashboardSlice/DashboardSlice"
 import { useEffect } from "react"
 import { getSocket } from "@/utils/socket"
 import { setSurveys } from "@/redux/SurveysSlice/SurveysSlice"
 import { SurveyRoutes } from "@/services/api/SurveyRoutes"
-import axios from "axios"
 
 
 export default function SurveyList() {
 
     const surveys = useAppSelector((store) => store.surveys)
 
-    const { searchValue } = useAppSelector((store) => store.dashboard)
     const { router } = useNavigation()
     const dispatch = useAppDispatch()
     const { GenModalConfirm } = useAppSelector((store) => store.dashboard)
@@ -103,13 +99,11 @@ export default function SurveyList() {
         dispatch(setGenModalConfirm({ ...GenModalConfirm, survey_name: survey_name, survey_id: survey_id, to_publish: true }))
     }
 
-
+    //copy url
     const handleCopyUrl = async (id: number) => {
         console.log("url", process.env.NEXT_PUBLIC_RESPONDER_URL)
         try {
-            // const responderUrl = `http://localhost:3000/surveys/${id}`
             const responderUrl = `${process.env.NEXT_PUBLIC_RESPONDER_URL}/${id}`
-            // const responderUrl = `https://cqgdsgvd-3000.inc1.devtunnels.ms/surveys/${id}`
             await navigator.clipboard.writeText(responderUrl)
             toast.dark('Copied to clipboard')
         } catch (err) {
