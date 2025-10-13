@@ -3,16 +3,18 @@ import { useEffect, useState } from "react";
 import { ImParagraphLeft } from "react-icons/im";
 import { IoMdRadioButtonOn, IoMdArrowDropdown } from "react-icons/io";
 import { GrCheckboxSelected } from "react-icons/gr";
-import { MdDelete, MdOutlineArrowDropDownCircle } from "react-icons/md";
+import { MdAddCircleOutline, MdContentCopy, MdDelete, MdOutlineArrowDropDownCircle } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import { useAppDispatch, useAppSelector } from "@/hooks/reduxhooks";
-import { setRemoveQuestion, setSurvey, setUpdateQuestion } from "@/redux/SurveySlice/SurveySlice";
+import { setSurvey, setUpdateQuestion } from "@/redux/SurveySlice/SurveySlice";
 import type { Survey } from "@/types/survey";
 import Tooltip from "@/components/Tooltip";
 import { usePathname } from "next/navigation";
-import { setViewMode } from "@/redux/DashboardSlice/DashboardSlice";
 import { getSocket } from "@/utils/socket";
 import { MdOutlineArrowDropDown } from "react-icons/md";
+import { IoAddCircleOutline } from "react-icons/io5";
+import DynamicTooltip from "@/components/Tooltip";
+// import { setActiveId } from "@/redux/DashboardSlice/DashboardSlice";
 const options: Survey["QuestionType"][] = [
   { title: "Paragraph", description: null },
   { title: "Multiple choice", description: null },
@@ -23,18 +25,51 @@ const options: Survey["QuestionType"][] = [
 type Props = {
   index: number;
   data: Survey["Question"];
+  activeId:number ;
+  setActiveId:React.Dispatch<React.SetStateAction<number>>
 };
 
-export default function Question({ index, data }: Props) {
+export default function Question({ index, data,setActiveId,activeId }: Props) {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const { questions } = useAppSelector((store) => store.survey)
   const { viewMode } = useAppSelector((store) => store.dashboard)
   const survey = useAppSelector((store) => store.survey)
+  // const [activeId,setActiveId] = useState<number|null>(null)
   const socket = getSocket()
 
   const [selectedOption, setSelectedOption] = useState(null); // State to store the currently selected option
+
+const handleAddQuestion = (idx: number) => {
+  const newQ = {
+    title: "",
+    description: null,
+    isDeleted: false,
+    type: {
+      title: "Paragraph",
+      description: null,
+    },
+    choices: [] as {
+      title: string;
+      description: string | null;
+      isDeleted: false;
+    }[],
+  };
+ 
+  const updatedQuestions = [
+    ...questions.slice(0, idx+1),
+    newQ,
+    ...questions.slice(idx+1),
+  ];
+ 
+  const updatedSurvey = {
+    ...survey,
+    questions: updatedQuestions,
+  };
+ 
+  dispatch(setSurvey(updatedSurvey));
+};
 
   const handleCheckboxChange = (event:any) => {
     const { value, checked } = event.target;
@@ -114,7 +149,18 @@ export default function Question({ index, data }: Props) {
 
   return (
     <div className={`${data.isDeleted ? "hidden" : "block"}`}>
-      <div className={` rounded-lg items-center border-l-6 border-indigo-600 bg-white p-6 shadow`}>
+       
+      <div 
+      key={index}
+      className={`
+        relative ${activeId===index? "border-indigo-600":"border-transparent"}
+        rounded-lg items-center border-l-6 border-indigo-600 bg-white p-6 shadow`}
+       onClick={() => {
+    if (!viewMode) {
+      setActiveId(index);
+    }
+  }}
+        >
         <div className="flex gap-4 justify-between">
           <div className="flex flex-col w-full">
             {/* Question title */}
@@ -220,7 +266,7 @@ export default function Question({ index, data }: Props) {
               {/* for preview page -- long answer entry */}
               {
                 viewMode ?
-                  (<textarea placeholder="Long-answer text" rows={1} className="w-full  outline-0 border-b-2 border-indigo-300" />) :
+                  (<textarea placeholder="Long-answer text" rows={1} className="w-full  outline-0 border-b-2 border-indigo-300 "  />) :
                   (<p>Long-answer text</p>)
               }
               {/* for preview page -- long answer entry */}
@@ -231,8 +277,8 @@ export default function Question({ index, data }: Props) {
                   <button onClick={() => {
                     deleteQuestion(index)
                   }} className=" flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
-                    <MdDelete size={24} className="text-indigo-600" />
-                    <Tooltip text="Delete" />
+                    {/* <MdDelete size={24} className="text-indigo-600" /> */}
+                    {/* <Tooltip text="Delete" /> */}
                   </button>
                 </div>
               }
@@ -346,7 +392,7 @@ export default function Question({ index, data }: Props) {
                   </div>
                 )}
 
-
+              
 
                 {!viewMode &&
                   <div className="flex justify-between items-center">
@@ -358,23 +404,71 @@ export default function Question({ index, data }: Props) {
                         Add Option
                       </button>
                     </div>
-                    {
+                    {/* {
                       questions.length > 1 &&
                       <div className="grid grid-flow-col justify-items-end">
+                        <DynamicTooltip text="Delete" position="right">
+
                         <button onClick={() => {
                           deleteQuestion(index)
                         }} className=" flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group">
-                          <MdDelete size={24} className="text-indigo-600" />
-                          <Tooltip text="Delete" />
+                        <MdOutlineArrowDropDown size={30} className="text-indigo-400"/>
+                          
                         </button>
+                          </DynamicTooltip>
                       </div>
-                    }
+                    } */}
                   </div>
                 }
               </div>
             )}
         </div>
+
+
+             {activeId === index && (
+            <div className="absolute top-1/2 -right-16 transform -translate-y-1/2 flex flex-col bg-white rounded-lg">
+              <DynamicTooltip text="Add question" position="right">
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddQuestion(index)
+                }}
+                className="bg-white  p-2 hover:bg-indigo-50 cursor-pointer rounded-t-lg"
+                >
+                <MdAddCircleOutline className="text-indigo-600" size={24} />
+              </button>
+                </DynamicTooltip>
+ 
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // duplicateQuestion(q);
+                }}
+                className="bg-white shadow p-2 hover:bg-indigo-50 cursor-pointer"
+              >
+                <MdContentCopy className="text-indigo-600" size={24} />
+              </button>
+                <DynamicTooltip text="Delete" position="right">
+                  
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteQuestion(index);
+                }}
+                className="bg-white  p-2 hover:bg-indigo-50 cursor-pointer group rounded-b-lg"
+                >
+                <MdDelete className="text-indigo-600" size={24} />
+              </button>
+                </DynamicTooltip>
+            </div>
+          )}
+ 
+
       </div>
+
     </div>
   );
 }
+
+

@@ -45,7 +45,7 @@ export default function SurveyHeading() {
         <div className="relative">
           <div
             ref={descRef}
-            className="outline-none text-gray-700 min-h-[40px] py-2 w-full"
+            className="outline-none text-gray-700 min-h-[40px] py-2 w-full "
             role="textbox"
             aria-label="Survey description"
             contentEditable={!viewMode}         

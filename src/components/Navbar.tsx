@@ -16,6 +16,7 @@ import { useRef, useState } from "react";
 import { getSocket } from "@/utils/socket";
 import Aside from "./Aside";
 import { resetSession } from "@/redux/DashboardSlice/DashboardSlice";
+import DynamicTooltip from "./Tooltip";
 
 export default function Navbar() {
 
@@ -199,13 +200,15 @@ export default function Navbar() {
                 {
                     pathName != "/dashboard" && !viewMode &&
                     <div className="flex items-center justify-center gap-3">
-                        
+                        <DynamicTooltip text="Preview" position="bottom">
+
                         {/* view */}
                         <button className="flex items-center justify-center cursor-pointer rounded-full p-2 hover:bg-[#faf5ff] group" onClick={handleView} >
 
                             <MdOutlineRemoveRedEye size={24} className="text-indigo-600" />
-                            <Tooltip text="Preview" />
+                            
                         </button>
+                        </DynamicTooltip>
 
                         {/* save */}
                         <button type="button" className="font-medium rounded-lg text-sm px-3 py-2.5 text-center  border-1 border-white  bg-green-600 text-white flex gap-2 cursor-pointer  hover:border-green-600 hover:text-green-600 hover:bg-white transition-all duration-300"

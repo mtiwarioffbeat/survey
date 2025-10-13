@@ -7,7 +7,7 @@ const initialState:{
     loading:boolean,
     viewMode:boolean,
     GenModalConfirm:GenModalConfirm,
-    searchValue:string
+    searchValue:string,
 } = {
     menuOpen:false,
     session:{
@@ -63,7 +63,8 @@ const DashboardSlice = createSlice({
 state.session = {id:null,name:null,email:null};
 state.showModal =false;
 state.GenModalConfirm ={survey_id:-1,survey_name:'',to_delete:false,to_publish:false,text:''};
-        }
+        },
+        
        
     }
 })
