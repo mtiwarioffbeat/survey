@@ -89,7 +89,7 @@ const page = () => {
                 type="email"
                 name='email'
                 placeholder="Enter your Email"
-                className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
                 value={loginData.email}
                 onChange={(e)=>handleChange(e)}
               />

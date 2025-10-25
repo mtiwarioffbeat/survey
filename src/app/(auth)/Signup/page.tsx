@@ -93,7 +93,7 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               placeholder="Enter Your Name"
               onChange={(e) => handleChange(e)}
               value={signupData.name}
-              className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
             />
             {signupErrors?.name && <p className="text-red-500">{signupErrors.name}</p>}
           </div>
@@ -105,7 +105,7 @@ const handlSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               value={signupData.email}
               onChange={(e) => handleChange(e)}
               placeholder="Enter your Email"
-              className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
             />
             {signupErrors?.email && <p className="text-red-500">{signupErrors.email}</p>}
           </div>
